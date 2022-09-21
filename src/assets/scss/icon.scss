@@ -1,0 +1,34 @@
+/**
+ * Icon
+ */
+.pt-icon {
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
+    overflow: hidden;
+
+    &.circle {
+        border-radius: 50%;
+    }
+}
+
+@mixin pt-icon-size($size) {
+    width: $size;
+    height: $size;
+}
+
+.pt-icon-small {
+    @include pt-icon-size(16px);
+}
+
+.pt-icon-medium {
+    @include pt-icon-size(32px);
+}
+
+.pt-icon-large {
+    @include pt-icon-size(48px);
+}
+
+.pt-icon-huge {
+    @include pt-icon-size(128px);
+}
