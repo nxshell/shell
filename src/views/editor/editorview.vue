@@ -101,7 +101,6 @@ export default {
             await sessionInstance.init();
             const editorValue = await sessionInstance.readFileContent();
             this.editorValue = new TextDecoder().decode(editorValue);
-            this.oldVlaue = this.editorValue;
             
             sessionInstance.registerCloseCallback(()=> {
                 this.save();
@@ -139,7 +138,7 @@ export default {
                 extensions: extensions,
                 parent: this.$refs.editor
             })
-
+            this.oldVlaue = this.editor_view.state.doc.toString();
         },
         async save() {
             this.editorValue = this.editor_view.state.doc.toString();
