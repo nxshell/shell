@@ -38,7 +38,7 @@
     "serialport": "^9.2.0",
     "telnet-client": "^1.4.9",
     "uuid": "^8.3.2",
-    "vue": "^2.6.11",
+    "vue": "2.6.14",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
     "webdav": "^4.2.0",
@@ -51,10 +51,10 @@
     "xterm-theme": "^1.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-router": "~4.4.0",
-    "@vue/cli-plugin-vuex": "~4.4.0",
-    "@vue/cli-service": "^4.4.6",
+    "@vue/cli-plugin-babel": "4.4.0",
+    "@vue/cli-plugin-router": "4.4.0",
+    "@vue/cli-plugin-vuex": "4.4.0",
+    "@vue/cli-service": "4.4.6",
     "electron-rebuild": "",
     "node-loader": "^1.0.0",
     "sass": "^1.26.5",
@@ -63,7 +63,7 @@
     "style-loader": "^2.0.0",
     "ts-loader": "^8.1.0",
     "typescript": "^4.3.2",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "2.6.14",
     "webpack": "^4.44.2"
   }
 }
