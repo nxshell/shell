@@ -25,12 +25,9 @@ import Lang from "../lang";
 import * as globalSetting from "./services/globalSetting";
 import * as EventBus from "./services/eventbus";
 
-import darkTheme from "./assets/scss/theme/dark/dark.lazy.scss.theme";
-import lightTheme from "./assets/scss/theme/default/light.lazy.scss.theme";
-
-let localeName = navigator.language;
-// let localeName = "en-US";
-const defaultLocalName = "en-US";
+	let localeName = navigator.language
+	// let localeName = "en-US";
+	const defaultLocalName = 'en-US'
 
 async function loadLang(locale) {
     const esModule = await Lang[locale]();
@@ -72,11 +69,11 @@ export default {
 
     async created() {
         let _theme = getUserConfigTheme();
-        if(_theme === "light") {
-            lightTheme.use();
-        } else {
-            darkTheme.use();
-        }
+			if (_theme === 'light') {
+				window.document.documentElement.setAttribute('nx-theme', 'light')
+			} else {
+				window.document.documentElement.setAttribute('nx-theme', 'dark')
+			}
         this.setTheme(_theme);
         let _name =  getUserConfigLanguage();
         if(_name) {

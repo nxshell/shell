@@ -59,17 +59,19 @@ import PtXterm from "./xterm/xterm";
 
 import PtMenuManager from "./menu/menuManager";
 import PtContextMenu from "./menu/contextmenu";
+import Space from './Space/index.vue'
 
 
 const components = [
     PtAvatar,
 
     PtButton,
-    
+
     PtFile,
     PtFolder,
 
     PtForm,
+    Space,
     PtFormItem,
 
     PtGridView,
@@ -88,7 +90,7 @@ const components = [
 
     PtMenu,
     PtMenuItem,
-    
+
     PtProgress,
 
     PtSelect,
@@ -120,7 +122,7 @@ export default {
 
         Vue.mixin(Pti18n);
         components.forEach((component) => {
-            Vue.component(component.name, component); 
+            Vue.component(component.name, component);
         });
     }
 }
