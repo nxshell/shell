@@ -10,9 +10,11 @@ import "./assets/scss/default.scss";
 import PtComponents from "@/components";
 import PtSessionManger from "@/services";
 
+import Element from './element'
 
 Vue.use(PtComponents);
 Vue.use(PtSessionManger);
+Vue.use(Element)
 
 Vue.config.productionTip = false;
 
