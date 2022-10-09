@@ -59,6 +59,7 @@ import PtXterm from "./xterm/xterm";
 
 import PtMenuManager from "./menu/menuManager";
 import PtContextMenu from "./menu/contextmenu";
+import Space from './Space/index.vue'
 
 
 const components = [
@@ -70,6 +71,7 @@ const components = [
     PtFolder,
 
     PtForm,
+    Space,
     PtFormItem,
 
     PtGridView,

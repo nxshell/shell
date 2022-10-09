@@ -25,9 +25,6 @@ import Lang from "../lang";
 import * as globalSetting from "./services/globalSetting";
 import * as EventBus from "./services/eventbus";
 
-import darkTheme from "./assets/scss/theme/dark/dark.lazy.scss.theme";
-import lightTheme from "./assets/scss/theme/default/light.lazy.scss.theme";
-
 let localeName = navigator.language;
 // let localeName = "en-US";
 const defaultLocalName = "en-US";
@@ -73,9 +70,9 @@ export default {
     async created() {
         let _theme = getUserConfigTheme();
         if(_theme === "light") {
-            lightTheme.use();
+            window.document.documentElement.setAttribute("nx-theme", "light");
         } else {
-            darkTheme.use();
+            window.document.documentElement.setAttribute("nx-theme", "dark");
         }
         this.setTheme(_theme);
         let _name =  getUserConfigLanguage();
@@ -106,7 +103,7 @@ export default {
                 // pass
             }
         })
-                
+
         document.addEventListener("fullscreenchange", ()=> {
             let isfullscreen = !!document.fullscreenElement;
             if(! isfullscreen) {
@@ -122,7 +119,7 @@ export default {
     methods: {
         ...mapMutations(['setTheme']),
     }
-    
+
 }
 </script>
 
