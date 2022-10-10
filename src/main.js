@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import "@fontsource/dejavu-mono"; 
+import "@fontsource/dejavu-mono";
 import "./assets/scss/default.scss";
 
 
@@ -18,7 +18,7 @@ Vue.use(Element)
 
 Vue.config.productionTip = false;
 
-!async function() {
+!async function () {
     await PtSessionManger.initService();
 
 
