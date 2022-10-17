@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Storage from "../services/storage";
+import * as globalSetting from "@/services/globalSetting";
 
 Vue.use(Vuex)
 
@@ -44,6 +45,7 @@ export default new Vuex.Store({
         },
         setTheme(state, theme) {
             state.theme = theme;
+            globalSetting.setProfile("xterm", {theme: theme})
         }
     },
     actions: {
