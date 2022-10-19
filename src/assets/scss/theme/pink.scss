@@ -1,0 +1,82 @@
+[nx-theme="pink"]:root {
+  --pink-color-100: #F8BBD0;
+  --pink-color-200: #F48FB1;
+  --pink-color-300: #F06292;
+  --pink-color-400: #EC407A;
+  --pink-color-500: #E91E63;
+  --pink-color-600: #D81B60;
+  --pink-color-700: #C2185B;
+  --pink-color-800: #AD1457;
+  --pink-color-900: #880E4F;
+  --pink-color-A100: #FF80AB;
+  --pink-color-A200: #FF4081;
+  --pink-color-A400: #F50057;
+  --pink-color-A700: #C51162;
+
+  --primaryColor: var(--pink-color-600);
+  --primaryTextColor: #ECEFF1;
+  --secondaryTextColor: #FAFAFA;
+
+  // 高亮色，相对于主色调
+  --highlightColor: #1E1E1E;
+  --deactiveTextColor: #FAFAFA;
+
+  /* Tabs */
+  --tabs-bg-color: var(--pink-color-800);
+  --tabs-item-bg-color: var();
+
+  --windowBorderColor: var(--pink-color-600);
+  --windowTitleBarColor: var(--pink-color-600);
+  --windowTitleBarDeactiveColor: var(--pink-color-600);
+  --highlightItemColor: #ccc3;
+  --hoverItemColor: var(--pink-color-300);
+  --borderColor: var(--pink-color-300);
+  --darkBorderColor: var(--pink-color-300);
+
+  --backgroundColor: var(--pink-color-700);
+  --lightBackgroundColor: var(--pink-color-600);
+  --darkBackgroundColor: #fff;
+
+  --disableColor: #81D4FA;
+  --successColor: #4FC3F7;
+  --infoColor: #007ACC;
+  --warningColor: #007ACC;
+  --dangerColor: #D32F2F;
+
+  --btnPrimaryPlainBackgroundColor: var(--pink-color-600);
+  --btnPrimaryPlainColor: #ECEFF1;
+  --btnPrimaryBackgroundColor: var(--backgroundColor);
+  --btnPrimaryHoverBackgroundColor: var(--pink-color-500);
+
+  --btnSuccessPlainBackgroundColor: #2AA19899;
+  --btnSuccessPlainColor: #FAFAFA;
+  --btnSuccessBackgroundColor: #579dea;
+  --btnSuccessHoverBackgroundColor: #579dea;
+
+  --btnInfoPlainBackgroundColor: #2AA19899;
+  --btnInfoPlainColor: #FAFAFA;
+  --btnInfoBackgroundColor: #579dea;
+  --btnInfoHoverBackgroundColor: #579dea;
+
+  --btnWarningPlainBackgroundColor: #2AA19899;
+  --btnWarningPlainColor: #FAFAFA;
+  --btnWarningBackgroundColor: #579dea;
+  --btnWarningHoverBackgroundColor: #579dea;
+
+  --btnDangerPlainBackgroundColor: #2AA19899;
+  --btnDangerPlainColor: #FAFAFA;
+  --btnDangerBackgroundColor: #579dea;
+  --btnDangerHoverBackgroundColor: #579dea;
+
+  --treeNodeInsertCurrentColor: #579dea;
+
+  --gridviewSelectedBorderColor: #ccc3;
+  --gridviewSelectedBackgroundColor: #00445488;
+  --gridviewHoverBorderColor: #004454AA;
+  --gridviewHoverBackgroundColor: #004454AA;
+
+  --fileViewAddressHostBorderColor: #004454AA;
+  --fileViewAddressHostBackgroundColor: #004454AA;
+  --processBarColor: #047aa6;
+
+}

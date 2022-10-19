@@ -1,4 +1,11 @@
 [nx-theme="dark"]:root {
+  $primary-i: 6;
+  @while $primary-i > 0 {
+    --primary-color-#{$primary-i} : #007ACC;
+    $primary-i: $primary-i - 1
+  }
+
+
   --primaryColor: #1E1E1E;
   --primaryTextColor: #D4D4D4;
   --secondaryTextColor: #D4D4D4;
@@ -29,7 +36,7 @@
 
   --btnPrimaryPlainBackgroundColor: #579dea;
   --btnPrimaryPlainColor: #D4D4D4;
-  --btnPrimaryBackgroundColor: #579dea;
+  --btnPrimaryBackgroundColor: #007ACC;
   --btnPrimaryHoverBackgroundColor: #579dea;
 
   --btnSuccessPlainBackgroundColor: #2AA19899;
@@ -56,8 +63,8 @@
 
   --gridviewSelectedBorderColor: #ccc3;
   --gridviewSelectedBackgroundColor: #00445488;
-  --gridviewHoverBorderColor:  #004454AA;
-  --gridviewHoverBackgroundColor:  #004454AA;
+  --gridviewHoverBorderColor: #004454AA;
+  --gridviewHoverBackgroundColor: #004454AA;
 
   --fileViewAddressHostBorderColor: #004454AA;
   --fileViewAddressHostBackgroundColor: #004454AA;

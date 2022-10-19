@@ -113,12 +113,14 @@ const components = [
 ];
 
 export default {
+    components,
     install(Vue) {
         Vue.use(PtElementResizeDetector);
         Vue.use(PtMenuManager);
         Vue.use(PtContextMenu);
         Vue.use(PtConfirm);
         Vue.use(MouseDrag);
+        Vue.use(Space);
 
         Vue.mixin(Pti18n);
         components.forEach((component) => {

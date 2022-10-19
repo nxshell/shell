@@ -28,7 +28,7 @@ export default {
         /** 初始化Session数据 */
         await globalSetting.loadGlobalProfile();
         let configs = globalSetting.getProfile("xterm");
-        if (configs && (configs.nxconfig != "")) {
+        if (configs && (configs.nxconfig !== "")) {
             await sessionManager.setConfigPath(configs.nxconfig);
             // load again
             await globalSetting.loadGlobalProfile();

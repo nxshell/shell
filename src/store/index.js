@@ -25,8 +25,8 @@ function userInfoPlugin() {
 export default new Vuex.Store({
     state: {
         userInfo: null,
-        configPannel: true,
-        keyboradToAll: false,
+        configPanel: true,
+        keyboardToAll: false,
         userLock: false,
         theme: "light",
     },
@@ -34,31 +34,30 @@ export default new Vuex.Store({
         setUserInfo(state, newUserInfo) {
             state.userInfo = newUserInfo;
         },
-        setConfigPannel(state, status) {
-            state.configPannel = !!status;
+        setConfigPanel(state, status) {
+            state.configPanel = !!status;
         },
-        setKeyboradToAll(state, status) {
-            state.keyboradToAll = !!status;
+        setKeyboardToAll(state, status) {
+            state.keyboardToAll = !!status;
         },
         setUserLock(state, status) {
             state.userLock = !!status;
         },
         setTheme(state, theme) {
             state.theme = theme;
-            globalSetting.setProfile("xterm", {theme: theme})
+            globalSetting.setProfile("xterm", {theme: theme}).then(() => {})
         }
     },
-    actions: {
-    },
+    actions: {},
     getters: {
         userInfo(state) {
             return state.userInfo;
         },
-        configPannel(state) {
-            return state.configPannel;
+        configPanel(state) {
+            return state.configPanel;
         },
-        keyboradToAll(state) {
-            return state.keyboradToAll;
+        keyboardToAll(state) {
+            return state.keyboardToAll;
         },
         userLock(state) {
             return state.userLock;

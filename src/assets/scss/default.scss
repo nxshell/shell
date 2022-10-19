@@ -2,3 +2,34 @@
 @import "icon";
 @import url(./theme/dark/dark.scss);
 @import url(./theme/default/light.scss);
+@import url(./theme/pink.scss);
+
+/* element-ui reset */
+.el-input__inner {
+  border: 0 !important;
+  background-color: var(--lightBackgroundColor) !important;
+}
+
+.el-dialog {
+  background-color: var(--lightBackgroundColor) !important;
+}
+
+@keyframes breathe {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes breathe {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

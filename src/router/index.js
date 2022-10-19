@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home1 from '../views/Home-1.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -24,7 +24,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home,
+        component: Home1,
         children: [
             {
                 path: "welcome/:id",
