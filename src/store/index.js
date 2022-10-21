@@ -29,6 +29,7 @@ export default new Vuex.Store({
         keyboardToAll: false,
         userLock: false,
         theme: "light",
+        showTabs: true,
     },
     mutations: {
         setUserInfo(state, newUserInfo) {
@@ -45,7 +46,10 @@ export default new Vuex.Store({
         },
         setTheme(state, theme) {
             state.theme = theme;
-            globalSetting.setProfile("xterm", {theme: theme}).then(() => {})
+            globalSetting.setProfile("xterm", { theme: theme })
+        },
+        setShowTabs(state, status) {
+            state.showTabs = !!status
         }
     },
     actions: {},
@@ -65,6 +69,9 @@ export default new Vuex.Store({
         theme(state) {
             return state.theme;
         },
+        showTabs(state) {
+            return state.showTabs
+        }
     },
     plugins: [userInfoPlugin()]
 })

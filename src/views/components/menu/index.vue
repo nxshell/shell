@@ -2,10 +2,11 @@
 	<div class="nx-menu-wrapper">
 		<!-- 提示创建会话配置 -->
 		<pt-tree
-			:treeData="data"
+			v-if="true"
+			:treeData="sessionConfigsTree"
 			:iconFilter="treeIconFilter"
-			:draggable="false"
-			:autoExpanded="true"
+			:draggable="true"
+			:nodeStates.sync="sessionConfigsTreeStates"
 			v-context-menu="getSessionConfigTreeContextMenu"
 			ref="sessionTree"
 			@tree-node-select="handleHostSelected"
@@ -13,61 +14,16 @@
 			@move-node="handleTreeNodeMove"
 			@contextmenu="handleSessionTreeContextMenu">
 			<template v-slot:additional="scope">
-				<span class="session-extend">
-					<!-- 配置类型为node的时候才显示sftp选项 -->
-					<pt-icon
-						v-if="scope.data.type === 'node' && scope.data.config.protocal === 'ssh'"
-						size="small"
-						iconName="ftp"
-						title="SFTP"
-						@click.stop="handleOpenSFTP(scope)"></pt-icon>
-				</span>
+				<el-tooltip class="item" effect="dark" content="点击打开SFTP" placement="top-start">
+					<span class="session-extend" @click.stop="handleOpenSFTP(scope)">
+						<i class="el-icon-position" />
+					</span>
+				</el-tooltip>
 			</template>
 		</pt-tree>
-		<!--						<div-->
-		<!--							class="host-tree-view"-->
-		<!--							tabindex="0"-->
-		<!--							@click="handleSessionTreeContainerClick"-->
-		<!--							v-context-menu="sessionConfigsTreeContextMenu.empty">-->
-		<!--							<pt-scroll-container :size="5">-->
-		<!--								<pt-tree-->
-		<!--									v-if="!searchSessionKeyword"-->
-		<!--									:treeData="sessionConfigsTree"-->
-		<!--									:iconFilter="treeIconFilter"-->
-		<!--									:draggable="true"-->
-		<!--									:nodeStates.sync="sessionConfigsTreeStates"-->
-		<!--									dataKey="data.uuid"-->
-		<!--									v-context-menu="getSessionConfigTreeContextMenu"-->
-		<!--									ref="sessionTree"-->
-		<!--									@tree-node-select="handleHostSelected"-->
-		<!--									@tree-node-open="handleHostOpen"-->
-		<!--									@move-node="handleTreeNodeMove"-->
-		<!--									@contextmenu="handleSessionTreeContextMenu">-->
-		<!--									<template v-slot:additional="scope">-->
-		<!--										<span class="session-extend">-->
-		<!--											&lt;!&ndash; 配置类型为node的时候才显示sftp选项 &ndash;&gt;-->
-		<!--											<pt-icon-->
-		<!--												v-if="scope.data.type == 'node' && scope.data.config.protocal == 'ssh'"-->
-		<!--												size="small"-->
-		<!--												iconName="ftp"-->
-		<!--												title="SFTP"-->
-		<!--												@click.stop="handleOpenSFTP(scope)"></pt-icon>-->
-		<!--										</span>-->
-		<!--									</template>-->
-		<!--								</pt-tree>-->
-		<!--								-->
-		<!-- 提示无数据 -->
-		<!--		<div v-if="!searchSessionKeyword && sessionConfigsTree.length === 0" class="no-session-data">-->
-		<!--			{{ T('home.host-manager.session-tree.no-session-data') }}-->
-		<!--		</div>-->
-		<!--		&lt;!&ndash; 提示无搜索结果 &ndash;&gt;-->
-		<!--		<div-->
-		<!--			v-if="searchSessionKeyword && sessionConfigsSearchTree.nodes.length === 0"-->
-		<!--			class="no-session-data">-->
-		<!--			{{ T('home.host-manager.session-tree.no-search-result') }}-->
-		<!--		</div>-->
-		<!--		</pt-scroll-container>-->
-		<!--	</div>-->
+		<el-empty v-else-if="sessionConfigsTree.length===0"
+		          :description="T('home.host-manager.session-tree.no-session-data') " />
+		<el-empty v-else :description="T('home.host-manager.session-tree.no-search-result')" />
 	</div>
 </template>
 
@@ -75,19 +31,17 @@
 
 import { treeIconFilter } from '@/views/sysicons'
 import { SESSION_CONFIG_TYPE } from "@/services/sessionMgr";
+import { processSessionConfigTree } from '@/views/components/menu/tools'
+import Storage from '@/services/storage'
+import * as EventBus from '@/services/eventbus'
 
 export default {
 	name: 'NxMenus',
 	components: {},
-	props: {
-		data: {
-			type: Array,
-			required: true,
-			default: () => []
-		}
-	},
 	data() {
 		return {
+			sessionConfigsTree: [],
+			sessionConfigsTreeStates: {},
 			sessionConfigsTreeContextMenu: {
 				folder: [
 					{
@@ -225,12 +179,24 @@ export default {
 			},
 		}
 	},
+	watch: {
+		sessionConfigsTreeStates() {
+			Storage.save('HOME-SESSIONTREE-STATE', this.sessionConfigsTreeStates)
+		}
+	},
 	computed: {
 		treeIconFilter() {
 			return treeIconFilter
 		}
 	},
+	created() {
+		EventBus.subscript('nx-menu-search', (keywords) => {
+			console.log(keywords)
+		})
+		this.updateSessionTree()
+	},
 	methods: {
+		processSessionConfigTree,
 		getSessionConfigTreeContextMenu() {
 			if (this.currentSelectSessionNodeConfigType === SESSION_CONFIG_TYPE.FOLDER) {
 				return this.sessionConfigsTreeContextMenu.folder
@@ -240,6 +206,20 @@ export default {
 				// TODO: 获取SessionConfig的状态，过滤掉一些无用状态
 				return this.sessionConfigsTreeContextMenu.node
 			}
+		},
+		/**
+		 * 匹配会话Tab页
+		 * 实际上一个会话配置可能会创建多个会话实例出来
+		 * 但是我们在界面上只能选择其中一个
+		 *
+		 * @param {SessionConfig} sessCfg 会话的配置
+		 */
+		matchSessionTab(sessCfg) {
+			let matchedSession = this.$sessionManager.matchSessionInstanceByConfig(sessCfg)
+			if (!matchedSession) {
+				return null
+			}
+			return matchedSession[0]
 		},
 		/**
 		 * 处理主机被选中
@@ -269,10 +249,6 @@ export default {
 				// sessInst = await this.$sessionManager.createSessionInstance(sessCfg);
 				return
 			}
-
-			this.$nextTick(() => {
-				this.activeSession(sessInst)
-			})
 		},
 		async handleHostOpen(data) {
 			const sessCfg = data.data.data
@@ -280,11 +256,7 @@ export default {
 				// 目录节点不启动会话实例
 				return
 			}
-
-			const sessInst = await this.$sessionManager.createSessionInstance(sessCfg)
-			this.$nextTick(() => {
-				this.activeSession(sessInst)
-			})
+			await this.$sessionManager.createSessionInstance(sessCfg)
 		},
 		/**
 		 * 处理会话树节点的移动（拖动）
@@ -305,7 +277,7 @@ export default {
 			if (destPosition === 'parent') {
 				destNode.addSessionConfig(sourceNode)
 			} else {
-				const { sessionConfig, index } = destNode._parent.findSubSessionConfig(dest._id)
+				const { index } = destNode._parent.findSubSessionConfig(dest._id)
 				const destIndex = index + (destPosition === 'before' ? 0 : 1)
 				destNode._parent.addSessionConfig(sourceNode, destIndex)
 			}
@@ -322,8 +294,86 @@ export default {
 
 			this.currentSelectSessionNodeConfigType = sessCfg.type
 		},
+		async handleOpenSFTP(sessCfg) {
+			await this.$sessionManager.createSFTPSessionInstance(sessCfg.data)
+		},
+		// 删除会话或者会话目录
+		handleSessionTreeContextMenu_Delete() {
+			const { data, node } = this.currentSelectSessionNode
+			const sessCfgData = data.data
+			const sessCfg = this.$sessionManager.getSessionConfigById(sessCfgData._id)
+
+			const message =
+				sessCfg.type === SESSION_CONFIG_TYPE.NODE
+					? this.T('home.host-manager.dialog-delete-confirm.delete-node', sessCfg.name)
+					: this.T('home.host-manager.dialog-delete-confirm.delete-folder', sessCfg.name)
+			this.$confirm(message, this.T('home.host-manager.dialog-delete-confirm.title'), {
+				type: 'warning'
+			}).then(() => {
+				this.$sessionManager.removeSessionConfig(sessCfg)
+				node.remove()
+				this.updateSessionTree()
+			}).catch((err) => {
+				// console.error(err)
+			})
+		},
+		updateSessionTree() {
+			const sessionConfigs = this.$sessionManager.getSessionConfigs()
+			this.sessionConfigsTree = this.processSessionConfigTree(sessionConfigs)
+		},
+
 	}
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.nx-menu-wrapper {
+	position: relative;
+	height: 100%;
+	background-color: var(--backgroundColor);
+
+	.el-empty {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		.el-empty__description {
+			p {
+				color: var(--primaryTextColor);
+			}
+		}
+	}
+
+	.pt-tree {
+		.nx-menu-item {
+			padding-top: 5px;
+			padding-right: 3px;
+			padding-left: 4px;
+
+			.pt-tree-item {
+				border-radius: 4px;
+				color: var(--primaryTextColor);
+
+				&:hover {
+					color: #fff;
+				}
+
+				.session-extend {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 24px;
+					height: 24px;
+					box-sizing: border-box;
+					border-radius: 4px;
+
+					&:hover {
+						background-color: var(--highlightItemColor);
+					}
+				}
+			}
+		}
+	}
+}
+</style>

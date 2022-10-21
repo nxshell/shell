@@ -1,22 +1,18 @@
 <template>
 	<div class="pt-shell-app-nav-bar">
+		<!-- Logo -->
 		<div class="pt-logo">
-			<el-avatar
-				shape="square"
-				fit="fill"
-				size="small"
-				:src="require('@/assets/logo.png')"
-				@click.native="doConfig"/>
+			<el-avatar shape="square" fit="fill" size="small" :src="require('@/assets/logo.png')" />
 		</div>
-
+		<!-- 用户头像 -->
 		<div class="capture" @click.prevent="doCapture" v-show="false">
-			<pt-icon type="img" :iconName="captureIcon" size="medium" className="icon-setting"/>
+			<pt-icon type="img" :iconName="captureIcon" size="medium" className="icon-setting" />
 		</div>
 		<!-- 设置相关 -->
 		<div class="icon-setting-container">
 			<Space vertical align="center">
 				<!-- 头像 -->
-				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login"/>
+				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />
 				<!-- 主题切换按钮 -->
 				<el-dropdown trigger="click" @command="toggleTheme">
 					<el-button type="text" :icon="themeIcon"></el-button>
@@ -36,7 +32,8 @@
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting"></el-button>
 				<!-- 版本信息 -->
 				<el-tooltip v-if="needUpdate" effect="dark" content="有新版本，点击进行升级" placement="bottom">
-					<el-button type="text" :class="{ 'version-btn': needUpdate }" icon="el-icon-sugar"></el-button>
+					<el-button type="text" :class="{ 'version-btn': needUpdate }" icon="el-icon-sugar"
+					           @click="handlerVersionUpdate"></el-button>
 				</el-tooltip>
 				<el-tooltip v-else effect="dark" :content="`当前版本 ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
@@ -47,16 +44,13 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
-
-import {SESSION_TYPES} from '@/services/session'
-import {createLocalFs} from '@/services/nxsys/localfs'
-import * as EventBus from '../services/eventbus'
-
+import { mapState, mapMutations } from 'vuex'
+import { SESSION_TYPES } from '@/services/session'
+import { createLocalFs } from '@/services/nxsys/localfs'
 import NxShellIcon from '@/assets/logo.png'
 import VideoPlay from '@/assets/images/video.png'
 import VideoPause from '@/assets/images/pause.png'
-import {sessionMixin} from '@/mixin/session-mixin'
+import { sessionMixin } from '@/mixin/session-mixin'
 
 export default {
 	name: 'PtShellAppNavBar',
@@ -78,7 +72,7 @@ export default {
 	},
 	mixins: [sessionMixin],
 	computed: {
-		...mapState(['userInfo', 'configPanel', 'userLock']),
+		...mapState(['userInfo', 'userLock']),
 		avatarUrl() {
 			return this.userInfo ? this.userInfo.user_avatar : ''
 		},
@@ -108,7 +102,7 @@ export default {
 	},
 
 	methods: {
-		...mapMutations(['setConfigPanel', 'setTheme']),
+		...mapMutations(['setTheme']),
 		goto_login() {
 			const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
 			if (loginInstances.length) {
@@ -144,17 +138,11 @@ export default {
 			}
 		},
 
-		doConfig(e) {
-			let action = !this.configPanel ? 'open' : 'close'
-			EventBus.publish('session-config-pannel', action)
-			this.setConfigPanel(!this.configPanel)
-		},
-
 		async saveCaptureFile() {
 			const save_buffer = await powertools.captureStop()
 			const coreService = powertools.getService('powertools-core')
-			const {canceled, filePath} = await coreService.showSaveDialog({
-				defaultPath: `nxshell-capture-${Date.now()}.webm`
+			const { canceled, filePath } = await coreService.showSaveDialog({
+				defaultPath: `nxshell-capture-${ Date.now() }.webm`
 			})
 			if (canceled) {
 				return
@@ -169,6 +157,9 @@ export default {
 		toggleTheme(theme) {
 			window.document.documentElement.setAttribute('nx-theme', theme)
 			this.setTheme(theme)
+		},
+		async handlerVersionUpdate() {
+			// TODO 外链打开github地址
 		}
 	}
 }
@@ -176,17 +167,27 @@ export default {
 
 <style lang="scss" scoped>
 .theme-btn {
+	padding: 5px;
 	border-color: var(--lightBackgroundColor);
 	background-color: var(--lightBackgroundColor);
 
 	::v-deep .el-dropdown-menu__item:not(.is-disabled) {
 		color: var(--primaryTextColor);
+		border-radius: 4px;
 
 		&:focus,
 		&:not(.is-disabled):hover {
-			color: #fff;
 			background-color: var(--backgroundColor);
 		}
+	}
+
+	.el-dropdown-menu__item {
+		margin-bottom: 5px;
+	}
+
+	.is-disabled {
+		border-radius: 4px;
+		background-color: var(--backgroundColor);
 	}
 
 	::v-deep .popper__arrow {
@@ -200,12 +201,13 @@ export default {
 
 .pt-shell-app-nav-bar {
 	display: flex;
-	padding: 10px;
-	height: calc(100vh - 20px);
 	flex-direction: column;
 	align-content: center;
 	align-items: center;
 	justify-content: space-between;
+	box-sizing: border-box;
+	padding: 10px;
+	height: 100vh;
 
 	.pt-logo {
 		display: flex;
@@ -243,23 +245,9 @@ export default {
 
 		.version-btn {
 			color: #f2d2b5;
-			text-shadow: 0px 0px 7px #ffd800;
+			text-shadow: 0 0 7px #ffd800;
 			animation: breathe 2.7s ease-in-out 0s infinite alternate;
 			-webkit-animation: breathe 2.7s ease-in-out 0s infinite alternate;
-		}
-	}
-
-	.capture {
-		margin-top: 10px;
-		text-align: center;
-
-		.icon-setting {
-			color: lightgray;
-			cursor: pointer;
-
-			&:hover {
-				color: white;
-			}
 		}
 	}
 }

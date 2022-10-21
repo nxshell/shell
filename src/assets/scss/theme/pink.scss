@@ -13,6 +13,10 @@
   --pink-color-A400: #F50057;
   --pink-color-A700: #C51162;
 
+  --n-color: rgb(16, 16, 20);
+  --n-text-color: rgba(255, 255, 255, 0.82);
+  --n-color-bg-dialog: var(--pink-color-700);
+
   --primaryColor: var(--pink-color-600);
   --primaryTextColor: #ECEFF1;
   --secondaryTextColor: #FAFAFA;
@@ -23,7 +27,7 @@
 
   /* Tabs */
   --tabs-bg-color: var(--pink-color-800);
-  --tabs-item-bg-color: var();
+  --tabs-item-bg-color: var(--pink-color-700);
 
   --windowBorderColor: var(--pink-color-600);
   --windowTitleBarColor: var(--pink-color-600);
@@ -71,12 +75,12 @@
   --treeNodeInsertCurrentColor: #579dea;
 
   --gridviewSelectedBorderColor: #ccc3;
-  --gridviewSelectedBackgroundColor: #00445488;
-  --gridviewHoverBorderColor: #004454AA;
-  --gridviewHoverBackgroundColor: #004454AA;
+  --gridviewSelectedBackgroundColor: var(--pink-color-300);
+  --gridviewHoverBorderColor: var(--pink-color-300);
+  --gridviewHoverBackgroundColor: var(--pink-color-300);
 
-  --fileViewAddressHostBorderColor: #004454AA;
-  --fileViewAddressHostBackgroundColor: #004454AA;
+  --fileViewAddressHostBorderColor: var(--pink-color-300);
+  --fileViewAddressHostBackgroundColor: var(--pink-color-300);
   --processBarColor: #047aa6;
 
 }

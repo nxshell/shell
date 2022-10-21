@@ -29,6 +29,7 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	Scrollbar,
+	Empty,
 	Tree,
 	DescriptionsItem
 } from 'element-ui'
@@ -48,6 +49,7 @@ const element = {
 		Vue.use(Tag)
 		Vue.use(Popover)
 		Vue.use(Tree)
+		Vue.use(Empty)
 		Vue.use(Dropdown).use(DropdownItem).use(DropdownMenu)
 		Vue.use(Radio).use(RadioButton).use(RadioGroup)
 		Vue.use(Checkbox).use(CheckboxGroup).use(CheckboxButton)

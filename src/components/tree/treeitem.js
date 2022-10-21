@@ -2,61 +2,37 @@ import { insert } from "../../../common/utils";
 import { processTreeNodes } from "./treeNode";
 
 const treeNodeTransfer = {
-    data: {},
-    setData(key, data) {
+    data: {}, setData(key, data) {
         this.data[key] = data;
-    },
-    getData(key) {
-        const data = this.data[key];
-
-        return data;
-    },
-    clear() {
+    }, getData(key) {
+        return this.data[key];
+    }, clear() {
         this.data = {};
     }
 };
 
 export default {
-    name: "PtTreeItem",
-    props: {
+    name: "PtTreeItem", props: {
         level: {
-            type: Number,
-            default: 0
-        },
-        nodeData: {
-            type: Object,
-            required: true
-        },
-        isFolder: {
-            type: Boolean,
-            default: false
-        },
-        draggable: {
-            type: Boolean,
-            default: false
-        },
-        additionalRender: {
+            type: Number, default: 0
+        }, nodeData: {
+            type: Object, required: true
+        }, isFolder: {
+            type: Boolean, default: false
+        }, draggable: {
+            type: Boolean, default: false
+        }, additionalRender: {
             type: Function
-        },
-        autoExpanded: {
-            type: Boolean,
-            default: false
-        },
-        treeRoot: {
+        }, autoExpanded: {
+            type: Boolean, default: false
+        }, treeRoot: {
             type: Object
-        },
-        innerPath: {
+        }, innerPath: {
             type: String,
-        },
-        iconFilter: Function,
-        nodeStates: Object,
-        dataKey: String
-    },
-    data() {
+        }, iconFilter: Function, nodeStates: Object, dataKey: String
+    }, data() {
         return {
-            insert: false,
-            insertType: "",
-            hover: false
+            insert: false, insertType: "", hover: false
         };
     },
 
@@ -64,20 +40,16 @@ export default {
         selected: {
             get() {
                 return this.nodeData.selected;
-            },
-            set(newValue) {
+            }, set(newValue) {
                 return this.nodeData.selected = newValue;
             }
-        },
-        expanded: {
+        }, expanded: {
             get() {
                 return this.nodeData.expanded;
-            },
-            set(newValue) {
+            }, set(newValue) {
                 return this.nodeData.expanded = newValue;
             }
-        },
-        _nodeData() {
+        }, _nodeData() {
             return this.nodeData.data;
         },
 
@@ -102,12 +74,11 @@ export default {
             }
 
             return prop;
-        },
-        height() {
+        }, height() {
             return parseInt(window.getComputedStyle(this.$el).height) || 0;
         }
     },
-    
+
     created() {
     },
 
@@ -115,14 +86,13 @@ export default {
     },
 
     methods: {
-        emit({data, node, multi, contextmenu}) {
-            this.$emit("tree-node-select", {data, node, multi, contextmenu});
+        emit({ data, node, multi, contextmenu }) {
+            this.$emit("tree-node-select", { data, node, multi, contextmenu });
             this.$emit("state-change");
-        },
-        selectItem(evt, contextmenu = false) {
+        }, selectItem(evt, contextmenu = false) {
             if (contextmenu) {
                 this.selected = true;
-                this.emit({data: this._nodeData, node: this, multi: false, contextmenu})
+                this.emit({ data: this._nodeData, node: this, multi: false, contextmenu })
                 return;
             }
             if (evt.ctrlKey) {
@@ -130,24 +100,23 @@ export default {
             } else {
                 this.selected = true;
             }
-            
+
             if (!evt.ctrlKey) {
                 this.expanded = !this.expanded;
             }
-            
-            this.emit({data: this._nodeData, node: this, multi: evt.ctrlKey});
+
+            this.emit({ data: this._nodeData, node: this, multi: evt.ctrlKey });
             evt.stopPropagation();
-        },
-        handleDblClick() {
-            this.$emit("tree-node-open", {data: this._nodeData})
+        }, handleDblClick() {
+            this.$emit("tree-node-open", { data: this._nodeData })
         },
 
         handleTreeNodeOpen(data) {
             this.$emit("tree-node-open", data);
         },
 
-        onSubTreeItemSelected({data, node, multi, contextmenu}) {
-            this.emit({data, node, multi, contextmenu});
+        onSubTreeItemSelected({ data, node, multi, contextmenu }) {
+            this.emit({ data, node, multi, contextmenu });
         },
 
         onTreeNodeDataChange(subTreeList) {
@@ -177,8 +146,7 @@ export default {
             if (this.isFolder && this.expanded === false && (dragPath !== this.innerPath)) {
                 this.expanded = true;
             }
-        },
-        onDragleave(evt) {
+        }, onDragleave(evt) {
             this.resetInsert();
         },
 
@@ -206,22 +174,22 @@ export default {
 
             const putNode = treeNodeTransfer.getData(putNodePath);
             treeNodeTransfer.clear();
-            if (putNodePath == this.innerPath) {
+            if (putNodePath === this.innerPath) {
                 this.resetInsert();
                 return;
             }
             putNode.remove()
-            
+
             const { nodeData } = putNode
             if (this.isFolder) {
                 this.appendChild(nodeData.data)
             } else {
                 this.appendSibling(nodeData.data, this.insertType)
             }
-        
+
             this.$emit("move-node", {
                 dest: this.nodeData.data.data,
-                destPosition: this.isFolder ? "parent": this.insertType,
+                destPosition: this.isFolder ? "parent" : this.insertType,
                 source: nodeData.data.data
             });
 
@@ -236,7 +204,7 @@ export default {
             if (evt instanceof Event) {
                 evt.preventDefault();
                 this.selectItem(null, true);
-                this.$emit("contextmenu", {data: this._nodeData, node: this});
+                this.$emit("contextmenu", { data: this._nodeData, node: this });
             } else {
                 this.$emit("contextmenu", evt);
             }
@@ -274,7 +242,7 @@ export default {
 
         /**
          * 添加兄弟节点
-         * 
+         *
          * @param {Object} nodeData 节点数据
          * @param {String} [pos] 位置：before | after， 不设置追加到最后
          */
@@ -283,8 +251,7 @@ export default {
             this.$emit("append", {
                 treeData, pos
             });
-        },
-        /**
+        }, /**
          * 删除自己
          */
         remove() {
@@ -293,28 +260,26 @@ export default {
     },
 
     render(createElement) {
-        let renderItem = [
-            createElement("pt-icon", {
-                // "class": {
-                //     "pt-icon": true,
-                //     "pt-icon-small": true
-                // }
-                props: {
-                    iconName: this.iconProp.iconName,
-                    type: this.iconProp.type
-                }
-            }),
-            createElement("span", {
-                "class": {
-                    text: true
-                }
-            }, this.T(this._nodeData.text))
-        ];
+        // 图标和标题
+        const renderItem = [createElement("pt-icon", {
+            props: {
+                iconName: this.iconProp.iconName, type: this.iconProp.type
+            }
+        }), createElement("span", {
+            "class": {
+                text: true
+            }
+        }, this.T(this._nodeData.text))];
 
-        if (this.additionalRender && this.hover) {
-            renderItem.push(this.additionalRender(this._nodeData));
+        // 包裹图标和标题 为后面flex布局做准备
+        const nxMenuItemWrapper = [createElement('span', {
+            style: {
+                display: 'flex', 'justify-content': 'flex-start', 'align-items': 'center'
+            }
+        }, renderItem)]
+        if (!this.isFolder && this.additionalRender && this.hover) {
+            nxMenuItemWrapper.push(this.additionalRender(this._nodeData));
         }
-
         let dragHandlers = {};
         if (this.draggable) {
             dragHandlers.dragstart = this.onDragstart;
@@ -324,34 +289,27 @@ export default {
             dragHandlers.drop = this.onDragdrop;
         }
 
-        let renderList = [
-            createElement("div", {
-                class: {
-                    "pt-tree-item": true,
-                    "selected": this.selected,
-                    "insert": this.insert,
-                    "this-node": this.insertType == "thisNode",
-                    "before": this.insertType == "before",
-                    "after": this.insertType == "after"
-                },
-                style: {
-                    paddingLeft: (5 + 15 * this.level) + "px"
-                },
-                attrs: {
-                    draggable: true,
-                    title: this.T(this._nodeData.text)
-                },
-                on: {
-                    click: this.selectItem,
-                    dblclick: this.handleDblClick,
-                    contextmenu: this.onContextMenu,
-                    // 'move-node': this.onMoveNode,
-                    ...dragHandlers,
-                    "mouseenter": this.handleMouseEnter,
-                    "mouseleave": this.handleMouseLeave
-                }
-            }, renderItem)
-        ];
+        const renderList = [createElement("div", {
+            class: {
+                "pt-tree-item": true,
+                "selected": this.selected,
+                "insert": this.insert,
+                "this-node": this.insertType === "thisNode",
+                "before": this.insertType === "before",
+                "after": this.insertType === "after"
+            }, style: {
+                // paddingLeft: (10 + 15 * this.level) + "px"
+            }, attrs: {
+                draggable: true, // title: this.T(this._nodeData.text)
+            }, on: {
+                click: this.selectItem,
+                dblclick: this.handleDblClick,
+                contextmenu: this.onContextMenu, // 'move-node': this.onMoveNode,
+                ...dragHandlers,
+                "mouseenter": this.handleMouseEnter,
+                "mouseleave": this.handleMouseLeave
+            }
+        }, nxMenuItemWrapper)];
 
         if (this.nodeData.children && this.nodeData.children.length && this.expanded) {
             renderList.push(createElement("pt-tree", {
@@ -366,8 +324,7 @@ export default {
                     iconFilter: this.iconFilter,
                     nodeStates: this.nodeStates,
                     dataKey: this.dataKey
-                },
-                on: {
+                }, on: {
                     "tree-node-select": this.onSubTreeItemSelected,
                     "tree-node-open": this.handleTreeNodeOpen,
                     "tree-node-data-change": this.onTreeNodeDataChange,
@@ -378,6 +335,6 @@ export default {
             }));
         }
 
-        return createElement("div", renderList);
+        return createElement("div", { class: { 'nx-menu-item': true, "nx-menu-folder": this.isFolder } }, renderList);
     }
 };

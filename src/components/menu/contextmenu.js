@@ -5,7 +5,7 @@ import "./contextmenu.scss";
 let mountPoint;
 
 const PtContextMenu = Vue.extend({
-    data () {
+    data() {
         return {
             menuData: [],
             sourceEvent: null,
@@ -51,7 +51,7 @@ const PtContextMenu = Vue.extend({
     methods: {
         getRect() {
             if (!this.$el) {
-                return {left: 0, top: 0, right: 0, height: 0};
+                return { left: 0, top: 0, right: 0, height: 0 };
             }
             const rect = this.$el.getBoundingClientRect();
             this.selfRect = {
@@ -61,7 +61,7 @@ const PtContextMenu = Vue.extend({
                 height: rect.height
             };
         },
-        handlePopStack () {
+        handlePopStack() {
             this.$destroy();
         }
     },
@@ -75,7 +75,6 @@ const PtContextMenu = Vue.extend({
                 "pop-stack": this.handlePopStack
             }
         });
-
         return h("div", {
             'class': {
                 'context-menu': true

@@ -81,7 +81,6 @@ export default {
 
             CloudService.oauth.getContributers().then((res) => {
                 this.contributers = res.data.contributers;
-                console.log('res----anzh',res)
             });
         },
 

@@ -1,19 +1,19 @@
 <template>
 	<div v-if="visible" v-bind="$attrs" class="nx-toolbar">
 		<el-input
-			v-model="searchKeyWords"
+			v-model="searchKeywords"
 			:placeholder="T('home.host-manager.search.placeholder')"
 			class="nx-search-input"
-			suffix-icon="el-icon-search"/>
+			suffix-icon="el-icon-search" />
 		<Space :size="5">
 			<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
 				<span class="host-tree-btn" @click="createFolder">
-					<i class="el-icon-folder-add"/>
+					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
 			<el-tooltip class="item" effect="dark" content="新建会话" placement="top-start">
-				<span class="host-tree-btn" @click="createSession">
-					<i class="el-icon-circle-plus-outline"/>
+				<span class="host-tree-btn" @click="gotoCreateShellSession">
+					<i class="el-icon-circle-plus-outline" />
 				</span>
 			</el-tooltip>
 		</Space>
@@ -21,28 +21,74 @@
 </template>
 
 <script>
-import Space from '@/components/space'
+import Space from '@/components/space/index.vue'
+import * as EventBus from '@/services/eventbus'
 
 export default {
 	name: 'NxToolbar',
-	components: {Space},
+	components: { Space },
 	props: {
 		visible: false
 	},
 	data() {
 		return {
-			searchKeyWords: ''
+			searchKeywords: ''
 		}
+	},
+	watch: {
+		searchKeywords() {
+			EventBus.publish('nx-menu-search', this.searchKeywords)
+		}
+	},
+	created() {
+		EventBus.subscript('create-session', () => {
+			this.gotoCreateShellSession()
+		})
 	},
 	methods: {
 		// 新建分组
 		createFolder() {
 
 		},
-		// 新建会话
-		createSession() {
+		/**
+		 * 添加配置
+		 * @param {SessionConfig} sessCfg 会话配置
+		 */
+		addSessionConfig(sessCfg) {
+			let treeData = this.processSessionConfigTree([sessCfg])[0]
+			const sessionTree = this.$refs.sessionTree
 
-		}
+			if (!this.currentSelectSessionNode) {
+				sessionTree.appendNode({ treeData })
+				this.$sessionManager.addSessionConfig(null, sessCfg)
+				this.updateSessionTree()
+				return
+			}
+			let { data, node } = this.currentSelectSessionNode
+			if (node.isFolder) {
+				node.appendChild(treeData)
+				this.$sessionManager.addSessionConfig(data.data, sessCfg)
+				this.updateSessionTree()
+				return
+			}
+			// 需要判断节点是不是根目录下的节点
+			node = node.getParentNode()
+			if (!node) {
+				sessionTree.appendNode({ treeData })
+				this.$sessionManager.addSessionConfig(null, sessCfg)
+			} else {
+				let { data } = node.nodeData
+				node.appendSibling(treeData)
+				this.$sessionManager.addSessionConfig(data.data, sessCfg)
+			}
+
+			this.updateSessionTree()
+		},
+		async gotoCreateShellSession() {
+			const sessCfg = this.$sessionManager.createShellSessionConfig(this.T('home.profile.default-session-name'))
+			this.addSessionConfig(sessCfg)
+			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
+		},
 	}
 }
 </script>
@@ -59,11 +105,11 @@ export default {
 	.nx-search-input {
 		width: 213px;
 		margin-right: 5px;
-
+		transition: background-color .3s var(--n-bezier);
 		::v-deep .el-input__inner {
 			background-color: var(--backgroundColor) !important;
-			transition: all 2s ease-in;
-			-webkit-transition: all 0.75s ease-in;
+			//transition: all 2s ease-in;
+			//-webkit-transition: all 0.75s ease-in;
 
 			&:focus {
 				color: #fff;

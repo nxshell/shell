@@ -1,26 +1,26 @@
 <template>
 	<div class="nx-tabs-wrapper">
 		<pt-tab
-			:tabs="data"
+			:tabs="sessionInstTabs"
 			:activeIndex="currentSessionTabIdx"
 			:translate="true"
 			@activate="handleSessionInstActive"
 			@remove="handleSessionInstRemove"
 			@contextmenu="handleSessionTabsContextMenu"
-			v-context-menu="getTabContextMenu"/>
+			v-context-menu="getTabContextMenu" />
 	</div>
 </template>
 
 <script>
+import {
+	handleSessionInstActive,
+	updateSessionInstTabs,
+	activeSession,
+} from '@/views/components/tabbar/tabs-utools'
+import * as EventBus from '@/services/eventbus'
+
 export default {
 	name: 'TitleBar',
-	props: {
-		data: {
-			type: Array,
-			require: true,
-			default: () => []
-		}
-	},
 	data() {
 		return {
 			sessionInstTabs: [],
@@ -113,11 +113,29 @@ export default {
 			},
 		}
 	},
+	mounted() {
+		EventBus.subscript('instance-created', (sessInst) => {
+			this.updateSessionInstTabs()
+			this.$nextTick(() => {
+				this.activeSession(sessInst)
+			})
+		})
+		EventBus.subscript('instance-destroyed', () => {
+			this.updateSessionInstTabs()
+		})
+		// 绑定快捷键
+		// this.setupBarShortCut()
+	},
 	methods: {
-		handleSessionInstActive() {
+		handleSessionInstActive,
+		updateSessionInstTabs,
+		activeSession,
+		// setupBarShortCut,
+		async handleClose() {
+			// await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},
 		handleSessionInstRemove(index) {
-			const {title, session} = this.sessionInstTabs[index]
+			const { title, data: session } = this.sessionInstTabs[index]
 			// 首页不需要确认
 			if (title === 'Welcome') {
 				this.sessionRemoveWithNoConfirm(index)
@@ -126,15 +144,16 @@ export default {
 
 			const isEditor = session && session.type === 'editor'
 			this.$confirm(
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.message' : 'delete-dialog.title'}`),
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.title' : 'delete-dialog.message'}`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.message' : 'delete-dialog.title' }`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
 				{
 					type: 'warning'
 				}
 			).then(() => {
 				session.beforeClose()
 				this.sessionRemoveWithNoConfirm(index)
-			}).catch(() => {
+			}).catch((error) => {
+				console.error(error)
 			})
 		},
 		async sessionRemoveWithNoConfirm(index) {
@@ -143,15 +162,16 @@ export default {
 				this.currentSessionTabIdx = this.currentSessionTabIdx > 0 ? this.currentSessionTabIdx : 0
 			}
 
-			const {data: session} = this.sessionInstTabs[index]
+			const { data: session } = this.sessionInstTabs[index]
 			session.close()
 		},
+
 		/**
 		 * 处理会话Tab的右键菜单
 		 */
 		handleSessionTabsContextMenu(tabItemIdx) {
 			this.sessionContextMenuTabIndex = tabItemIdx
-			const {data: {type}} = this.sessionInstTabs[tabItemIdx]
+			const { data: { type } } = this.sessionInstTabs[tabItemIdx]
 			this.sessionContextMenuTabType = type
 		},
 		getSessionTabContextMenu() {

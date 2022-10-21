@@ -495,7 +495,7 @@ export default {
 			}
 		},
 		onXtermResize(cols, rows) {
-			this.sessionInstance.emit('resize', cols, rows)
+			// this.sessionInstance.emit('resize', cols, rows)
 		},
 		onTitleChange(title) {
 			title = title.split(':')

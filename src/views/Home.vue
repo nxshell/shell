@@ -79,7 +79,8 @@
 								</template>
 							</pt-tree>
 							<!-- 提示无数据 -->
-							<div v-if="!searchSessionKeyword && sessionConfigsTree.length === 0" class="no-session-data">
+							<div v-if="!searchSessionKeyword && sessionConfigsTree.length === 0"
+							     class="no-session-data">
 								{{ T('home.host-manager.session-tree.no-session-data') }}
 							</div>
 							<!-- 提示无搜索结果 -->
@@ -156,7 +157,7 @@ export default {
 	},
 	data() {
 		return {
-			props:{
+			props: {
 				label: 'text',
 				children: 'children'
 			},
@@ -476,7 +477,8 @@ export default {
 		this.init()
 	},
 
-	mounted() {},
+	mounted() {
+	},
 
 	methods: {
 		setupBarShortCut() {
@@ -536,7 +538,8 @@ export default {
 				this.updateSessionInstTabs()
 			})
 
-			EventBus.subscript('instance-close', (inst) => {})
+			EventBus.subscript('instance-close', (inst) => {
+			})
 
 			EventBus.subscript('session-update', (sessCfg) => {
 				// TODO: 更新实例的名称
@@ -658,9 +661,9 @@ export default {
 			/** @type {import("../services/session").SessionInterface[]} */
 			let matchedSessionInstances = this.$sessionManager.matchSessionInstanceByConfig(sessionConfig)
 			matchedSessionInstances &&
-				matchedSessionInstances.forEach((inst) => {
-					inst.updateName(sessionConfig.name)
-				})
+			matchedSessionInstances.forEach((inst) => {
+				inst.updateName(sessionConfig.name)
+			})
 			if (matchedSessionInstances?.length) {
 				this.updateSessionInstTabs()
 			}
@@ -673,7 +676,8 @@ export default {
 			// let sessionConfigTree = sessionConfigs.map(sessionConfig => sessionConfig.toJSONObject(true))
 			const sessionConfigTree = sessionConfigs
 			let matchFunc = (name) => true
-			let addToGC = (id, func) => {}
+			let addToGC = (id, func) => {
+			}
 			if (searchKeywords) {
 				let reg = new RegExp(searchKeywords, 'i')
 				matchFunc = (name) => reg.test(name)
@@ -923,8 +927,8 @@ export default {
 
 			const isEditor = session && session.type === 'editor'
 			this.$confirm(
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.message' : 'delete-dialog.title'}`),
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.title' : 'delete-dialog.message'}`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.message' : 'delete-dialog.title' }`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
 				{
 					type: 'warning'
 				}
@@ -933,7 +937,8 @@ export default {
 					session.beforeClose()
 					this.sessionRemoveWithNoConfirm(index)
 				})
-				.catch(() => {})
+				.catch(() => {
+				})
 		},
 
 		async sessionRemoveWithNoConfirm(index) {
@@ -1042,7 +1047,8 @@ export default {
 			this.$refs.sessionTree.clearSelection()
 		},
 
-		handleSessionTreeContainerContextMenu() {},
+		handleSessionTreeContainerContextMenu() {
+		},
 
 		/**
 		 * 树右键菜单处理
@@ -1086,19 +1092,15 @@ export default {
 					? this.T('home.host-manager.dialog-delete-confirm.delete-node', sessCfg.name)
 					: this.T('home.host-manager.dialog-delete-confirm.delete-folder', sessCfg.name)
 
-			this.$confirm({
-				title: this.T('home.host-manager.dialog-delete-confirm.title'),
-				message,
+			this.$confirm(message, this.T('home.host-manager.dialog-delete-confirm.title'), {
 				type: 'warning'
+			}).then(() => {
+				this.$sessionManager.removeSessionConfig(sessCfg)
+				node.remove()
+				this.updateSessionTree()
+			}).catch((err) => {
+				console.error(err)
 			})
-				.then(() => {
-					this.$sessionManager.removeSessionConfig(sessCfg)
-					node.remove()
-					this.updateSessionTree()
-				})
-				.catch((err) => {
-					console.error(err)
-				})
 		},
 		// 重命名会话文件夹
 		handleSessionTreeContextMenu_RenameFolder() {
@@ -1241,9 +1243,11 @@ export default {
 		height: 40px;
 		padding-left: 2px;
 		background-color: var(--backgroundColor);
+
 		.el-input {
 			width: 213px;
 		}
+
 		.host-tree-btn {
 			display: inline-block;
 			box-sizing: border-box;

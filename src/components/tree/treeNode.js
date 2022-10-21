@@ -10,19 +10,17 @@ export function getDataKeyFunc(key) {
     }
     let readKey = funcCache[key];
     if (key && !readKey) {
-        readKey = new Function(['value'], `
-            return value.${key};
-        `);
+        readKey = new Function(['value'], `return value.${ key };`);
         funcCache[key] = readKey;
     }
     return readKey;
 }
 
-export function processTreeNodes(treeData, autoExpanded=false, nodeStates = null, key="") {
+export function processTreeNodes(treeData, autoExpanded = false, nodeStates = null, key = "") {
     if (!nodeStates) {
         nodeStates = Object.create(null);
     }
-    
+
     let readKey = getDataKeyFunc(key);
 
     const process = (treeList) => {
@@ -33,13 +31,10 @@ export function processTreeNodes(treeData, autoExpanded=false, nodeStates = null
             const stateKey = readKey(value);
 
             const stateValue = nodeStates[stateKey] || {
-                expanded: false,
-                selected: false
+                expanded: false, selected: false
             };
             let wrapNode = {
-                _$ptTreeNode: true,
-                selected: stateValue.selected,
-                data: value
+                _$ptTreeNode: true, selected: stateValue.selected, data: value
             };
 
             if (value.children) {

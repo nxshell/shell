@@ -1,32 +1,41 @@
 [nx-theme="dark"]:root {
-  $primary-i: 6;
-  @while $primary-i > 0 {
-    --primary-color-#{$primary-i} : #007ACC;
-    $primary-i: $primary-i - 1
-  }
+  // 主色
+  --n-color: rgb(16, 16, 20);
+  // 辅助色
+  --n-color-auxiliary: rgb(24 24 28);
+  --n-color-bg-dialog: rgb(44, 44, 50);
+  --n-color-hover: #0000;
+  --n-btn-color-hover: #7fe7c4;
+  --n-text-color-hover: #7fe7c4;
+  --n-border: 1px solid rgba(255, 255, 255, 0.24);
+  --n-border-hover: 1px solid #7fe7c4;
+  --n-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+  --n-color-focus: rgba(99, 226, 183, 0.1);
+  --n-text-color: rgba(255, 255, 255, 0.82);
+  --n-placeholder-color: rgba(255, 255, 255, 0.38);
+  --n-placeholder-color-disabled: rgba(255, 255, 255, 0.28);
 
-
-  --primaryColor: #1E1E1E;
+  --primaryColor: var(--n-color-auxiliary);
   --primaryTextColor: #D4D4D4;
   --secondaryTextColor: #D4D4D4;
 
   // 高亮色，相对于主色调
-  --highlightColor: #1E1E1E;
+  --highlightColor: var(--n-color-auxiliary);
   --deactiveTextColor: #D4D4D4;
 
   // --borderColor: rgb(218, 173, 173);
 
-  --windowBorderColor: #1E1E1E;
-  --windowTitleBarColor: rgb(60, 60, 60);
-  --windowTitleBarDeactiveColor: #1E1E1E;
+  --windowBorderColor: var(--n-color-auxiliary);
+  --windowTitleBarColor: var(--n-color-auxiliary);
+  --windowTitleBarDeactiveColor: var(--n-color-auxiliary);
   --highlightItemColor: #ccc3;
   --hoverItemColor: #ccc3;
-  --borderColor: #1E1E1E;
+  --borderColor: var(--n-color-auxiliary);
   --darkBorderColor: #ccc3;
 
-  --backgroundColor: rgb(51, 51, 51);
-  --lightBackgroundColor: rgb(37, 37, 38);
-  --darkBackgroundColor: #1E1E1E;
+  --backgroundColor: var(--n-color-auxiliary);
+  --lightBackgroundColor: var(--n-color);
+  --darkBackgroundColor: var(--n-color-auxiliary);
 
   --disableColor: #007ACC;
   --successColor: #007ACC;
@@ -36,8 +45,8 @@
 
   --btnPrimaryPlainBackgroundColor: #579dea;
   --btnPrimaryPlainColor: #D4D4D4;
-  --btnPrimaryBackgroundColor: #007ACC;
-  --btnPrimaryHoverBackgroundColor: #579dea;
+  --btnPrimaryBackgroundColor: var(--n-placeholder-color);
+  --btnPrimaryHoverBackgroundColor: var(--n-color-focus);
 
   --btnSuccessPlainBackgroundColor: #2AA19899;
   --btnSuccessPlainColor: #D4D4D4;

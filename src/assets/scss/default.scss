@@ -14,6 +14,47 @@
   background-color: var(--lightBackgroundColor) !important;
 }
 
+.el-message-box {
+  border: none !important;
+  background-color: var(--n-color-bg-dialog) !important;
+
+  .el-message-box__header {
+    .el-message-box__title {
+      color: var(--n-text-color);
+    }
+
+    .el-message-box__headerbtn {
+      .el-message-box__close {
+        color: var(--n-text-color);
+      }
+    }
+  }
+
+  .el-message-box__content {
+    color: var(--n-text-color);
+  }
+}
+
+//.el-button {
+//  &:focus, &:hover {
+//    background-color: var(--n-color-hover) !important;
+//    color: var(--n-text-color-hover) !important;
+//    border-color: var(--n-border-hover) !important;
+//  }
+//
+//  &--primary {
+//    color: var(--n-color) !important;
+//    background-color: var(--n-btn-color-hover) !important;
+//    border-color: var(--n-btn-color-hover) !important;
+//
+//    &:hover, &:focus {
+//      background-color: var(--n-color-hover);
+//      color: var(--n-text-color-hover);
+//    }
+//  }
+//
+//}
+
 @keyframes breathe {
   0% {
     opacity: 0.5;

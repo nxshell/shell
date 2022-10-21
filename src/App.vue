@@ -83,7 +83,7 @@ export default {
 			try {
 				this.left_pannel = false
 				this.top_pannel = false
-				EventBus.publish('session-config-pannel', 'close')
+				EventBus.publish('session-config-panel', 'close')
 				await document.body.requestFullscreen()
 			} catch (e) {
 				// pass
@@ -94,7 +94,7 @@ export default {
 			let isfullscreen = !!document.fullscreenElement
 			if (!isfullscreen) {
 				if (this.configPanel) {
-					EventBus.publish('session-config-pannel', 'open')
+					EventBus.publish('session-config-panel', 'open')
 				}
 				this.left_pannel = true
 				this.top_pannel = true
@@ -108,8 +108,8 @@ export default {
 #app {
 	width: 100%;
 	height: 100%;
-	background-color: var(--backgroundColor);
-	//background-image: url("./assets/images/background.png");
+	background-color: var(--lightBackgroundColor);
+	//background-image: url("https://images.unsplash.com/photo-1515674744565-0d7112cd179a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
 	//background-repeat: no-repeat;
 	//background-size: 100% 100%;
 

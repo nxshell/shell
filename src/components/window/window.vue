@@ -146,11 +146,11 @@ export default {
 	.left-panel {
 		height: 100%;
 		background-color: var(--backgroundColor);
-		border-right: 1px solid var(--lightBackgroundColor);
+		//border-right: 1px solid var(--lightBackgroundColor);
 	}
 
 	.main-panel {
-		width: 100%;
+		width: calc(100vw - 50px);
 		height: 100%;
 
 		.title-bar {
