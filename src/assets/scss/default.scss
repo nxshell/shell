@@ -5,7 +5,9 @@
 @import url(./theme/pink.scss);
 
 /* element-ui reset */
-.el-input__inner {
+.el-input__inner, .el-textarea__inner {
+  color: var(--primaryTextColor) !important;
+  caret-color: var(--primaryTextColor);
   border: 0 !important;
   background-color: var(--lightBackgroundColor) !important;
 }
@@ -35,25 +37,40 @@
   }
 }
 
-//.el-button {
-//  &:focus, &:hover {
-//    background-color: var(--n-color-hover) !important;
-//    color: var(--n-text-color-hover) !important;
-//    border-color: var(--n-border-hover) !important;
-//  }
-//
-//  &--primary {
-//    color: var(--n-color) !important;
-//    background-color: var(--n-btn-color-hover) !important;
-//    border-color: var(--n-btn-color-hover) !important;
-//
-//    &:hover, &:focus {
-//      background-color: var(--n-color-hover);
-//      color: var(--n-text-color-hover);
-//    }
-//  }
-//
-//}
+.el-button {
+  //  &:focus, &:hover {
+  //    background-color: var(--n-color-hover) !important;
+  //    color: var(--n-text-color-hover) !important;
+  //    border-color: var(--n-border-hover) !important;
+  //  }
+  //
+  //  &--primary {
+  //    color: var(--n-color) !important;
+  //    background-color: var(--n-btn-color-hover) !important;
+  //    border-color: var(--n-btn-color-hover) !important;
+  //
+  //    &:hover, &:focus {
+  //      background-color: var(--n-color-hover);
+  //      color: var(--n-text-color-hover);
+  //    }
+  //  }
+  //
+  &--text {
+    color: var(--primaryTextColor) !important;
+
+    i {
+      font-size: 20px;
+    }
+  }
+
+  &.is-disabled {
+    color: #C0C4CC !important;
+
+    i {
+      color: #C0C4CC !important;
+    }
+  }
+}
 
 @keyframes breathe {
   0% {

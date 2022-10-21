@@ -21,7 +21,7 @@
                 height: (selectionRect.bottom - selectionRect.top) + 'px',
             }"
         ></div>
-        <div v-if="mode == 'detail'" 
+        <div v-if="mode === 'detail'"
             class="grid-view-header"
             @contextmenu.stop
         >

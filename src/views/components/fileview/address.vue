@@ -1,393 +1,378 @@
 <template>
-    <div class="pt-file-view-address" :class="{
-            editable: isEditable
-        }"
-    >
-        <span class="btn-scroll left" @click.stop="scrollToLeft">
-            <pt-icon size="custom"
-                :customSize="12"
-                :disabled="canScrollToLeft"
-                iconName="arrow-left-bold"></pt-icon>
-        </span>
-        <div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
-            <ul class="address-list" ref="address" @click.stop>
-                <li class="address-list-item host" @click="handleEnableEditPath">
-                    <pt-icon size="custom" :customSize="16" type="img" :iconName="IconHost"></pt-icon>
-                    <span style="margin-left:5px">{{hostInfo.username}}@{{hostInfo.host}}</span>
-                </li>
-                <template v-if="!isEditable">
-                <li v-for="(entry, idx) in parsedPath" :key="entry.entry + '/' + idx"
-                    class="address-list-item"
-                >
-                    <span @click="handleChangePath(idx)">{{ entry.entry }}</span>
-                    <pt-popper
-                        position="bottom-left"
-                        :show="entry.showMenu"
-                    >
-                        <pt-menu :menu="entry.subFolderList" @pop-stack="entry.showMenu = false" ref="menu"></pt-menu>
-                        <pt-icon slot="reference"
-                            v-if="!entry.showMenu"
-                            size="custom"
-                            :customSize="12"
-                            iconName="arrow-right"
-                            className="pop-menu"
-                            @click.stop="showFolderList(entry, idx)"></pt-icon>
-                        <pt-icon slot="reference"
-                            v-if="entry.showMenu"
-                            size="custom"
-                            :customSize="12"
-                            iconName="arrow-down"
-                            className="pop-menu"
-                            @click.stop="showFolderList(entry, idx)"></pt-icon>
-                    </pt-popper>
-                </li>
-                </template>
-            </ul>
-            <input v-if="isEditable"
-                ref="pathEditor"
-                spellcheck="false"
-                class="address-input"
-                autocomplete="off"
-                v-model="curPath"
-                @blur="handleDisableEditPath"
-                @keydown="handleInputPath"
-            >
-        </div>
-        
-        <span class="btn-scroll right" @click.stop="scrollToRight">
-            <pt-icon size="custom"
-                :customSize="12"
-                :disabled="canScrollToRight"
-                iconName="arrow-right-bold"></pt-icon>
-        </span>
-    </div>
+	<div class="pt-file-view-address" :class="{editable: isEditable}">
+		<span class="btn-scroll left" :class="{disabled:canScrollToLeft}" @click.stop="scrollToLeft">
+			<i class="el-icon-caret-left" />
+		</span>
+		<div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
+			<ul class="address-list" ref="address" @click.stop>
+				<li class="address-list-item host" @click="handleEnableEditPath">
+					<pt-icon size="custom" :customSize="16" type="img" :iconName="IconHost"></pt-icon>
+					<span style="margin-left: 5px">{{ hostInfo.username }}@{{ hostInfo.host }}</span>
+				</li>
+				<template v-if="!isEditable">
+					<li v-for="(entry, idx) in parsedPath" :key="entry.entry + '/' + idx" class="address-list-item">
+						<span @click="handleChangePath(idx)">{{ entry.entry }}</span>
+						<pt-popper position="bottom-left" :show="entry.showMenu">
+							<pt-menu
+								:menu="entry.subFolderList"
+								@pop-stack="entry.showMenu = false"
+								ref="menu"
+							></pt-menu>
+							<pt-icon
+								slot="reference"
+								v-if="!entry.showMenu"
+								size="custom"
+								:customSize="12"
+								iconName="arrow-right"
+								className="pop-menu"
+								@click.stop="showFolderList(entry, idx)"
+							></pt-icon>
+							<pt-icon
+								slot="reference"
+								v-else
+								size="custom"
+								:customSize="12"
+								iconName="arrow-down"
+								className="pop-menu"
+								@click.stop="showFolderList(entry, idx)"
+							></pt-icon>
+						</pt-popper>
+					</li>
+				</template>
+			</ul>
+			<input
+				v-if="isEditable"
+				ref="pathEditor"
+				spellcheck="false"
+				class="address-input"
+				autocomplete="off"
+				v-model="curPath"
+				@blur="handleDisableEditPath"
+				@keydown="handleInputPath"
+			/>
+		</div>
+
+		<span class="btn-scroll right" :class="{disabled:canScrollToRight}" @click.stop="scrollToRight">
+			<i class="el-icon-caret-right" />
+		</span>
+	</div>
 </template>
 
 <script>
-import path from "path";
-import PtPopper from "../../../components/base/popper";
-import IconHost from "../../../assets/sysicons/host.png";
+import path from 'path'
+import PtPopper from '../../../components/base/popper'
+import IconHost from '../../../assets/sysicons/host.png'
 
 export default {
-    name: "PtFileViewAddress",
-    components: {
-        PtPopper
-    },
-    props: {
-        hostInfo: {
-            type: Object
-        },
+	name: 'PtFileViewAddress',
+	components: {
+		PtPopper
+	},
+	props: {
+		hostInfo: {
+			type: Object
+		},
 
-        checkPath: {
-            type: Function
-        },
+		checkPath: {
+			type: Function
+		},
 
-        value: String,
+		value: String,
 
-        getFolderList: Function
-    },
-    data() {
-        return {
-            IconHost,
+		getFolderList: Function
+	},
+	data() {
+		return {
+			IconHost,
 
-            isEditable: false,
+			isEditable: false,
 
-            btnScroll: {
-                show: false,
-                containerWidth: 0,
-                contentWidth: 0,
-                scrollLeft: 0
-            },
+			btnScroll: {
+				show: false,
+				containerWidth: 0,
+				contentWidth: 0,
+				scrollLeft: 0
+			},
 
-            showMenu: false,
+			showMenu: false,
 
-            detectSizeHandler: null,
+			detectSizeHandler: null,
 
-            curPath: "",
-            parsedPath: []
-        }
-    },
+			curPath: '',
+			parsedPath: []
+		}
+	},
 
-    computed: {
-        canScrollToLeft() {
-            return this.btnScroll.scrollLeft == 0;
-        },
+	computed: {
+		canScrollToLeft() {
+			return this.btnScroll.scrollLeft == 0
+		},
 
-        canScrollToRight() {
-            return this.btnScroll.scrollLeft >= this.btnScroll.contentWidth - this.btnScroll.containerWidth;
-        }
-    },
+		canScrollToRight() {
+			return this.btnScroll.scrollLeft >= this.btnScroll.contentWidth - this.btnScroll.containerWidth
+		}
+	},
 
-    watch: {
-        value(newVal) {
-            this.parsePath();
-            this.$nextTick(() => {
-                this.detectAddressListWidth();
-            });
-            if (newVal != this.curPath) {
-                this.curPath = newVal;
-            }
-        }
-    },
+	watch: {
+		value(newVal) {
+			this.parsePath()
+			this.$nextTick(() => {
+				this.detectAddressListWidth()
+			})
+			if (newVal != this.curPath) {
+				this.curPath = newVal
+			}
+		}
+	},
 
-    created() {
-        this.curPath = this.value;
-    },
+	created() {
+		this.curPath = this.value
+	},
 
-    mounted() {
-        this.parsePath();
+	mounted() {
+		this.parsePath()
 
-        this.detectSizeHandler = (element) => {
-            this.btnScroll.containerWidth = element.offsetWidth;
-        };
+		this.detectSizeHandler = (element) => {
+			this.btnScroll.containerWidth = element.offsetWidth
+		}
 
-        this.$nextTick(() => {
-            this.$ptElementResizeDetector.listenTo(this.$el, this.detectSizeHandler);
-            this.detectAddressListWidth();
-        });
-    },
+		this.$nextTick(() => {
+			this.$ptElementResizeDetector.listenTo(this.$el, this.detectSizeHandler)
+			this.detectAddressListWidth()
+		})
+	},
 
-    methods: {
-        parsePath() {
-            let pathSegments = this.value.split("/");
-            pathSegments.unshift("/");
-            this.parsedPath = pathSegments.filter(p => p).map((entryName) => {
-                return {
-                    entry: entryName,
-                    showMenu: false,
-                    subFolderList: []
-                }
-            });
-        },
-        async showFolderList(entry, idx) {
-            const pathSegments = this.parsedPath.slice(1, idx + 1);
-            let dirPath = pathSegments.map((seg) => {
-                return seg.entry;
-            }).join("/");
+	methods: {
+		parsePath() {
+			let pathSegments = this.value.split('/')
+			pathSegments.unshift('/')
+			this.parsedPath = pathSegments
+				.filter((p) => p)
+				.map((entryName) => {
+					return {
+						entry: entryName,
+						showMenu: false,
+						subFolderList: []
+					}
+				})
+		},
+		async showFolderList(entry, idx) {
+			const pathSegments = this.parsedPath.slice(1, idx + 1)
+			let dirPath = pathSegments
+				.map((seg) => {
+					return seg.entry
+				})
+				.join('/')
 
-            dirPath = path.resolve(`/${dirPath}`, "..");
-            const folderList = await this.getFolderList(dirPath);
-            entry.subFolderList = folderList.map((folder) => {
-                return {
-                    type: "normal",
-                    label: folder,
-                    handler: () => {
-                        this.$emit("change", path.resolve(dirPath, folder));
-                    }
-                };
-            });
+			dirPath = path.resolve(`/${ dirPath }`, '..')
+			const folderList = await this.getFolderList(dirPath)
+			entry.subFolderList = folderList.map((folder) => {
+				return {
+					type: 'normal',
+					label: folder,
+					handler: () => {
+						this.$emit('change', path.resolve(dirPath, folder))
+					}
+				}
+			})
 
-            entry.showMenu = true;
-            this.$nextTick(() => {
-                console.log("showMenu", entry.showMenu);
-            })
-        },
-        detectAddressListWidth() {
-            this.btnScroll.contentWidth = this.$refs.address.getBoundingClientRect().width;
-        },
+			entry.showMenu = true
+			this.$nextTick(() => {
+				console.log('showMenu', entry.showMenu)
+			})
+		},
+		detectAddressListWidth() {
+			this.btnScroll.contentWidth = this.$refs.address.getBoundingClientRect().width
+		},
 
-        scrollToLeft() {
-            let curLeft = this.$refs.container.scrollLeft;
-            curLeft -= 100;
-            this.$refs.container.scrollTo(curLeft, 0);
-            this.btnScroll.scrollLeft = this.$refs.container.scrollLeft;
-        },
-        scrollToRight() {
-            let curLeft = this.$refs.container.scrollLeft;
-            curLeft += 100;
-            this.$refs.container.scrollTo(curLeft, 0);
-            this.btnScroll.scrollLeft = this.$refs.container.scrollLeft;
-        },
+		scrollToLeft() {
+			let curLeft = this.$refs.container.scrollLeft
+			curLeft -= 100
+			this.$refs.container.scrollTo(curLeft, 0)
+			this.btnScroll.scrollLeft = this.$refs.container.scrollLeft
+		},
+		scrollToRight() {
+			let curLeft = this.$refs.container.scrollLeft
+			curLeft += 100
+			this.$refs.container.scrollTo(curLeft, 0)
+			this.btnScroll.scrollLeft = this.$refs.container.scrollLeft
+		},
 
-        handleMouseWheel(evt) {
-            if (evt.deltaY < 0) {
-                this.scrollToLeft();
-            } else {
-                this.scrollToRight();
-            }
-        },
+		handleMouseWheel(evt) {
+			if (evt.deltaY < 0) {
+				this.scrollToLeft()
+			} else {
+				this.scrollToRight()
+			}
+		},
 
-        handleChangePath(idx) {
-            const pathSegments = this.parsedPath.slice(1, idx + 1);
-            const path = pathSegments.map((seg) => {
-                return seg.entry;
-            }).join("/");
+		handleChangePath(idx) {
+			const pathSegments = this.parsedPath.slice(1, idx + 1)
+			const path = pathSegments
+				.map((seg) => {
+					return seg.entry
+				})
+				.join('/')
 
-            this.$emit("change", `/${path}`);
-        },
+			this.$emit('change', `/${ path }`)
+		},
 
-        handleEnableEditPath() {
-            this.isEditable = true;
+		handleEnableEditPath() {
+			this.isEditable = true
 
-            this.$nextTick(() => {
-                this.$refs.pathEditor.focus();
-                this.$refs.pathEditor.selectionStart = 0;
-                this.$refs.pathEditor.selectionLength = this.curPath.length;
-            });
-        },
+			this.$nextTick(() => {
+				this.$refs.pathEditor.focus()
+				this.$refs.pathEditor.selectionStart = 0
+				this.$refs.pathEditor.selectionLength = this.curPath.length
+			})
+		},
 
-        handleDisableEditPath() {
-            this.isEditable = false;
-        },
+		handleDisableEditPath() {
+			this.isEditable = false
+		},
 
-        async handleInputPath(evt) {
-            if (evt.key === "Enter") {
-                let ret = await this.checkPath(this.curPath);
-                if (ret) {
-                    this.$emit("change", this.curPath);
-                    this.handleDisableEditPath();
-                }
-            }
-        }
-    },
+		async handleInputPath(evt) {
+			if (evt.key === 'Enter') {
+				let ret = await this.checkPath(this.curPath)
+				if (ret) {
+					this.$emit('change', this.curPath)
+					this.handleDisableEditPath()
+				}
+			}
+		}
+	},
 
-    beforeDestroy() {
-        this.$ptElementResizeDetector.removeListener(this.$el, this.detectSizeHandler);
-    }
+	beforeDestroy() {
+		this.$ptElementResizeDetector.removeListener(this.$el, this.detectSizeHandler)
+	}
 }
 </script>
 
 <style lang="scss">
 .pt-file-view-address {
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    box-sizing: border-box;
-    height: 30px;
-    width: 100%;
-    border-radius: 3px;
+	position: relative;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	box-sizing: border-box;
+	height: 30px;
+	width: 100%;
+	border-radius: 3px;
 
-    border: 1px solid var(--borderColor);
-    background-color: var(--backgroundColor);
+	border: 1px solid var(--borderColor);
+	background-color: var(--backgroundColor);
 
-    color: var(--primaryTextColor);
-    overflow: hidden;
+	color: var(--primaryTextColor);
+	overflow: hidden;
 
-    .container {
-        position: relative;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        box-sizing: border-box;
-        height: 30px;
-        width: 100%;
-        overflow: hidden;
-    }
+	.container {
+		position: relative;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		box-sizing: border-box;
+		height: 30px;
+		width: 100%;
+		overflow: hidden;
+	}
 
-    &.editable {
-        border: 1px solid var(--primaryColor);
-    }
+	&.editable {
+		border: 1px solid var(--primaryColor);
+	}
 
-    .btn-scroll {
-        position: absolute;
-        display: inline-flex;
-        align-items: center;
-        width: 12px;
-        height: 30px;
-        cursor: pointer;
-        z-index: 999;
+	.btn-scroll {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		cursor: pointer;
+		z-index: 999;
+		background-color: var(--lightBackgroundColor);
 
-        .pt-icon-wrapper {
-            height: 33px;
-            line-height: 30px;
-        }
+		i {
+			font-size: 18px;
 
-        .pt-icon {
-            // margin-left: 5px;
-            // margin-right: 5px;
-            // color: var(--secondaryTextColor);
-            // transition: color .2s;
-            &:hover {
-                color: var(--primaryTextColor);
-                transition: color .2s;
-            }
-            &.disabled {
-                color: var(--disableColor); 
-            }
-        }
+			&:hover {
+				color: var(--primaryTextColor);
+				transition: color 0.2s;
+			}
+		}
 
-        background-color: var(--lightBackgroundColor);
+		&.disabled {
+			i {
+				color: #C0C4CC;
+			}
+		}
+	}
 
-        &.left {
-            left: 0;
-            top: 0;
-        }
+	.address-list {
+		display: inline-flex;
+		justify-content: flex-start;
+		align-items: center;
+		margin: 0;
+		list-style: none;
+		height: 28px;
 
-        &.right {
-            right: 0;
-            top: 0;
-        }
-    }
+		.address-list-item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			list-style: none;
+			margin: {
+				left: 1px;
+				right: 1px;
+			}
+			padding: {
+				left: 5px;
+			}
+			box-sizing: border-box;
+			border: 1px solid transparent;
+			border-radius: 3px;
 
-    .address-list {
-        display: inline-flex;
-        justify-content: flex-start;
-        align-items: center;
-        margin: 0;
-        padding: 0 12px;
-        list-style: none;
-        height: 30px;
+			height: 30px;
+			line-height: 30px;
+			max-width: 120px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			cursor: pointer;
 
-        .address-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            list-style: none;
-            margin: {
-                left: 1px;
-                right: 1px;
-            };
-            padding: {
-                left: 5px;
-            };
-            box-sizing: border-box;
-            border: 1px solid transparent;
-            border-radius: 3px;
+			&:hover {
+				border: 1px solid var(--fileViewAddressHostBorderColor);
+				background-color: var(--fileViewAddressHostBackgroundColor);
+			}
 
-            height: 30px;
-            line-height: 30px;
-            max-width: 120px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            cursor: pointer;
+			&.host {
+				margin: 0;
+				max-width: 200px;
+				// border: 1px solid var(--fileViewAddressHostBorderColor);
+				// background-color: var(--fileViewAddressHostBackgroundColor);
+			}
 
-            &:hover {
-                border: 1px solid var(--fileViewAddressHostBorderColor);
-                background-color: var(--fileViewAddressHostBackgroundColor);
-            }
+			.pop-menu {
+				&:hover {
+					color: var(--primaryColor);
+				}
+			}
 
-            &.host {
-                margin: 0;
-                max-width: 200px;
-                // border: 1px solid var(--fileViewAddressHostBorderColor);
-                // background-color: var(--fileViewAddressHostBackgroundColor);
-            }
+			.pt-icon-wrapper {
+				// 强制修正不对齐的问题
+				height: 28px;
+			}
+		}
+	}
 
-            .pop-menu {
-                &:hover {
-                    color: var(--primaryColor);
-                }
-            }
-
-            .pt-icon-wrapper {
-                // 强制修正不对齐的问题
-                height: 32px;
-            }
-        }
-    }
-
-    .address-input {
-        border: none;
-        outline: none;
-        height: 26px;
-        line-height: 26px;
-        // width: calc(100% - 112px);
-        width: 100%;
-        color: var(--primaryTextColor);
-        background-color: var(--backgroundColor);
-        flex-grow: 0;
-    }
+	.address-input {
+		border: none;
+		outline: none;
+		height: 26px;
+		line-height: 26px;
+		// width: calc(100% - 112px);
+		width: 100%;
+		color: var(--primaryTextColor);
+		background-color: var(--backgroundColor);
+		flex-grow: 0;
+	}
 }
 </style>

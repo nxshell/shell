@@ -1,48 +1,32 @@
 <template>
 	<div class="pt-file-view">
 		<pt-toolbar
-			:height="48"
 			:centerStyle="{
 				overflow: 'hidden',
 				marginLeft: '10px',
 				marginRight: '10px'
 			}"
 		>
-			<pt-icon
-				slot="left"
-				size="small"
-				iconName="direction-left"
-				:disabled="!canGoBack"
-				flat
-				:title="T('home.fileview.mainview.go-back')"
-				@click="goBack"
-			></pt-icon>
-			<pt-icon
-				slot="left"
-				size="small"
-				iconName="direction-right"
-				:disabled="!canForward"
-				flat
-				:title="T('home.fileview.mainview.go-forward')"
-				@click="forward"
-			></pt-icon>
-			<pt-icon
-				slot="left"
-				size="small"
-				iconName="direction-up"
-				:disabled="!canGoUp"
-				flat
-				:title="T('home.fileview.mainview.go-up')"
-				@click="goUp"
-			></pt-icon>
-			<pt-icon
-				slot="left"
-				size="small"
-				iconName="refresh"
-				flat
-				:title="T('home.fileview.mainview.go-refresh')"
-				@click="refresh"
-			></pt-icon>
+			<template slot="left">
+				<Space :size="5">
+					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-back')"
+					            placement="right-end">
+						<el-button type="text" icon="el-icon-back" :disabled="!canGoBack" @click="goBack" />
+					</el-tooltip>
+					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-forward')"
+					            placement="right-end">
+						<el-button type="text" icon="el-icon-right" :disabled="!canForward" @click="forward" />
+					</el-tooltip>
+					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-up')"
+					            placement="right-end">
+						<el-button type="text" icon="el-icon-top" :disabled="!canGoUp" @click="goUp" />
+					</el-tooltip>
+					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-refresh')"
+					            placement="right-end">
+						<el-button type="text" icon="el-icon-refresh" :disabled="!refresh" @click="refresh" />
+					</el-tooltip>
+				</Space>
+			</template>
 			<pt-file-view-address
 				slot="center"
 				v-model="currentPath"
@@ -51,12 +35,13 @@
 				:checkPath="checkPath"
 				@change="goTo($event)"
 			></pt-file-view-address>
-			<pt-inputbox
-				v-model="searchKeyWords"
-				type="search"
-				slot="right"
-				:placeholder="T('home.fileview.mainview.search-tab')"
-			></pt-inputbox>
+			<template slot="right">
+				<el-input
+					v-model="searchKeyWords"
+					:placeholder="T('home.fileview.mainview.search-tab')"
+					class="nx-search-input"
+					suffix-icon="el-icon-search" />
+			</template>
 		</pt-toolbar>
 		<!-- <pt-toolbar></pt-toolbar> -->
 		<pt-grid-view
@@ -263,7 +248,7 @@
 					</pt-row>
 				</div>
 				<span
-					><input type="checkbox" v-model="askDialog.keep" /><span>{{
+				><input type="checkbox" v-model="askDialog.keep" /><span>{{
 						T('home.fileview.ask-dialogs.merge.keep')
 					}}</span></span
 				>
@@ -336,7 +321,7 @@
 					</pt-row>
 				</div>
 				<span
-					><input type="checkbox" v-model="askDialog.keep" /><span>{{
+				><input type="checkbox" v-model="askDialog.keep" /><span>{{
 						T('home.fileview.ask-dialogs.overwrite.keep')
 					}}</span></span
 				>
@@ -348,7 +333,7 @@
 				size="small"
 				@click="handleMergeFolder"
 				focus
-				>{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
+			>{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
 			</pt-button>
 			<pt-button
 				v-if="askDialog.questionType === 'overwrite'"
@@ -357,7 +342,7 @@
 				size="small"
 				@click="handleOverwrite"
 				focus
-				>{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
+			>{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
 			</pt-button>
 			<pt-button slot="footer" type="info" size="small" @click="handleSkip" focus>
 				{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}
@@ -372,10 +357,10 @@
 <script>
 import path from 'path'
 import PtFileViewAddress from './address'
-import {getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName} from '../../fileicons'
-import {Dirent} from '../../../../common/filesystem/dirent'
-
-import {createDataTransfer} from '../../../services/nxsys/dataTransfer'
+import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../../fileicons'
+import { Dirent } from '../../../../common/filesystem/dirent'
+import { createDataTransfer } from '@/services/nxsys/dataTransfer'
+import Space from '@/components/space'
 
 function sort(dirent1, dirent2) {
 	return dirent1.name > dirent2.name
@@ -403,16 +388,17 @@ function formatFileSize(size, detail = false) {
 		unit = 'KB'
 	}
 	if (detail) {
-		return `${v}${unit} (${size} Bytes)`
+		return `${ v }${ unit } (${ size } Bytes)`
 	} else {
-		return `${v}${unit}`
+		return `${ v }${ unit }`
 	}
 }
 
 export default {
 	name: 'PtFileView',
 	components: {
-		PtFileViewAddress
+		PtFileViewAddress,
+		Space
 	},
 	props: {
 		cwd: {
@@ -836,7 +822,7 @@ export default {
 				const fsInstance = await this.getFs()
 				dirents = await fsInstance.readdir(dirPath)
 			} catch (err) {
-				this.$confirm(this.T('home.fileview.confirm-dialogs.errors.error-message', err.message),this.T('home.fileview.confirm-dialogs.errors.title'),{
+				this.$confirm(this.T('home.fileview.confirm-dialogs.errors.error-message', err.message), this.T('home.fileview.confirm-dialogs.errors.title'), {
 					type: 'error'
 				})
 				return false
@@ -862,7 +848,7 @@ export default {
 
 			let List = [...dirList, ...fileList]
 			this.fileItems = List.map((dirent) => {
-				const {icon, type} = this.getIconAndType(dirent)
+				const { icon, type } = this.getIconAndType(dirent)
 				return {
 					name: dirent.name,
 					icon: icon,
@@ -917,7 +903,8 @@ export default {
 				let stat = await fsInstance.lstat(realPath)
 				let dirent = new Dirent(realPath, stat)
 				return dirent
-			} catch (err) {}
+			} catch (err) {
+			}
 			return false
 		},
 
@@ -1111,12 +1098,12 @@ export default {
 					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-upload'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1160,12 +1147,12 @@ export default {
 					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-download'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1549,9 +1536,12 @@ export default {
 			this.handleCloseCreateDirDialog()
 		},
 
-		handlePaste() {},
-		handleCut() {},
-		handleCopy() {},
+		handlePaste() {
+		},
+		handleCut() {
+		},
+		handleCopy() {
+		},
 
 		async deleteFile(filePath) {
 			try {
@@ -1725,7 +1715,8 @@ export default {
 								type: 'info'
 							}
 						)
-					} catch (e) {}
+					} catch (e) {
+					}
 					return
 				}
 				const fs = await this.getFs()
@@ -1802,31 +1793,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-file-view {
 	position: relative;
 	width: 100%;
 	height: 100%;
-
-	.pt-icon {
-		// margin-left: 5px;
-		// margin-right: 5px;
-		color: var(--secondaryTextColor);
-		transition: color 0.2s;
-
-		&:hover {
-			color: var(--primaryTextColor);
-			transition: color 0.2s;
-		}
-
-		&.disabled {
-			color: var(--disableColor);
-		}
-	}
-
-	.icon-disable {
-		color: var(--disableColor);
-	}
 
 	.pt-grid-view {
 		height: calc(100% - 72px);
@@ -1835,6 +1806,10 @@ export default {
 	.status-description {
 		width: 260px;
 		text-align: right;
+	}
+
+	::v-deep .el-input__inner {
+		border: 1px solid var(--borderColor) !important;
 	}
 }
 

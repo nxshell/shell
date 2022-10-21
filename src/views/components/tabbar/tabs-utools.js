@@ -10,12 +10,10 @@ export function activeSession(sessInst) {
         return 0
     }
     const router = sessInst.router
-    console.log(sessInst, '会话路由', router, this.$route)
     if (router.path === this.$route.path) {
-        console.log('路由一直')
         return 0
     }
-    this.$router.push({ path: router.path }).then(r => console.log(r))
+    this.$router.push({ path: router.path })
     this.currentSessionTabIdx = this.sessionInstTabs.findIndex((inst) => {
         return inst.data.id === sessInst.id
     })

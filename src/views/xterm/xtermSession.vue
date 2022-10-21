@@ -1,6 +1,6 @@
 <template>
 	<div class="pt-xterm-session">
-		<pt-toolbar :height="48" v-if="false">
+		<pt-toolbar v-if="false">
 			<pt-icon
 				iconName="copy"
 				slot="left"
