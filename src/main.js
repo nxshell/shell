@@ -3,20 +3,22 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import "@fontsource/dejavu-mono"; 
+import "@fontsource/dejavu-mono";
 import "./assets/scss/default.scss";
 
 
 import PtComponents from "@/components";
 import PtSessionManger from "@/services";
 
+import Element from './element'
 
 Vue.use(PtComponents);
 Vue.use(PtSessionManger);
+Vue.use(Element)
 
 Vue.config.productionTip = false;
 
-!async function() {
+!async function () {
     await PtSessionManger.initService();
 
 

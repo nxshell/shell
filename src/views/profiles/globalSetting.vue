@@ -8,7 +8,7 @@
                         @tree-node-select="handleNavToSection"
                     ></pt-tree>
                 </div>
-                
+
             </pt-col>
             <pt-col :span="18">
                 <div class="profile-container">
@@ -91,23 +91,23 @@ export default {
                                 }
                             ]
                         },
-                        {
-                            name: "theme",
-                            title: "home.profile.system.theme.title",
-                            description: "home.profile.system.theme.description",
-                            defaultValue: "dark",
-                            type: "select",
-                            options: [
-                                {
-                                    label: "home.profile.system.theme.options.dark",
-                                    value: "dark"
-                                },
-                                {
-                                    label: "home.profile.system.theme.options.light",
-                                    value: "light"
-                                }
-                            ]
-                        },
+                        // {
+                        //     name: "theme",
+                        //     title: "home.profile.system.theme.title",
+                        //     description: "home.profile.system.theme.description",
+                        //     defaultValue: "dark",
+                        //     type: "select",
+                        //     options: [
+                        //         {
+                        //             label: "home.profile.system.theme.options.dark",
+                        //             value: "dark"
+                        //         },
+                        //         {
+                        //             label: "home.profile.system.theme.options.light",
+                        //             value: "light"
+                        //         }
+                        //     ]
+                        // },
                         {
                             name: "nxconfig",
                             title: "home.profile.system.nxconfig.title",
@@ -135,7 +135,7 @@ export default {
 
     mounted() {
     },
-    
+
     methods: {
         updateSessionConfig() {
             return globalSetting.setProfile("xterm", this.profileData)
@@ -164,7 +164,7 @@ export default {
             let item = profiles[index];
             let fontList = await this.font_list();
             if(!fontList) {
-                return; 
+                return;
             }
             item.items[0].options = fontList;
             this.$set(this.profiles, index, item);
@@ -193,7 +193,7 @@ export default {
 .global-profile {
     position: relative;
     background-color: var(--backgroundColor);
-    
+
     width: 100%;
     height: 100%;
 

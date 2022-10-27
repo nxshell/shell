@@ -35,7 +35,7 @@ export default {
         },
         leftPanelWidth: {
             type: Number,
-            default: ISMACOS ? 70 : 60
+            default: ISMACOS ? 70 : 50
         },
         leftPanel: {
             type: Boolean,
@@ -233,7 +233,7 @@ export default {
                 .window-close {
                     height: 100%;
                     -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.279 5.5L11 10.221l-.779.779L5.5 6.279.779 11 0 10.221 4.721 5.5 0 .779.779 0 5.5 4.721 10.221 0 11 .779 6.279 5.5z' fill='%23000'/%3E%3C/svg%3E") no-repeat 50% 50%;
-                    
+
                     &:hover {
                         background-color: white;
                     }

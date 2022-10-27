@@ -19,12 +19,12 @@ module.exports = {
                 {
                     test: /\.lazy\.scss.theme$/,
                     use: [
-                      { 
-                        loader: "style-loader", 
-                        options: { injectType: "lazyStyleTag" }, 
-                      },
-                      'css-loader',
-                      'sass-loader'
+                        {
+                            loader: "style-loader",
+                            options: {injectType: "lazyStyleTag"},
+                        },
+                        'css-loader',
+                        'sass-loader'
                     ]
                 }
             ]

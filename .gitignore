@@ -25,6 +25,7 @@ pnpm-debug.log*
 # Logs
 logs
 *.log
+.lh
 
 # Runtime data
 pids

@@ -1,215 +1,204 @@
 <template>
-    <div class="pt-shell-app-nav-bar">
-        <pt-avatar :avatarUrl="avatarUrl"
-            :avatarName="avatarName"
-            :title="T(userInfo ? 'home.nav.user-info':'home.nav.user-login')"
-            @click="goto_login"
-            v-show="false"
-        />
-        <pt-list dataKey="text" :listData="apps" ref="applist" @click.native="doConfig">
-            <template v-slot="scope">
-                <pt-icon :iconName="scope.item.data.icon"
-                    size="medium"
-                    type="img"
-                    className="app-icon"
-                    :title="scope.item.data.text"/>
-            </template>
-        </pt-list>
-        <div class="capture" @click.prevent="doCapture" v-show="false">
-            <pt-icon type="img"
-                :iconName="captureIcon"
-                size="medium"
-                className="icon-setting"/>
-        </div>
-        <div class="icon-setting-container" @click="gotoGlobalSetting">
-            <pt-icon iconName="setting"
-                size="medium"
-                className="icon-setting"/>
-        </div>
-        
-    </div>
+	<div class="pt-shell-app-nav-bar">
+		<div class="pt-logo" :class="{ macos: IS_MACOS }">
+			<el-avatar shape="square" fit="fill" size="small" :src="require('@/assets/logo.png')" @click.native="doConfig" />
+		</div>
+		<div class="capture" @click.prevent="doCapture" v-show="false">
+			<pt-icon type="img" :iconName="captureIcon" size="medium" className="icon-setting" />
+		</div>
+		<!-- 设置相关 -->
+		<div class="icon-setting-container">
+			<Space vertical align="center">
+				<!-- 头像 -->
+				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />
+				<!-- 主题切换按钮 -->
+				<el-button type="text" :icon="themeIcon" @click="toggleTheme"></el-button>
+				<!-- 设置按钮 -->
+				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting"></el-button>
+			</Space>
+		</div>
+	</div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+	import { mapState, mapMutations } from 'vuex'
 
-import { SESSION_TYPES } from "@/services/session";
-import { createLocalFs } from "../services/nxsys/localfs";
-import * as EventBus from "../services/eventbus";
+	import { SESSION_TYPES } from '@/services/session'
+	import { createLocalFs } from '../services/nxsys/localfs'
+	import * as EventBus from '../services/eventbus'
 
-import NxShellIcon from "@/assets/logo.png"
-import VideoPlay from "@/assets/images/video.png"
-import VideoPause from "@/assets/images/pause.png"
+	import NxShellIcon from '@/assets/logo.png'
+	import VideoPlay from '@/assets/images/video.png'
+	import VideoPause from '@/assets/images/pause.png'
+	import Space from '@/components/space'
 
-export default {
-    name: "PtShellAppNavBar",
-    data() {
-        return {
-            apps: [
-                {
-                    text: "NxShell",
-                    icon: NxShellIcon
-                }
-            ],
-            capture: false,
-            fsClient: null,
-            captureIcon: VideoPlay,
-            sessionPannel: "open",
-        }
-    },
+	export default {
+		name: 'PtShellAppNavBar',
+		components: { Space },
+		data() {
+			return {
+				apps: [
+					{
+						text: 'NxShell',
+						icon: NxShellIcon
+					}
+				],
+				capture: false,
+				fsClient: null,
+				captureIcon: VideoPlay,
+				sessionPannel: 'open'
+			}
+		},
 
-    computed: {
-        ...mapState(["userInfo", "configPannel", "userLock"]),
-        avatarUrl() {
-            return this.userInfo ? this.userInfo.user_avatar : "";
-        },
-        avatarName() {
-            return this.userInfo ? this.userInfo.user_name : "";
-        }
-    },
+		computed: {
+			...mapState(['userInfo', 'configPannel', 'userLock', 'theme']),
+			avatarUrl() {
+				return this.userInfo ? this.userInfo.user_avatar : ''
+			},
+			avatarName() {
+				return this.userInfo ? this.userInfo.user_name : ''
+			},
+			themeIcon() {
+				return this.theme === 'light' ? 'el-icon-moon' : 'el-icon-sunny'
+			},
+			IS_MACOS() {
+				return /macintosh/i.test(navigator.userAgent)
+			}
+		},
 
-    async mounted() {
-        await this.$nextTick();
-        this.$refs.applist.selectItem(0);
-    },
+		async mounted() {
+			this.$nextTick(() => {
+				this.$refs.appList?.selectItem(0)
+			})
+		},
 
-    methods: {
-        ...mapMutations(['setConfigPannel']),
-        goto_login() {
-            const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN);
-            if (loginInstances.length) {
-                return;
-            }
-            this.$sessionManager.createLoginSessionInstance();
-        },
+		methods: {
+			...mapMutations(['setConfigPannel', 'setTheme']),
+			goto_login() {
+				const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
+				if (loginInstances.length) {
+					return
+				}
+				this.$sessionManager.createLoginSessionInstance()
+			},
 
-        gotoGlobalSetting() {
-            if (this.userLock) {
-                // not allow
-                return;
-            }
-            const globalSettingInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.GLOBALSETTING);
-            if (globalSettingInstances.length) {
-                return;
-            }
+			gotoGlobalSetting() {
+				if (this.userLock) {
+					// not allow
+					return
+				}
+				const globalSettingInstances = this.$sessionManager.matchSessionInstanceBySessionType(
+					SESSION_TYPES.GLOBALSETTING
+				)
+				if (globalSettingInstances.length) {
+					return
+				}
 
-            this.$sessionManager.createGlobalSettingSessionInstance();
-        },
+				this.$sessionManager.createGlobalSettingSessionInstance()
+			},
 
-        doCapture(e) {
-            if(this.capture) {
-                this.capture = false;
-                this.captureIcon = VideoPlay;
-                this.saveCaptureFile();
-            } else {
-                this.capture = true;
-                this.captureIcon = VideoPause;
-                powertools.captureStart();
-            }
+			doCapture(e) {
+				if (this.capture) {
+					this.capture = false
+					this.captureIcon = VideoPlay
+					this.saveCaptureFile()
+				} else {
+					this.capture = true
+					this.captureIcon = VideoPause
+					powertools.captureStart()
+				}
+			},
 
-        },
+			doConfig(e) {
+				let action = !this.configPannel ? 'open' : 'close'
+				EventBus.publish('session-config-pannel', action)
+				this.setConfigPannel(!this.configPannel)
+			},
 
-        doConfig(e) {
-            let action = (!this.configPannel) ? "open" : "close";
-            EventBus.publish("session-config-pannel", action);
-            this.setConfigPannel(! this.configPannel);
-        },
-
-        async saveCaptureFile() {
-            const save_buffer = await powertools.captureStop();
-            const coreService = powertools.getService("powertools-core");
-            const {canceled, filePath} = await coreService.showSaveDialog({
-                defaultPath: `nxshell-capture-${Date.now()}.webm`
-            });
-            if(canceled) {
-                return;
-            }
-            if(!this.fsClient) {
-                this.fsClient = await createLocalFs();
-            }
-            const w_handle = await this.fsClient.open(filePath, "w");
-            await this.fsClient.write(w_handle, save_buffer, 0, save_buffer.length, 0);
-            this.fsClient.close(w_handle);
-        }
-    }
-}
+			async saveCaptureFile() {
+				const save_buffer = await powertools.captureStop()
+				const coreService = powertools.getService('powertools-core')
+				const { canceled, filePath } = await coreService.showSaveDialog({
+					defaultPath: `nxshell-capture-${Date.now()}.webm`
+				})
+				if (canceled) {
+					return
+				}
+				if (!this.fsClient) {
+					this.fsClient = await createLocalFs()
+				}
+				const w_handle = await this.fsClient.open(filePath, 'w')
+				await this.fsClient.write(w_handle, save_buffer, 0, save_buffer.length, 0)
+				this.fsClient.close(w_handle)
+			},
+			toggleTheme() {
+				if (this.theme === 'light') {
+					this.setTheme('dark')
+					window.document.documentElement.setAttribute('nx-theme', 'dark')
+				} else {
+					this.setTheme('light')
+					window.document.documentElement.removeAttribute('nx-theme')
+				}
+			}
+		}
+	}
 </script>
 
 <style lang="scss">
-.pt-shell-app-nav-bar {
-    position: relative;
-    box-sizing: content-box;
+	.pt-shell-app-nav-bar {
+		display: flex;
+		padding: 10px;
+		height: calc(100vh - 20px);
+		flex-direction: column;
+		align-content: center;
+		align-items: center;
+		justify-content: space-between;
 
-    text-align: center;
+		.pt-logo {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 40px;
+			height: 40px;
 
-    padding: {
-        top: 36px;
-        bottom: 10px;
-    }
-    width: 100%;
-    // 需要减去padding-top和padding-bottom的大小
-    height: calc(100% - 46px);
+			.el-avatar {
+				background: transparent;
+			}
 
-    .pt-avatar {
-        cursor: pointer;
-    }
+			&:hover {
+				cursor: pointer;
+				background-color: var(--lightBackgroundColor);
+			}
+		}
+		.macos {
+			margin-top: 20px;
+		}
+		.icon-setting-container {
+			.el-button {
+				width: 40px;
 
-    // override list and list-item style
-    .pt-list {
-        overflow: hidden;
-        margin-top: 16px;
-        ul {
-            border: none;
-        }
-        
-        background-color: transparent;
-        .pt-list-item {
-            height: 60px;
-            line-height: 60px;
-            text-align: center;
-            color: lightgray;
+				i {
+					font-size: 20px;
+				}
 
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.3);
-            }
+				&:hover {
+					background-color: var(--lightBackgroundColor);
+				}
+			}
+		}
 
-            &.selected {
-                background-color: rgba(0, 0, 0, 0.1);
-                color: white;
-            }
+		.capture {
+			margin-top: 10px;
+			text-align: center;
 
-            .app-icon {
-                cursor: pointer;
-            }
-        }
-    }
+			.icon-setting {
+				color: lightgray;
+				cursor: pointer;
 
-    .icon-setting-container {
-        position: absolute;
-        width: 100%;
-        bottom: 10px;
-
-        text-align: center;
-
-        .icon-setting {
-            color: lightgray;
-            cursor: pointer;
-        }
-        &:hover {
-            background-color: var(--lightBackgroundColor);
-        }
-    }
-    .capture {
-        margin-top: 10px;
-        text-align: center;
-        .icon-setting {
-            color: lightgray;
-            cursor: pointer;
-            &:hover {
-                color: white;
-            }
-        }
-    }
-    
-}
+				&:hover {
+					color: white;
+				}
+			}
+		}
+	}
 </style>
