@@ -260,9 +260,9 @@ export default {
 	border-radius: 3px;
 
 	border: 1px solid var(--borderColor);
-	background-color: var(--backgroundColor);
+	background-color: var(--n-bg-color-light);
 
-	color: var(--primaryTextColor);
+	color: var(--n-text-color-base);
 	overflow: hidden;
 
 	.container {
@@ -277,7 +277,7 @@ export default {
 	}
 
 	&.editable {
-		border: 1px solid var(--primaryColor);
+		border: 1px solid var(--n-border-color);
 	}
 
 	.btn-scroll {
@@ -288,20 +288,24 @@ export default {
 		height: 28px;
 		cursor: pointer;
 		z-index: 999;
-		background-color: var(--lightBackgroundColor);
+		background-color: var(--n-bg-color-light);
+
+		&:hover:not(.disabled) {
+			background-color: var(--n-hover-bg-color);
+		}
 
 		i {
 			font-size: 18px;
 
 			&:hover {
-				color: var(--primaryTextColor);
+				color: var(--n-text-color-base);
 				transition: color 0.2s;
 			}
 		}
 
 		&.disabled {
 			i {
-				color: #C0C4CC;
+				color: #B8B8B8;
 			}
 		}
 	}
@@ -319,16 +323,11 @@ export default {
 			justify-content: space-between;
 			align-items: center;
 			list-style: none;
-			margin: {
-				left: 1px;
-				right: 1px;
-			}
 			padding: {
 				left: 5px;
 			}
 			box-sizing: border-box;
 			border: 1px solid transparent;
-			border-radius: 3px;
 
 			height: 30px;
 			line-height: 30px;
@@ -339,26 +338,17 @@ export default {
 			cursor: pointer;
 
 			&:hover {
-				border: 1px solid var(--fileViewAddressHostBorderColor);
-				background-color: var(--fileViewAddressHostBackgroundColor);
+				background-color: var(--n-hover-bg-color);
 			}
 
 			&.host {
-				margin: 0;
 				max-width: 200px;
-				// border: 1px solid var(--fileViewAddressHostBorderColor);
-				// background-color: var(--fileViewAddressHostBackgroundColor);
 			}
 
 			.pop-menu {
 				&:hover {
-					color: var(--primaryColor);
+					color: var(--n-text-color-base);
 				}
-			}
-
-			.pt-icon-wrapper {
-				// 强制修正不对齐的问题
-				height: 28px;
 			}
 		}
 	}
@@ -370,8 +360,8 @@ export default {
 		line-height: 26px;
 		// width: calc(100% - 112px);
 		width: 100%;
-		color: var(--primaryTextColor);
-		background-color: var(--backgroundColor);
+		color: var(--n-text-color-base);
+		background-color: var(--n-bg-color-base);
 		flex-grow: 0;
 	}
 }

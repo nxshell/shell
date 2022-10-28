@@ -192,7 +192,7 @@ export default {
 <style lang="scss">
 .global-profile {
     position: relative;
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
 
     width: 100%;
     height: 100%;
@@ -208,7 +208,7 @@ export default {
 
     .nav-tree-container {
         padding: {top: 15px; bottom: 15px;};
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     .profile-container {
@@ -232,7 +232,7 @@ export default {
                     font-weight: bold;
 
                     background-color: var(--primaryColor) !important;
-                    color: var(--primaryTextColor);
+                    color: var(--n-text-color-base);
                 }
             }
         }

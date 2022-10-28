@@ -114,7 +114,7 @@ export default {
 	height: 40px;
 	box-sizing: border-box;
 	overflow: hidden;
-	background-color: var(--tabs-bg-color);
+	background-color: var(--n-tabs-bg-color);
 
 	.content {
 		display: inline-block;

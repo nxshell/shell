@@ -731,8 +731,8 @@ export default {
 			height: 34px;
 			line-height: 34px;
 			padding: 0 10px;
-			color: var(--primaryTextColor);
-			background-color: var(--backgroundColor);
+			color: var(--n-text-color-base);
+			background-color: var(--n-bg-color-base);
             margin-right: 5px;
 		}
 		.btn {
@@ -743,12 +743,12 @@ export default {
 			height: 32px;
 			line-height: 22px;
 			padding: 5px;
-			color: var(--primaryTextColor);
+			color: var(--n-text-color-base);
 			border-radius: 4px;
             margin-right: 5px;
 			&:hover {
 				cursor: pointer;
-				background-color: var(--backgroundColor);
+				background-color: var(--n-bg-color-base);
 			}
 		}
 	}

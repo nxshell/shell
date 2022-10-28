@@ -133,7 +133,7 @@ export default {
 		&:hover {
 			cursor: pointer;
 			border-radius: 4px;
-			background-color: var(--highlightItemColor);
+			background-color: var(--n-hover-bg-color);
 		}
 
 		.item-icon {
@@ -147,7 +147,7 @@ export default {
 			display: inline-block;
 			flex-grow: 1;
 			text-align: left;
-			color: var(--primaryTextColor);
+			color: var(--n-text-color-base);
 		}
 
 		.item-accelerator {

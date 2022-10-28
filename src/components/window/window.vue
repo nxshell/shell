@@ -1,21 +1,21 @@
 <template>
 	<div class="pt-window" :class="{ 'not-macos': !IS_MAC_OS }">
 		<div class="left-panel" v-if="leftPanel" :style="{ width: leftPanelWidth + 'px' }">
-			<slot name="left-panel"/>
+			<slot name="left-panel" />
 		</div>
 		<div class="main-panel">
 			<div class="title-bar" :class="{ drag: isMainWindow, deactive: !active }">
-				<Toolbar :visible="true" class="title-text"></Toolbar>
+				<toolbar :visible="true" class="title-text" />
 				<div class="window-controls-container" v-if="!IS_MAC_OS">
 					<Space :size="20">
 						<span class="control-btn" @click="doMinimize">
-							<i class="el-icon-minus"/>
+							<i class="el-icon-minus" />
 						</span>
 						<span class="control-btn" @click="doMaximize">
-							<i :class="state === 'normal' ? 'el-icon-full-screen' : 'el-icon-copy-document'"/>
+							<i :class="state === 'normal' ? 'el-icon-full-screen' : 'el-icon-copy-document'" />
 						</span>
 						<span class="control-btn" @click="doClose">
-							<i class="el-icon-close"/>
+							<i class="el-icon-close" />
 						</span>
 					</Space>
 				</div>
@@ -34,7 +34,7 @@ import Toolbar from "@/views/components/toolbar";
 const IS_MAC_OS = /macintosh/i.test(navigator.userAgent)
 export default {
 	name: 'PtWindow',
-	components: {Space, Toolbar},
+	components: { Space, Toolbar },
 	props: {
 		isMainWindow: {
 			type: Boolean,
@@ -68,7 +68,7 @@ export default {
 	},
 	computed: {
 		main_container_fix_style() {
-			return this.topPanel ? {} : {height: '100%'}
+			return this.topPanel ? {} : { height: '100%' }
 		}
 	},
 
@@ -145,7 +145,7 @@ export default {
 
 	.left-panel {
 		height: 100%;
-		background-color: var(--backgroundColor);
+		background-color: var(--n-bg-color-base);
 		//border-right: 1px solid var(--lightBackgroundColor);
 	}
 
@@ -159,7 +159,7 @@ export default {
 			align-items: center;
 			height: 40px;
 			width: 100%;
-			background-color: var(--windowTitleBarColor);
+			background-color: var(--n-bg-color-base);
 
 			&.drag {
 				-webkit-app-region: drag;
@@ -184,12 +184,12 @@ export default {
 					height: 32px;
 					line-height: 32px;
 					text-align: center;
-					color: var(--primaryTextColor);
+					color: var(--n-text-color-base);
 
 					&:hover {
 						cursor: pointer;
 						color: #ffffff;
-						background-color: var(--windowTitleBarDeactiveColor);
+						background-color: var(--n-hover-bg-color);
 					}
 				}
 			}

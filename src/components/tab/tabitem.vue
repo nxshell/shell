@@ -78,8 +78,8 @@ export default {
 	height: 30px;
 	line-height: 30px;
 	border: none;
-	color: var(--primaryTextColor);
-	background-color: var(--tabs-item-bg-color);
+	color: var(--n-text-color-base);
+	background-color: var(--n-tabs-item-bg-color);
 	user-select: none;
 	transition: all 0.2s;
 
@@ -93,15 +93,15 @@ export default {
 
 	&:hover {
 		cursor: pointer;
-		color: var(--primaryTextColor);
-		background-color: var(--btnPrimaryHoverBackgroundColor);
+		color: var(--n-text-color-base);
+		background-color: var(--n-tabs-item-hover-bg-color);
 		transition: all 0.2s;
 	}
 
 	&.pt-tab-item--selected {
-		background-color: var(--btnPrimaryHoverBackgroundColor);
-		border-color: var(--btnPrimaryHoverBackgroundColor);
-		color: white;
+		background-color: var(--n-tabs-item-hover-bg-color);
+		border-color: var(--n-tabs-item-hover-bg-color);
+		color: var(--n-text-color-base);
 		transition: all 0.2s;
 	}
 }

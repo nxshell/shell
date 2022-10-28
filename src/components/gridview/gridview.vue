@@ -670,9 +670,9 @@ export default {
         box-sizing: border-box;
         z-index: 2;
 
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
 
-        background-color: var(--backgroundColor);
+        background-color: var(--n-bg-color-base);
 
         .columns {
             display: flex;

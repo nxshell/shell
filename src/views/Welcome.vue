@@ -132,12 +132,12 @@ export default {
     padding: 20px 60px;
     width: 100%;
     height: 100%;
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
 
     h1 {
         margin-bottom: 12px;
         font-size: 32px;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     .sub-header {
@@ -153,7 +153,7 @@ export default {
         h2 {
             margin-bottom: 20px;
             font-size: 20px;
-            color: var(--primaryTextColor);
+            color: var(--n-text-color-base);
         }
 
         .link-line {
@@ -162,7 +162,7 @@ export default {
             font-size: 14px;
 
             a {
-                color: var(--primaryTextColor);
+                color: var(--n-text-color-base);
                 &:visited {
                     color: var(--secondaryTextColor);
                 }
@@ -170,7 +170,7 @@ export default {
         }
 
         .no-data {
-            color: var(--primaryTextColor);
+            color: var(--n-text-color-base);
         }
         
         .contributer-list {

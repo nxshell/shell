@@ -1,65 +1,27 @@
 :root {
-  --primaryColor: rgb(42,130, 228);
-  --primaryTextColor: rgb(80, 80, 80);
-  --secondaryTextColor: rgb(128, 128, 128);
+  --n-disabled-color: #B8B8B8;
 
-  // 高亮色，相对于主色调
-  --highlightColor: #ffffff;
-  --deactiveTextColor: rgb(166, 166, 166);
+  --n-bg-color-base: #FFFFFF;
+  --n-bg-color-light: #EFF0F7;
+  --n-text-color: #000;
+  --n-text-color-base: #132847;
+  --n-text-color-light: rgb(51, 54, 57);
+  --n-hover-bg-color: rgba(46, 51, 56, 0.05);
 
-  // --borderColor: rgb(218, 173, 173);
+  --n-button-primary: #63e2b7;
+  --n-button-primary-hover: #7fe7c4;
 
-  --windowBorderColor: rgb(128, 128, 128);
-  --windowTitleBarColor: rgb(245, 245, 248);
-  --windowTitleBarDeactiveColor: rgb(245, 245, 245);
-  --highlightItemColor: rgb(229, 229, 229);
-  --hoverItemColor: rgb(230, 230, 230);
-  --borderColor: rgb(229, 229, 229);
-  --darkBorderColor: #b2b2b2;
+  --n-input-bg-color: rgb(220, 223, 230, 0.8);
+  --n-border-color: rgb(220, 223, 230, 0.8);
 
-  --backgroundColor: white;
-  --lightBackgroundColor: rgb(245, 245, 245);
-  --darkBackgroundColor: rgb(229, 229, 229);
+  --n-color-bg-dialog: #ffffff;
+  --n-color-modal: #ffffff;
+  --n-progress-bar-color: #90CAF9;
 
-  --disableColor: #dddddd;
-  --successColor: #43cf7c;
-  --infoColor: rgb(128, 128, 128);
-  --warningColor: #ff8d1a;
-  --dangerColor: #d43030;
+  /* Tabs */
+  --n-tabs-bg-color: #FAFAFA;
+  --n-tabs-item-bg-color: #FFFFFF;
+  --n-tabs-item-hover-bg-color: rgba(46, 51, 56, 0.09);
 
-  --btnPrimaryPlainBackgroundColor: #f6fafe;
-  --btnPrimaryPlainColor: white;
-  --btnPrimaryBackgroundColor: rgb(42,130, 228);
-  --btnPrimaryHoverBackgroundColor: #579dea;
 
-  --btnSuccessPlainBackgroundColor: #fafefb;
-  --btnSuccessPlainColor: #43cf7c;
-  --btnSuccessBackgroundColor: #43cf7c;
-  --btnSuccessHoverBackgroundColor: #6cd998;
-
-  --btnInfoPlainBackgroundColor: #f3f3f3;
-  --btnInfoPlainColor: rgb(128, 128, 128);
-  --btnInfoBackgroundColor: rgb(128, 128, 128);
-  --btnInfoHoverBackgroundColor: #9a9a9a;
-
-  --btnWarningPlainBackgroundColor: white;
-  --btnWarningPlainColor: #ff8d1a;
-  --btnWarningBackgroundColor: #ff8d1a;
-  --btnWarningHoverBackgroundColor: #ffa64d;
-
-  --btnDangerPlainBackgroundColor: #fbeeee;
-  --btnDangerPlainColor: #d43030;
-  --btnDangerBackgroundColor: #d43030;
-  --btnDangerHoverBackgroundColor: #dd5a5a;
-
-  --treeNodeInsertCurrentColor: #85b7ef;
-
-  --gridviewSelectedBorderColor: rgb(42,130, 228);
-  --gridviewSelectedBackgroundColor: rgba(42,130, 228, .2);
-  --gridviewHoverBorderColor:  rgb(42,130, 228, .3);
-  --gridviewHoverBackgroundColor:  rgb(42,130, 228, .05);
-
-  --fileViewAddressHostBorderColor: rgb(42,130, 228, .3);
-  --fileViewAddressHostBackgroundColor: rgb(42,130, 228, .05);
-  --processBarColor: #43cf7c;
 }

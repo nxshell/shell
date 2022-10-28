@@ -95,7 +95,7 @@ export default {
     padding: 1px;
     overflow: hidden;
 
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
     border: solid 1px var(--borderColor);
     
     transition: all 0.2s;
@@ -114,8 +114,8 @@ export default {
         outline: none;
         width: calc(100% - 18px);
         height: calc(100% - 2px);
-        background-color: var(--backgroundColor);
-        color: var(--primaryTextColor);
+        background-color: var(--n-bg-color-base);
+        color: var(--n-text-color-base);
 
         padding-left: 15px
     }

@@ -1242,7 +1242,7 @@ export default {
 		box-sizing: border-box;
 		height: 40px;
 		padding-left: 2px;
-		background-color: var(--backgroundColor);
+		background-color: var(--n-bg-color-base);
 
 		.el-input {
 			width: 213px;
@@ -1257,7 +1257,7 @@ export default {
 			height: 32px;
 			line-height: 22px;
 			padding: 5px;
-			color: var(--primaryTextColor);
+			color: var(--n-text-color-base);
 			border-radius: 4px;
 			background-color: var(--lightBackgroundColor);
 
@@ -1273,7 +1273,7 @@ export default {
 		width: 100%;
 		height: 100%;
 		background-color: var(--lightBackgroundColor);
-		color: var(--primaryTextColor);
+		color: var(--n-text-color-base);
 		outline: none;
 		// border: solid 1px var(--borderColor);
 

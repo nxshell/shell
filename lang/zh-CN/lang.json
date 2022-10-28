@@ -557,7 +557,7 @@
             },
             "mainview": {
                 "total-file-count": "共 $0 个项目",
-                "total-selected-count": "共 $0 个项目，选择了 $1 个项目",
+                "total-selected-count": "共 $0 个项目  选中 $1 个项目",
                 "search-tab": "请输入要搜索的文件名称",
                 "go-back": "后退",
                 "go-forward": "前进",

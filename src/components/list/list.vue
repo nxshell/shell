@@ -156,7 +156,7 @@ export default {
         }
 
         &.selected {
-            background-color: var(--highlightItemColor);
+            background-color: var(--n-hover-bg-color);
         }
     }
 }

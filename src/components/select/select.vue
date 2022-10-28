@@ -54,7 +54,7 @@ export default {
     height: $selectHeight;
 
     border: solid 1px var(--borderColor);
-    background-color: var(--backgroundColor);
-    color: var(--primaryTextColor);
+    background-color: var(--n-bg-color-base);
+    color: var(--n-text-color-base);
 }
 </style>

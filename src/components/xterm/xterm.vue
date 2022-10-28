@@ -497,9 +497,9 @@ export default {
 		align-items: center;
 
 		.switch-btn {
-			border: 1px solid var(--primaryTextColor);
-			color: var(--primaryTextColor);
-			background-color: var(--backgroundColor);
+			border: 1px solid var(--n-text-color-base);
+			color: var(--n-text-color-base);
+			background-color: var(--n-bg-color-base);
 		}
 	}
 }

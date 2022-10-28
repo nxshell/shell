@@ -11,6 +11,7 @@ import PtComponents from "@/components";
 import PtSessionManger from "@/services";
 
 import Element from './element'
+import '@/assets/scss/theme/element-variables.scss'
 
 Vue.use(PtComponents);
 Vue.use(PtSessionManger);

@@ -16,6 +16,7 @@ import {
 	handleSessionInstActive,
 	updateSessionInstTabs,
 	activeSession,
+	setupBarShortCut
 } from '@/views/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
 
@@ -124,13 +125,13 @@ export default {
 			this.updateSessionInstTabs()
 		})
 		// 绑定快捷键
-		// this.setupBarShortCut()
+		this.setupBarShortCut()
 	},
 	methods: {
 		handleSessionInstActive,
 		updateSessionInstTabs,
 		activeSession,
-		// setupBarShortCut,
+		setupBarShortCut,
 		async handleClose() {
 			// await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},

@@ -272,11 +272,11 @@ export default {
 
 		&:hover {
 			cursor: pointer;
-			background-color: var(--highlightItemColor);
+			background-color: var(--n-hover-bg-color);
 		}
 
 		&.selected {
-			background-color: var(--highlightItemColor);
+			background-color: var(--n-hover-bg-color);
 		}
 
 		.text {

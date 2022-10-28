@@ -24,10 +24,9 @@ export default {
         left: 5px;
         right: 5px;
     }
-    color: var(--primaryTextColor);
+    color: var(--n-text-color-base);
     box-sizing: content-box;
-    border-top: 1px solid var(--borderColor);
-
-    background-color: var(--backgroundColor);
+    border-top: 1px solid var(--n-border-color);
+    background-color: var(--n-bg-color-base);
 }
 </style>

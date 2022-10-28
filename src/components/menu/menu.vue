@@ -42,7 +42,7 @@ export default {
 		bottom: 5px;
 	}
 	border-radius: 4px;
-	background-color: var(--lightBackgroundColor);
-	box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .2);
+	background-color: var(--n-color-modal);
+	box-shadow: 2px 2px 30px 1px rgba(0, 0, 0, .2);
 }
 </style>

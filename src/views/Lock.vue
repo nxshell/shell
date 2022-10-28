@@ -83,12 +83,12 @@ export default {
 <style lang="scss">
 
 .lock-page {
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
     width: 100%;
     height: 100%;
     font-size: 20px;
 
-    color: var(--primaryTextColor);
+    color: var(--n-text-color-base);
 
     display: flex;
     flex-direction: column;
@@ -98,7 +98,7 @@ export default {
 
     .lock-desc {
         font-size: 20px;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
         margin-bottom: 25px;
     }
 
@@ -117,7 +117,7 @@ export default {
 
     .password-note {
         margin-right: 10px;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
         font-size: 15px;
     }
 }

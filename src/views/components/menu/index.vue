@@ -330,7 +330,7 @@ export default {
 .nx-menu-wrapper {
 	position: relative;
 	height: 100%;
-	background-color: var(--backgroundColor);
+	background-color: var(--n-bg-color-base);
 
 	.el-empty {
 		position: absolute;
@@ -340,7 +340,7 @@ export default {
 
 		.el-empty__description {
 			p {
-				color: var(--primaryTextColor);
+				color: var(--n-text-color-base);
 			}
 		}
 	}
@@ -353,11 +353,11 @@ export default {
 
 			.pt-tree-item {
 				border-radius: 4px;
-				color: var(--primaryTextColor);
+				color: var(--n-text-color-base);
 
-				&:hover {
-					color: #fff;
-				}
+				//&:hover {
+				//	color: #fff;
+				//}
 
 				.session-extend {
 					display: inline-flex;
@@ -369,7 +369,7 @@ export default {
 					border-radius: 4px;
 
 					&:hover {
-						background-color: var(--highlightItemColor);
+						background-color: var(--n-hover-bg-color);
 					}
 				}
 			}

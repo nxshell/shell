@@ -162,8 +162,8 @@ export default {
     /** 大小  */
     &.pt-button--default {
         border: solid 1px var(--borderColor);
-        background-color: var(--backgroundColor);
-        color: var(--primaryTextColor);
+        background-color: var(--n-bg-color-base);
+        color: var(--n-text-color-base);
         transition: all 0.2s;
         &:hover {
             border: solid 1px var(--primaryColor);

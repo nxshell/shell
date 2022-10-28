@@ -156,7 +156,7 @@ export default {
 <style lang="scss">
 .pt-grid-view-item {
     position: relative;
-    color: var(--primaryTextColor);
+    color: var(--n-text-color-base);
     box-sizing: border-box;
 
     .pt-grid-view-item-container {
@@ -169,12 +169,12 @@ export default {
 
         border: 1px solid transparent;
         &:hover {
-            border: 1px solid var(--gridviewHoverBorderColor);
-            background-color: var(--gridviewHoverBackgroundColor);
+            border: 1px solid var(--n-hover-bg-color);
+            background-color: var(--n-hover-bg-color);
         }
         &.selected {
-            border: 1px solid var(--gridviewSelectedBorderColor);
-            background-color: var(--gridviewSelectedBackgroundColor);
+            border: 1px solid var(--n-hover-bg-color);
+            background-color: var(--n-hover-bg-color);
         }
 
         .detail-name-field {

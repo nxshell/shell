@@ -108,7 +108,7 @@ export default {
 #app {
 	width: 100%;
 	height: 100%;
-	background-color: var(--lightBackgroundColor);
+	background-color: var(--n-bg-color-light);
 	//background-image: url("https://images.unsplash.com/photo-1515674744565-0d7112cd179a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
 	//background-repeat: no-repeat;
 	//background-size: 100% 100%;
@@ -121,7 +121,7 @@ export default {
 
 	.main-window {
 		.control-panel {
-			background-color: var(--primaryColor);
+			background-color: var(--n-bg-color-light);
 		}
 	}
 }

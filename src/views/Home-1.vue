@@ -1,7 +1,7 @@
 <template>
 	<div class="nx-layout-wrapper">
 		<div v-if="configPanel" class="nx-layout-left">
-			<nx-menu />
+			<nx-menu ref="menuRef" />
 		</div>
 		<div class="nx-layout-right" :style="{width: `calc(100% - ${configPanel ? 295 : 0}px)`}">
 			<!-- toggle-bar	-->
@@ -16,7 +16,7 @@
 			<div v-if="showTabs" class="nx-content-tabs">
 				<tab-bar />
 			</div>
-			<div class="nx-content" :style="{height: `calc(100% - ${showTabs ? '0px' : '40px'})`}">
+			<div class="nx-content" :style="{height: `calc(100% - ${showTabs ? '40px':'0px' })`}">
 				<keep-alive>
 					<router-view :key="$route.name" />
 				</keep-alive>
@@ -33,10 +33,9 @@ import { mapMutations, mapState } from 'vuex'
 
 export default {
 	name: 'Home',
-	components: { Space, TabBar, NxMenu },
+	components: { Space, NxMenu, TabBar },
 	data() {
-		return {
-		}
+		return {}
 	},
 	computed: {
 		...mapState(['configPanel', 'showTabs'])
@@ -74,7 +73,7 @@ export default {
 		width: var(--tool-box-width);
 		height: 100vh;
 		box-sizing: border-box;
-		padding: 0 1px;
+		padding: 5px;
 	}
 
 	.nx-layout-right {

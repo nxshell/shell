@@ -109,13 +109,13 @@ export default {
         margin-bottom: 10px;
         font-size: 14px;
         font-weight: 600;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     label {
         font-size: 11px;
         font-weight: 600;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     p {

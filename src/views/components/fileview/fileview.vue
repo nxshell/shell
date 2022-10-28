@@ -1,4 +1,4 @@
-<template>
+<template xmlns="">
 	<div class="pt-file-view">
 		<pt-toolbar
 			:centerStyle="{
@@ -9,20 +9,36 @@
 		>
 			<template slot="left">
 				<Space :size="5">
-					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-back')"
-					            placement="right-end">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('home.fileview.mainview.go-back')"
+						placement="right-end"
+					>
 						<el-button type="text" icon="el-icon-back" :disabled="!canGoBack" @click="goBack" />
 					</el-tooltip>
-					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-forward')"
-					            placement="right-end">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('home.fileview.mainview.go-forward')"
+						placement="right-end"
+					>
 						<el-button type="text" icon="el-icon-right" :disabled="!canForward" @click="forward" />
 					</el-tooltip>
-					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-up')"
-					            placement="right-end">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('home.fileview.mainview.go-up')"
+						placement="right-end"
+					>
 						<el-button type="text" icon="el-icon-top" :disabled="!canGoUp" @click="goUp" />
 					</el-tooltip>
-					<el-tooltip class="item" effect="dark" :content="T('home.fileview.mainview.go-refresh')"
-					            placement="right-end">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('home.fileview.mainview.go-refresh')"
+						placement="right-end"
+					>
 						<el-button type="text" icon="el-icon-refresh" :disabled="!refresh" @click="refresh" />
 					</el-tooltip>
 				</Space>
@@ -40,10 +56,10 @@
 					v-model="searchKeyWords"
 					:placeholder="T('home.fileview.mainview.search-tab')"
 					class="nx-search-input"
-					suffix-icon="el-icon-search" />
+					suffix-icon="el-icon-search"
+				/>
 			</template>
 		</pt-toolbar>
-		<!-- <pt-toolbar></pt-toolbar> -->
 		<pt-grid-view
 			:mode="layout"
 			:columns="columns"
@@ -58,37 +74,16 @@
 			@file-sort="handleFileSort"
 			v-context-menu="handleGetContextMenu"
 		></pt-grid-view>
-		<pt-status-bar>
-			<pt-status-bar-item>
-				{{
-					selectedItems.length > 0
-						? T('home.fileview.mainview.total-selected-count', fileList.length, selectedItems.length)
-						: T('home.fileview.mainview.total-file-count', fileList.length)
-				}}
-			</pt-status-bar-item>
-			<pt-status-bar-item v-if="currentProgressStatus.show" align="right">
-				<span class="status-description">{{ currentProgressStatus.description }}</span>
-			</pt-status-bar-item>
-			<pt-status-bar-item v-if="currentProgressStatus.show">
-				<pt-progress
-					:height="16"
-					:progress="currentProgressStatus.progress"
-					:speed="currentProgressStatus.speed"
-				></pt-progress>
-			</pt-status-bar-item>
-			<!-- <pt-status-bar-item
-				grow
-				align="right"
-			>
-				<pt-icon size="small"></pt-icon>
-			</pt-status-bar-item> -->
-		</pt-status-bar>
-		<pt-dialog
-			:title="T('home.fileview.prop-dialog.file-props')"
-			:show.sync="filePropDialog.show"
-			@ok="handleCloseFilePropDialog"
-			@cancel="handleCloseFilePropDialog"
-		>
+		<file-status-bar
+			:file-total="fileList.length"
+			:selected-length="selectedItems.length"
+			:progress-desc="currentProgressStatus.description"
+			:show-progress="currentProgressStatus.show"
+			:progress="currentProgressStatus.progress"
+			:speed="currentProgressStatus.speed"
+		/>
+		<!-- 查看文件属性弹窗 -->
+		<el-dialog :title="T('home.fileview.prop-dialog.file-props')" :visible.sync="filePropDialog.show">
 			<div class="file-prop-dialog">
 				<div class="file-base-info info-block">
 					<pt-icon size="large" type="img" :iconName="filePropDialog.dirent.fileicon"></pt-icon>
@@ -134,76 +129,106 @@
 					</pt-row>
 				</div>
 			</div>
-		</pt-dialog>
-		<pt-dialog
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="handleCloseFilePropDialog">取 消</el-button>
+				<el-button type="primary" @click="handleCloseFilePropDialog">确 定</el-button>
+			</div>
+		</el-dialog>
+		<!-- 创建文件夹弹窗 -->
+		<el-dialog
 			:title="T('home.fileview.createdir-dialog.title')"
-			:show.sync="dirCreateDialog.show"
-			@ok="handleCreateDirConfirm"
-			@cancel="handleCreateDirCancel"
+			:visible.sync="dirCreateDialog.show"
+			:close-on-click-modal="false"
+			width="450px"
 		>
-			<div class="create-dir-dialog">
-				<pt-inputbox
+			<Space vertical :item-style="{width: '100%'}">
+				<el-input
 					v-model="dirCreateDialog.dirname"
-					type="text"
 					:placeholder="T('home.fileview.createdir-dialog.placeholder')"
-				></pt-inputbox>
-				<p v-if="!isValidNewDirName" class="invalid-dir-name">
-					{{ T('home.fileview.createdir-dialog.invalid-dir-name') }}
-				</p>
+				/>
+				<el-alert
+					v-if="!isValidNewDirName"
+					:title="T('home.fileview.createdir-dialog.invalid-dir-name')"
+					:closable="false"
+					type="warning"
+					show-icon
+				/>
+			</Space>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="handleCreateDirCancel">取 消</el-button>
+				<el-button type="primary" @click="handleCreateDirConfirm">确 定</el-button>
 			</div>
-		</pt-dialog>
-		<pt-dialog
+		</el-dialog>
+		<!-- 重命名弹窗 -->
+		<el-dialog
 			:title="T('home.fileview.rename-dialog.title')"
-			:show.sync="renameDialog.show"
-			@ok="handleRenameConfirm"
-			@cancel="handleRenameCancel"
+			:visible.sync="renameDialog.show"
+			:close-on-click-modal="false"
+			width="400px"
 		>
-			<div class="create-dir-dialog">
-				<pt-inputbox
-					v-model="renameDialog.dirname"
-					type="text"
-					:placeholder="T('home.fileview.rename-dialog.placeholder')"
-				></pt-inputbox>
-				<p v-if="!isValidNewDirName" class="invalid-dir-name">
-					{{ T('home.fileview.rename-dialog.invalid-name') }}
-				</p>
+			<Space vertical :item-style="{width: '100%'}">
+				<el-input v-model="renameDialog.dirname"
+				          :placeholder="T('home.fileview.rename-dialog.placeholder')"></el-input>
+				<el-alert
+					v-if="!isValidRenameDirName"
+					:title="T('home.fileview.rename-dialog.invalid-name')"
+					:closable="false"
+					type="warning"
+					show-icon
+				/>
+			</Space>
+
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="handleRenameCancel">取 消</el-button>
+				<el-button type="primary" @click="handleRenameConfirm">确 定</el-button>
 			</div>
-		</pt-dialog>
-		<pt-dialog
+		</el-dialog>
+		<!-- 文件权限修改弹窗 -->
+		<el-dialog
 			:title="T('home.fileview.chmod-dialog.title')"
-			:show.sync="chmodDialog.show"
-			@ok="handleChmodConfirm"
-			@cancel="handleCloseChmodDialog"
+			:visible.sync="chmodDialog.show"
+			:close-on-click-modal="false"
+			width="400px"
 		>
-			<div class="create-dir-dialog">
-				<pt-inputbox
-					v-model="chmodDialog.permissions"
-					type="text"
-					:placeholder="T('home.fileview.chmod-dialog.placeholder')"
-				></pt-inputbox>
-				<p v-if="!isValidPermissions" class="invalid-dir-name">
-					{{ T('home.fileview.chmod-dialog.invalid-permissions') }}
-				</p>
+			<Space vertical :item-style="{width: '100%'}">
+				<el-input v-model="chmodDialog.permissions"
+				          :placeholder="T('home.fileview.chmod-dialog.placeholder')"></el-input>
+				<el-alert
+					v-if="!isValidPermissions"
+					:title="T('home.fileview.chmod-dialog.invalid-permissions')"
+					:closable="false"
+					type="warning"
+					show-icon
+				/>
+			</Space>
+
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="handleCloseChmodDialog">取 消</el-button>
+				<el-button type="primary" @click="handleChmodConfirm">确 定</el-button>
 			</div>
-		</pt-dialog>
-		<pt-dialog
+		</el-dialog>
+		<!-- 文件移动弹窗 -->
+		<el-dialog
 			:title="T('home.fileview.move-dialog.title')"
-			:show.sync="moveDialog.show"
-			@ok="handleMoveConfirm"
-			@cancel="handleCloseMoveDialog"
+			:visible.sync="moveDialog.show"
+			:close-on-click-modal="false"
+			width="400px"
 		>
-			<div class="move-dir-dialog">
-				<pt-select v-model="moveDialog.dirname" class="move-dir-select">
-					<pt-select-option
+			<div style="width: 100%">
+				<el-select v-model="moveDialog.dirname" placeholder="请选择">
+					<el-option
 						v-for="(opt, idx) in moveDialog.dirnameList"
 						:key="idx"
 						:label="opt"
-						:value="opt"
-					/>
-				</pt-select>
+						:value="opt" />
+				</el-select>
 			</div>
-		</pt-dialog>
-		<pt-dialog :title="askDialog.title" :show.sync="askDialog.show">
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="handleCloseMoveDialog">取 消</el-button>
+				<el-button type="primary" @click="handleMoveConfirm">确 定</el-button>
+			</div>
+		</el-dialog>
+		<el-dialog :title="askDialog.title" :visible.sync="askDialog.show" width="600px">
 			<!-- 合并目录 -->
 			<div v-if="askDialog.questionType === 'merge'" class="ask-dialog">
 				<p class="message">{{ T('home.fileview.ask-dialogs.merge.message', askDialog.args.name) }}</p>
@@ -252,6 +277,7 @@
 						T('home.fileview.ask-dialogs.merge.keep')
 					}}</span></span
 				>
+				<el-checkbox v-model="askDialog.keep">{{ T('home.fileview.ask-dialogs.merge.keep') }}</el-checkbox>
 			</div>
 			<!-- 覆盖文件 -->
 			<div v-if="askDialog.questionType === 'overwrite'" class="ask-dialog">
@@ -320,37 +346,21 @@
 						</pt-col>
 					</pt-row>
 				</div>
-				<span
-				><input type="checkbox" v-model="askDialog.keep" /><span>{{
-						T('home.fileview.ask-dialogs.overwrite.keep')
-					}}</span></span
-				>
+				<el-checkbox v-model="askDialog.keep">{{ T('home.fileview.ask-dialogs.overwrite.keep') }}</el-checkbox>
 			</div>
-			<pt-button
-				v-if="askDialog.questionType === 'merge'"
-				slot="footer"
-				type="danger"
-				size="small"
-				@click="handleMergeFolder"
-				focus
-			>{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
-			</pt-button>
-			<pt-button
-				v-if="askDialog.questionType === 'overwrite'"
-				slot="footer"
-				type="danger"
-				size="small"
-				@click="handleOverwrite"
-				focus
-			>{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
-			</pt-button>
-			<pt-button slot="footer" type="info" size="small" @click="handleSkip" focus>
-				{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}
-			</pt-button>
-			<pt-button slot="footer" size="small" @click="handleTransCancel">
-				{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
-			</pt-button>
-		</pt-dialog>
+			<template #footer>
+				<el-button v-if="askDialog.questionType === 'merge'" type="danger" @click="handleMergeFolder">
+					{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
+				</el-button>
+				<el-button v-if="askDialog.questionType === 'overwrite'" type="primary" @click="handleOverwrite">
+					{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
+				</el-button>
+				<el-button @click="handleSkip">{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}</el-button>
+				<el-button @click="handleTransCancel"
+				>{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
+				</el-button>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
@@ -361,6 +371,7 @@ import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../
 import { Dirent } from '../../../../common/filesystem/dirent'
 import { createDataTransfer } from '@/services/nxsys/dataTransfer'
 import Space from '@/components/space'
+import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
 
 function sort(dirent1, dirent2) {
 	return dirent1.name > dirent2.name
@@ -397,6 +408,7 @@ function formatFileSize(size, detail = false) {
 export default {
 	name: 'PtFileView',
 	components: {
+		FileStatusBar,
 		PtFileViewAddress,
 		Space
 	},
@@ -659,7 +671,7 @@ export default {
 			}
 		},
 		searchKeyWords(newVal) {
-			if (newVal == '') {
+			if (newVal === '') {
 				this.clearSearch()
 			} else {
 				this.doSearch()
@@ -675,7 +687,7 @@ export default {
 			return this.history.current < this.history.stack.length - 1
 		},
 		canGoUp() {
-			return this.currentPath != '/'
+			return this.currentPath !== '/'
 		},
 
 		currentPath() {
@@ -731,6 +743,7 @@ export default {
 	},
 
 	mounted() {
+
 		this.$nextTick(async () => {
 			let cwd = this.cwd || '~'
 			// replace space
@@ -789,6 +802,9 @@ export default {
 	},
 
 	methods: {
+		formatProgress() {
+			return `${ this.currentProgressStatus.progress } ${ this.currentProgressStatus.speed }%`
+		},
 		getDirEntryType(dirent) {
 			const types = {
 				directory: this.T('home.fileview.prop-dialog.directory'),
@@ -822,9 +838,13 @@ export default {
 				const fsInstance = await this.getFs()
 				dirents = await fsInstance.readdir(dirPath)
 			} catch (err) {
-				this.$confirm(this.T('home.fileview.confirm-dialogs.errors.error-message', err.message), this.T('home.fileview.confirm-dialogs.errors.title'), {
-					type: 'error'
-				})
+				this.$confirm(
+					this.T('home.fileview.confirm-dialogs.errors.error-message', err.message),
+					this.T('home.fileview.confirm-dialogs.errors.title'),
+					{
+						type: 'error'
+					}
+				)
 				return false
 			}
 
@@ -1523,7 +1543,7 @@ export default {
 
 			try {
 				await fsInstance.mkdir(fullPath)
-				this.refresh()
+				await this.refresh()
 				this.handleCloseCreateDirDialog()
 			} catch (e) {
 				this.$confirm(e.message, this.T('home.fileview.confirm-dialogs.errors.title'), {
@@ -1797,7 +1817,7 @@ export default {
 .pt-file-view {
 	position: relative;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 40px);
 
 	.pt-grid-view {
 		height: calc(100% - 72px);

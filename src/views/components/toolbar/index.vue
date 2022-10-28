@@ -17,12 +17,30 @@
 				</span>
 			</el-tooltip>
 		</Space>
+		<!--新建文件夹弹窗-->
+		<el-dialog
+			:title="T(sessionFolderEditDialog.title)"
+			:label-width="80"
+			:visible.sync="sessionFolderEditDialog.showDialog"
+			width="400px">
+			<el-form :model="sessionFolderEditDialog.data">
+				<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')">
+					<el-input v-model="sessionFolderEditDialog.data.folderName"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="sessionFolderEditDialog.showDialog = false">取 消</el-button>
+				<el-button type="primary" @click="handlerClick">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
-import Space from '@/components/space/index.vue'
 import * as EventBus from '@/services/eventbus'
+import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
+import { resetValues } from '../../../../common/utils'
+import Space from '@/components/space/index.vue'
 
 export default {
 	name: 'NxToolbar',
@@ -32,7 +50,19 @@ export default {
 	},
 	data() {
 		return {
-			searchKeywords: ''
+			searchKeywords: '',
+			/**
+			 * 会话目录编辑框
+			 */
+			sessionFolderEditDialog: {
+				showDialog: false,
+				isEdit: false,
+				title: '',
+				editId: -1,
+				data: {
+					folderName: ''
+				}
+			},
 		}
 	},
 	watch: {
@@ -48,7 +78,41 @@ export default {
 	methods: {
 		// 新建分组
 		createFolder() {
+			this.sessionFolderEditDialog.showDialog = true
+			this.sessionFolderEditDialog.isEdit = false
+			this.sessionFolderEditDialog.title = 'home.host-manager.dialog-edit-folder.add-title'
+			resetValues(this.sessionFolderEditDialog.data)
+		},
+		/**
+		 * 处理会话配置树
+		 */
+		processSessionConfigTree(sessionConfigs, searchKeywords) {
+			const sessionConfigTree = sessionConfigs
+			let matchFunc = (name) => true
+			if (searchKeywords) {
+				let reg = new RegExp(searchKeywords, 'i')
+				matchFunc = (name) => reg.test(name)
+			}
 
+			const walkAndProcess = (parent, cfgNodes) => {
+				for (const cfgNode of cfgNodes) {
+					let treeNode = {
+						text: cfgNode.name,
+						data: cfgNode.toJSONObject(false)
+					}
+					let children = []
+					if (cfgNode.type === SESSION_CONFIG_TYPE.FOLDER) {
+						walkAndProcess(children, cfgNode.subSessions)
+						treeNode.children = children
+					}
+					if (matchFunc(cfgNode.name) || children.length > 0) {
+						parent.push(treeNode)
+					}
+				}
+			}
+			let treeRoot = []
+			walkAndProcess(treeRoot, sessionConfigTree)
+			return treeRoot
 		},
 		/**
 		 * 添加配置
@@ -56,19 +120,19 @@ export default {
 		 */
 		addSessionConfig(sessCfg) {
 			let treeData = this.processSessionConfigTree([sessCfg])[0]
-			const sessionTree = this.$refs.sessionTree
-
+			const menuRef = this.$parent.$children[2].$children[0]
+			const sessionTree = menuRef.$refs.sessionTree
 			if (!this.currentSelectSessionNode) {
 				sessionTree.appendNode({ treeData })
 				this.$sessionManager.addSessionConfig(null, sessCfg)
-				this.updateSessionTree()
+				menuRef.updateSessionTree()
 				return
 			}
 			let { data, node } = this.currentSelectSessionNode
 			if (node.isFolder) {
 				node.appendChild(treeData)
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
-				this.updateSessionTree()
+				menuRef.updateSessionTree()
 				return
 			}
 			// 需要判断节点是不是根目录下的节点
@@ -82,13 +146,28 @@ export default {
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
 			}
 
-			this.updateSessionTree()
+			menuRef.updateSessionTree()
 		},
 		async gotoCreateShellSession() {
 			const sessCfg = this.$sessionManager.createShellSessionConfig(this.T('home.profile.default-session-name'))
 			this.addSessionConfig(sessCfg)
 			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
 		},
+		handlerClick(){
+			if (!this.sessionFolderEditDialog.isEdit) {
+				const sessCfg = new SessionConfig(
+					this.sessionFolderEditDialog.data.folderName,
+					SESSION_CONFIG_TYPE.FOLDER
+				)
+				this.addSessionConfig(sessCfg)
+			} else {
+				const sessCfg = this.$sessionManager.getSessionConfigById(
+					this.currentSelectSessionNode.node.nodeData.data.data._id
+				)
+				sessCfg.update(this.sessionFolderEditDialog.data.folderName)
+				this.sessionFolderEditDialog.showDialog = false
+			}
+		}
 	}
 }
 </script>
@@ -106,16 +185,6 @@ export default {
 		width: 213px;
 		margin-right: 5px;
 		transition: background-color .3s var(--n-bezier);
-		::v-deep .el-input__inner {
-			background-color: var(--backgroundColor) !important;
-			//transition: all 2s ease-in;
-			//-webkit-transition: all 0.75s ease-in;
-
-			&:focus {
-				color: #fff;
-				background-color: var(--btnPrimaryHoverBackgroundColor) !important;
-			}
-		}
 	}
 
 	.host-tree-btn {
@@ -126,7 +195,7 @@ export default {
 		width: 32px;
 		height: 32px;
 		line-height: 22px;
-		color: var(--primaryTextColor);
+		color: var(--n-text-color-base);
 		border-radius: 4px;
 		background-color: var(--btnPrimaryBackgroundColor);
 

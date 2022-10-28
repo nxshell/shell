@@ -29,6 +29,9 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	Scrollbar,
+	Progress,
+	Divider,
+	Alert,
 	Empty,
 	Tree,
 	DescriptionsItem
@@ -44,12 +47,15 @@ const element = {
 		Vue.use(Form).use(FormItem)
 		Vue.use(Input)
 		Vue.use(Dialog)
+		Vue.use(Alert)
 		Vue.use(Scrollbar)
 		Vue.use(Tooltip)
 		Vue.use(Tag)
 		Vue.use(Popover)
 		Vue.use(Tree)
 		Vue.use(Empty)
+		Vue.use(Divider)
+		Vue.use(Progress)
 		Vue.use(Dropdown).use(DropdownItem).use(DropdownMenu)
 		Vue.use(Radio).use(RadioButton).use(RadioGroup)
 		Vue.use(Checkbox).use(CheckboxGroup).use(CheckboxButton)

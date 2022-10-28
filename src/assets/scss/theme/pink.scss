@@ -1,4 +1,5 @@
 [nx-theme="pink"]:root {
+  --n-disabled-color: #B8B8B8;
   --pink-color-100: #F8BBD0;
   --pink-color-200: #F48FB1;
   --pink-color-300: #F06292;
@@ -13,74 +14,94 @@
   --pink-color-A400: #F50057;
   --pink-color-A700: #C51162;
 
-  --n-color: rgb(16, 16, 20);
+  --n-bg-color-base: var(--pink-color-700);
+  --n-bg-color-light: var(--pink-color-600);
   --n-text-color: rgba(255, 255, 255, 0.82);
+  --n-text-color-base: rgb(219, 223, 234);
+  --n-text-color-light: rgb(217, 219, 233);
+  --n-hover-bg-color: var(--pink-color-800);
+
+  --n-button-primary: #63e2b7;
+  --n-button-primary-hover: #7fe7c4;
+
+  --n-input-bg-color: var(--pink-color-800);
+  --n-border-color: var(--pink-color-700);
+
   --n-color-bg-dialog: var(--pink-color-700);
+  --n-color-modal: var(--pink-color-700);
 
-  --primaryColor: var(--pink-color-600);
-  --primaryTextColor: #ECEFF1;
-  --secondaryTextColor: #FAFAFA;
-
-  // 高亮色，相对于主色调
-  --highlightColor: #1E1E1E;
-  --deactiveTextColor: #FAFAFA;
-
+  //--n-progress-bar-color: var(--pink-color-A200);
+  --n-progress-bar-color: #C51162;
   /* Tabs */
-  --tabs-bg-color: var(--pink-color-800);
-  --tabs-item-bg-color: var(--pink-color-700);
+  --n-tabs-bg-color: var(--pink-color-800);
+  --n-tabs-item-bg-color: var(--pink-color-700);
+  --n-tabs-item-hover-bg-color: var(--pink-color-500);
 
-  --windowBorderColor: var(--pink-color-600);
-  --windowTitleBarColor: var(--pink-color-600);
-  --windowTitleBarDeactiveColor: var(--pink-color-600);
-  --highlightItemColor: #ccc3;
-  --hoverItemColor: var(--pink-color-300);
-  --borderColor: var(--pink-color-300);
-  --darkBorderColor: var(--pink-color-300);
 
-  --backgroundColor: var(--pink-color-700);
-  --lightBackgroundColor: var(--pink-color-600);
-  --darkBackgroundColor: #fff;
-
-  --disableColor: #81D4FA;
-  --successColor: #4FC3F7;
-  --infoColor: #007ACC;
-  --warningColor: #007ACC;
-  --dangerColor: #D32F2F;
-
-  --btnPrimaryPlainBackgroundColor: var(--pink-color-600);
-  --btnPrimaryPlainColor: #ECEFF1;
-  --btnPrimaryBackgroundColor: var(--backgroundColor);
-  --btnPrimaryHoverBackgroundColor: var(--pink-color-500);
-
-  --btnSuccessPlainBackgroundColor: #2AA19899;
-  --btnSuccessPlainColor: #FAFAFA;
-  --btnSuccessBackgroundColor: #579dea;
-  --btnSuccessHoverBackgroundColor: #579dea;
-
-  --btnInfoPlainBackgroundColor: #2AA19899;
-  --btnInfoPlainColor: #FAFAFA;
-  --btnInfoBackgroundColor: #579dea;
-  --btnInfoHoverBackgroundColor: #579dea;
-
-  --btnWarningPlainBackgroundColor: #2AA19899;
-  --btnWarningPlainColor: #FAFAFA;
-  --btnWarningBackgroundColor: #579dea;
-  --btnWarningHoverBackgroundColor: #579dea;
-
-  --btnDangerPlainBackgroundColor: #2AA19899;
-  --btnDangerPlainColor: #FAFAFA;
-  --btnDangerBackgroundColor: #579dea;
-  --btnDangerHoverBackgroundColor: #579dea;
-
-  --treeNodeInsertCurrentColor: #579dea;
-
-  --gridviewSelectedBorderColor: #ccc3;
-  --gridviewSelectedBackgroundColor: var(--pink-color-300);
-  --gridviewHoverBorderColor: var(--pink-color-300);
-  --gridviewHoverBackgroundColor: var(--pink-color-300);
-
-  --fileViewAddressHostBorderColor: var(--pink-color-300);
-  --fileViewAddressHostBackgroundColor: var(--pink-color-300);
-  --processBarColor: #047aa6;
+  //--primaryColor: var(--pink-color-600);
+  //--primaryTextColor: #ECEFF1;
+  //--secondaryTextColor: #FAFAFA;
+  //
+  //// 高亮色，相对于主色调
+  //--highlightColor: #1E1E1E;
+  //--deactiveTextColor: #FAFAFA;
+  //
+  ///* Tabs */
+  //--tabs-bg-color: var(--pink-color-800);
+  //--tabs-item-bg-color: var(--pink-color-700);
+  //
+  //--windowBorderColor: var(--pink-color-600);
+  //--windowTitleBarColor: var(--pink-color-600);
+  //--windowTitleBarDeactiveColor: var(--pink-color-600);
+  //--highlightItemColor: #ccc3;
+  //--hoverItemColor: var(--pink-color-300);
+  //--borderColor: var(--pink-color-300);
+  //--darkBorderColor: var(--pink-color-300);
+  //
+  //--backgroundColor: var(--pink-color-700);
+  //--lightBackgroundColor: var(--pink-color-600);
+  //--darkBackgroundColor: #fff;
+  //
+  //--disableColor: #81D4FA;
+  //--successColor: #4FC3F7;
+  //--infoColor: #007ACC;
+  //--warningColor: #007ACC;
+  //--dangerColor: #D32F2F;
+  //
+  //--btnPrimaryPlainBackgroundColor: var(--pink-color-600);
+  //--btnPrimaryPlainColor: #ECEFF1;
+  //--btnPrimaryBackgroundColor: var(--backgroundColor);
+  //--btnPrimaryHoverBackgroundColor: var(--pink-color-500);
+  //
+  //--btnSuccessPlainBackgroundColor: #2AA19899;
+  //--btnSuccessPlainColor: #FAFAFA;
+  //--btnSuccessBackgroundColor: #579dea;
+  //--btnSuccessHoverBackgroundColor: #579dea;
+  //
+  //--btnInfoPlainBackgroundColor: #2AA19899;
+  //--btnInfoPlainColor: #FAFAFA;
+  //--btnInfoBackgroundColor: #579dea;
+  //--btnInfoHoverBackgroundColor: #579dea;
+  //
+  //--btnWarningPlainBackgroundColor: #2AA19899;
+  //--btnWarningPlainColor: #FAFAFA;
+  //--btnWarningBackgroundColor: #579dea;
+  //--btnWarningHoverBackgroundColor: #579dea;
+  //
+  //--btnDangerPlainBackgroundColor: #2AA19899;
+  //--btnDangerPlainColor: #FAFAFA;
+  //--btnDangerBackgroundColor: #579dea;
+  //--btnDangerHoverBackgroundColor: #579dea;
+  //
+  //--treeNodeInsertCurrentColor: #579dea;
+  //
+  //--gridviewSelectedBorderColor: #ccc3;
+  //--gridviewSelectedBackgroundColor: var(--pink-color-300);
+  //--gridviewHoverBorderColor: var(--pink-color-300);
+  //--gridviewHoverBackgroundColor: var(--pink-color-300);
+  //
+  //--fileViewAddressHostBorderColor: var(--pink-color-300);
+  //--fileViewAddressHostBackgroundColor: var(--pink-color-300);
+  //--processBarColor: #047aa6;
 
 }

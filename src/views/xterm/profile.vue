@@ -905,7 +905,7 @@ export default {
 <style lang="scss">
 .pt-shell-profile {
     position: relative;
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
     width: 100%;
     height: 100%;
 
@@ -919,7 +919,7 @@ export default {
 
     .pt-switch-tip {
         padding-right: 5px;
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     .pt-row {
@@ -933,7 +933,7 @@ export default {
 
     .nav-tree-container {
         padding: {top: 15px; bottom: 15px;};
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
     }
 
     .profile-container {

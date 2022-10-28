@@ -157,7 +157,7 @@ export default {
             .product-name {
                 font-size: 32px;
                 font-weight: 600;
-                color: var(--primaryTextColor);
+                color: var(--n-text-color-base);
             }
         }
     }
@@ -229,7 +229,7 @@ export default {
             flex-grow: 1;
             font-size: 20px;
             font-weight: 600;
-            color: var(--primaryTextColor);
+            color: var(--n-text-color-base);
         }
 
         .logout {
@@ -285,7 +285,7 @@ export default {
             p {
                 font-size: 14px;
                 line-height: 1.5;
-                color: var(--primaryTextColor);
+                color: var(--n-text-color-base);
                 margin-bottom: 10px;
             }
 

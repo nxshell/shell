@@ -13,6 +13,12 @@ export default {
 		size: {
 			type: [Number, String],
 			default: 8
+		},
+		itemStyle: {
+			type: [Object, Array],
+			default: () => {
+				return {}
+			}
 		}
 	},
 	render(createElement) {
@@ -22,7 +28,8 @@ export default {
 				{
 					style: {
 						display: 'inline-block',
-						[this.vertical ? 'margin-bottom' : 'margin-right']: `${this.size}px`
+						[this.vertical ? 'margin-bottom' : 'margin-right']: `${ this.size }px`,
+						...this.itemStyle
 					}
 				},
 				[x]

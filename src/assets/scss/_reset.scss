@@ -56,3 +56,103 @@ a {
   width: 10px;
   border-radius: 4px;
 }
+
+/** element ui reset **/
+.el-input__inner, .el-textarea__inner {
+  color: var(--n-text-color-base) !important;
+  caret-color: var(--n-text-color-base);
+  border-width: 0 !important;
+  background-color: var(--n-input-bg-color) !important;
+
+  &:focus {
+    background-color: var(--n-input-bg-color) !important;
+  }
+}
+
+.el-dialog {
+  background-color: var(--n-color-bg-dialog) !important;
+
+  &__header {
+    padding: 12px !important;
+  }
+
+  &__title {
+    color: var(--n-text-color-base) !important;
+  }
+
+  &__headerbtn {
+    i {
+      color: var(--n-text-color-base) !important;
+    }
+  }
+
+  &__body {
+    color: var(--n-text-color-base) !important;
+    padding: 12px 20px !important;
+  }
+}
+
+.el-form {
+  &-item {
+    &__label {
+      color: var(--n-text-color-base) !important;
+    }
+  }
+}
+
+.el-message-box {
+  border: none !important;
+  background-color: var(--n-color-bg-dialog) !important;
+
+  .el-message-box__header {
+    .el-message-box__title {
+      color: var(--n-text-color-base);
+    }
+
+    .el-message-box__headerbtn {
+      .el-message-box__close {
+        color: var(--n-text-color-base);
+      }
+    }
+  }
+
+  .el-message-box__content {
+    color: var(--n-text-color-base);
+  }
+}
+
+.el-button {
+  border-width: 0 !important;
+  //&:focus, &:hover {
+  //  background-color: var(--n-color-hover) !important;
+  //  color: var(--n-text-color-hover) !important;
+  //  border-color: var(--n-border-hover) !important;
+  //}
+
+  &--primary {
+    //color: var(--n-color) !important;
+    background-color: var(--n-button-primary) !important;
+    border-color: var(--n-button-primary) !important;
+
+    &:hover, &:focus {
+      background-color: var(--n-button-primary-hover) !important;
+      //color: var(--n-text-color-base);
+    }
+  }
+
+  &--text {
+    color: var(--n-text-color-base) !important;
+
+    i {
+      font-size: 20px;
+    }
+  }
+
+  &.is-disabled {
+    color: #B8B8B8 !important;
+
+    i {
+      color: #B8B8B8 !important;
+    }
+  }
+}

@@ -14,8 +14,8 @@
 				<!-- 头像 -->
 				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />
 				<!-- 主题切换按钮 -->
-				<el-dropdown trigger="click" @command="toggleTheme">
-					<el-button type="text" :icon="themeIcon"></el-button>
+				<el-dropdown trigger="click" placement="bottom-end" @command="toggleTheme">
+					<el-button type="text" :icon="themeIcon" />
 					<el-dropdown-menu class="theme-btn" slot="dropdown">
 						<el-dropdown-item :disabled="theme === 'light'" command="light" icon="el-icon-sunny">
 							亮色
@@ -32,8 +32,12 @@
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting"></el-button>
 				<!-- 版本信息 -->
 				<el-tooltip v-if="needUpdate" effect="dark" content="有新版本，点击进行升级" placement="bottom">
-					<el-button type="text" :class="{ 'version-btn': needUpdate }" icon="el-icon-sugar"
-					           @click="handlerVersionUpdate"></el-button>
+					<el-button
+						type="text"
+						:class="{ 'version-btn': needUpdate }"
+						icon="el-icon-sold-out"
+						@click="handlerVersionUpdate"
+					></el-button>
 				</el-tooltip>
 				<el-tooltip v-else effect="dark" :content="`当前版本 ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
@@ -168,16 +172,16 @@ export default {
 <style lang="scss" scoped>
 .theme-btn {
 	padding: 5px;
-	border-color: var(--lightBackgroundColor);
-	background-color: var(--lightBackgroundColor);
+	border-color: var(--n-bg-color-light);
+	background-color: var(--n-bg-color-light);
 
 	::v-deep .el-dropdown-menu__item:not(.is-disabled) {
-		color: var(--primaryTextColor);
+		color: var(--n-text-color-base);
 		border-radius: 4px;
 
 		&:focus,
 		&:not(.is-disabled):hover {
-			background-color: var(--backgroundColor);
+			background-color: var(--n-bg-color-base);
 		}
 	}
 
@@ -187,14 +191,14 @@ export default {
 
 	.is-disabled {
 		border-radius: 4px;
-		background-color: var(--backgroundColor);
+		background-color: var(--n-bg-color-base);
 	}
 
 	::v-deep .popper__arrow {
-		border-top-color: var(--lightBackgroundColor) !important;
+		border-top-color: var(--n-bg-color-light) !important;
 
 		&::after {
-			border-top-color: var(--lightBackgroundColor) !important;
+			border-top-color: var(--n-bg-color-light) !important;
 		}
 	}
 }
@@ -219,11 +223,6 @@ export default {
 		.el-avatar {
 			background: transparent;
 		}
-
-		&:hover {
-			cursor: pointer;
-			background-color: var(--lightBackgroundColor);
-		}
 	}
 
 	.icon-setting-container {
@@ -235,17 +234,13 @@ export default {
 			}
 
 			&:hover {
-				background-color: var(--lightBackgroundColor);
+				background-color: var(--n-hover-bg-color);
 			}
 		}
 
-		::v-deep .el-button--text {
-			color: var(--primaryTextColor);
-		}
-
 		.version-btn {
-			color: #f2d2b5;
-			text-shadow: 0 0 7px #ffd800;
+			color: #1DE9B6 !important;
+			text-shadow: 0 0 7px #1DE9B6;
 			animation: breathe 2.7s ease-in-out 0s infinite alternate;
 			-webkit-animation: breathe 2.7s ease-in-out 0s infinite alternate;
 		}

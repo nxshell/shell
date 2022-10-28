@@ -314,7 +314,7 @@ export default {
 		color: var(--secondaryTextColor);
 		transition: color 0.2s;
 		&:hover {
-			color: var(--primaryTextColor);
+			color: var(--n-text-color-base);
 			transition: color 0.2s;
 		}
 	}

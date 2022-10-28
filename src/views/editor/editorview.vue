@@ -235,7 +235,7 @@ export default {
 .pt-vnc-view {
 	height: 100%;
 	width: 100%;
-	background-color: var(--backgroundColor);
+	background-color: var(--n-bg-color-base);
 
 	::v-deep .el-input__inner {
 		border: 1px solid var(--borderColor) !important;
@@ -243,7 +243,7 @@ export default {
 
 	.nx-edit-file-open {
 		font-size: 18px;
-		color: var(--primaryTextColor);
+		color: var(--n-text-color-base);
 		transition: color .2s;
 	}
 
@@ -259,7 +259,7 @@ export default {
 	}
 
 	.editor_url {
-		color: var(--primaryTextColor);
+		color: var(--n-text-color-base);
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;

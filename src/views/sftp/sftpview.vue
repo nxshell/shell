@@ -81,6 +81,6 @@ export default {
 .pt-sftp-view {
     position: relative;
     height: 100%;
-    background-color: var(--backgroundColor);
+    background-color: var(--n-bg-color-base);
 }
 </style>

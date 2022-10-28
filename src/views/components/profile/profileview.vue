@@ -138,7 +138,7 @@ export default {
         line-height: 30px;
         margin-bottom: 10px;
 
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
         &:hover {
             background-color: var(--lightBackgroundColor);
         }
