@@ -45,7 +45,7 @@ export default new Vuex.Store({
         },
         setTheme(state, theme) {
             state.theme = theme;
-            globalSetting.setProfile("xterm", {theme: theme})
+            globalSetting.updateProfile("xterm", {theme: theme})
         }
     },
     actions: {
