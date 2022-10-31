@@ -31,3 +31,11 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
     walkAndProcess(treeRoot, sessionConfigTree)
     return treeRoot
 }
+
+/**
+ * 右键打开链接
+ */
+export function handleSessionTreeContextMenu_Connect() {
+    console.log('右键打开')
+    this.handleHostOpen(this.currentSelectedSessionNode)
+}

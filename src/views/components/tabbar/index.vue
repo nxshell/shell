@@ -2,130 +2,61 @@
 	<div class="nx-tabs-wrapper">
 		<pt-tab
 			:tabs="sessionInstTabs"
-			:activeIndex="currentSessionTabIdx"
+			:activeIndex="activeTabIndex"
 			:translate="true"
 			@activate="handleSessionInstActive"
 			@remove="handleSessionInstRemove"
 			@contextmenu="handleSessionTabsContextMenu"
-			v-context-menu="getTabContextMenu" />
+			v-context-menu="getTabContextMenu"
+		/>
 	</div>
 </template>
 
 <script>
 import {
-	handleSessionInstActive,
-	updateSessionInstTabs,
 	activeSession,
-	setupBarShortCut
+	handleSessionInstActive,
+	setupBarShortCut,
+	updateSessionInstTabs
 } from '@/views/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
+import { mapState } from 'vuex'
+import Space from '@/components/space'
+import { contextMenuMixin } from './context-menu-mixin'
 
 export default {
 	name: 'TitleBar',
+	components: { Space },
 	data() {
 		return {
-			sessionInstTabs: [],
-			currentSessionTabIdx: 0,
 			sessionContextMenuTabIndex: -1,
-			sessionTabContextMenu: {
-				shell: [
-					{
-						label: 'home.sessions-context-menu.duplicate',
-						type: 'normal',
-						// accelerator: "ctrl+insert",
-						handler: this.handleCopy
-					},
-					{
-						label: 'home.sessions-context-menu.close',
-						type: 'normal',
-						// accelerator: "ctrl+insert",
-						handler: this.handleClose
-					},
-					{
-						label: 'home.sessions-context-menu.close-right',
-						type: 'normal',
-						handler: this.handleCloseRight
-					},
-					{
-						label: 'home.sessions-context-menu.close-other',
-						type: 'normal',
-						handler: this.handleCloseOther
-					},
-					{
-						label: 'home.sessions-context-menu.close-left',
-						type: 'normal',
-						handler: this.handleCloseLeft
-					},
-					{
-						type: 'separator'
-					},
-					{
-						label: 'home.sessions-context-menu.prop',
-						type: 'normal',
-						handler: this.handleProp
-					}
-				],
-				welcome: [
-					{
-						label: 'home.sessions-context-menu.close',
-						type: 'normal',
-						handler: this.handleClose
-					}
-				],
-				setting: [
-					{
-						label: 'home.sessions-context-menu.close',
-						type: 'normal',
-						handler: this.handleClose
-					}
-				],
-				login: [
-					{
-						label: 'home.sessions-context-menu.close',
-						type: 'normal',
-						handler: this.handleClose
-					}
-				],
-				unknow: [
-					{
-						label: 'home.sessions-context-menu.close',
-						type: 'normal',
-						handler: this.handleClose
-					},
-					{
-						label: 'home.sessions-context-menu.close-left',
-						type: 'normal',
-						handler: this.handleCloseLeft
-					},
-					{
-						label: 'home.sessions-context-menu.close-right',
-						type: 'normal',
-						handler: this.handleCloseRight
-					},
-					{
-						label: 'home.sessions-context-menu.close-other',
-						type: 'normal',
-						handler: this.handleCloseOther
-					}
-				]
-			},
 			getTabContextMenu: () => {
 				return this.getSessionTabContextMenu()
 			},
 		}
 	},
+	mixins: [contextMenuMixin],
 	mounted() {
 		EventBus.subscript('instance-created', (sessInst) => {
 			this.updateSessionInstTabs()
-			this.$nextTick(() => {
-				this.activeSession(sessInst)
-			})
+			this.activeSession(sessInst)
 		})
 		EventBus.subscript('instance-destroyed', () => {
 			this.updateSessionInstTabs()
+			if (this.sessionInstTabs.length <= 0) {
+				this.$sessionManager.createWelcomeSessionInstance()
+			} else {
+				if (this.activeTabIndex >= this.sessionInstTabs.length) {
+					this.$store.dispatch('updateActiveTabIndex', this.sessionInstTabs.length - 1)
+				}
+				this.handleSessionInstActive(this.activeTabIndex || 0)
+			}
 		})
 		// 绑定快捷键
 		this.setupBarShortCut()
+	},
+	computed: {
+		...mapState(['activeTabIndex', 'sessionInstTabs'])
 	},
 	methods: {
 		handleSessionInstActive,
@@ -133,13 +64,14 @@ export default {
 		activeSession,
 		setupBarShortCut,
 		async handleClose() {
-			// await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
+			await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},
 		handleSessionInstRemove(index) {
+			debugger
 			const { title, data: session } = this.sessionInstTabs[index]
 			// 首页不需要确认
 			if (title === 'Welcome') {
-				this.sessionRemoveWithNoConfirm(index)
+				session.close()
 				return
 			}
 
@@ -152,19 +84,12 @@ export default {
 				}
 			).then(() => {
 				session.beforeClose()
-				this.sessionRemoveWithNoConfirm(index)
+				session.close()
+				this.$store.dispatch('updateActiveTabIndex', index)
 			}).catch((error) => {
 				console.error(error)
 			})
-		},
-		async sessionRemoveWithNoConfirm(index) {
-			if (this.currentSessionTabIdx === index) {
-				this.currentSessionTabIdx -= 1
-				this.currentSessionTabIdx = this.currentSessionTabIdx > 0 ? this.currentSessionTabIdx : 0
-			}
-
-			const { data: session } = this.sessionInstTabs[index]
-			session.close()
+			this.activeSession(session)
 		},
 
 		/**
@@ -178,7 +103,7 @@ export default {
 		getSessionTabContextMenu() {
 			let menus = this.sessionTabContextMenu[this.sessionContextMenuTabType]
 			if (!menus) {
-				menus = this.sessionTabContextMenu['unknow']
+				menus = this.sessionTabContextMenu['unknown']
 			}
 			return menus
 		},
@@ -186,9 +111,26 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .nx-tabs-wrapper {
 	width: 100%;
 	height: 100%;
+
+
+}
+
+.el-popover {
+	background-color: var(--n-color-modal) !important;
+	min-width: 102px !important;
+	box-sizing: border-box;
+	border: 0 !important;
+
+	.popper__arrow {
+		border-bottom-color: var(--n-color-modal) !important;
+
+		&::after {
+			border-bottom-color: var(--n-color-modal) !important;
+		}
+	}
 }
 </style>

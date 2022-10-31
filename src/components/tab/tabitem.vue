@@ -1,8 +1,8 @@
 <template>
 	<el-tag
+		v-bind="$attrs"
 		class="pt-tab-item"
 		:class="{ 'pt-tab-item--selected': selected }"
-		closable
 		@click="onClickHandler"
 		@contextmenu.prevent="handleContextMenu"
 		@close="onCloseHandler">
@@ -49,7 +49,7 @@ export default {
 				}
 			}
 			if (typeof this.icon === 'object') {
-				const iconProp = {...this.icon}
+				const iconProp = { ...this.icon }
 				if (iconProp.type !== 'img') {
 					iconProp.type = 'svg'
 				}

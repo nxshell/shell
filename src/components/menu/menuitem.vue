@@ -16,7 +16,7 @@
 			<template slot="reference">
 				<div class="pt-menu-item-container">
 					<span class="item-icon"><!--占位--></span>
-					<span class="item-label">{{ T(label) }}</span>
+					<span class="item-label">{{ translate ? T(label) : label }}</span>
 					<span class="item-accelerator">{{ accelerator }}</span>
 					<pt-icon iconName="arrow-right" size="small" className="item-submenu-arrow" />
 				</div>
@@ -24,7 +24,7 @@
 		</pt-popper>
 		<div v-else-if="item.type === 'normal'" class="pt-menu-item-container">
 			<span class="item-icon"><!--占位--></span>
-			<span class="item-label">{{ T(label) }}</span>
+			<span class="item-label">{{ translate ? T(label) : label }}</span>
 			<span class="item-accelerator">{{ accelerator }}</span>
 			<span class="item-submenu-arrow"><!--占位--></span>
 		</div>
@@ -56,7 +56,11 @@ export default {
 		 */
 		item: {
 			type: Object
-		}
+		},
+		translate: {
+			type: Boolean,
+			default: true
+		},
 	},
 
 	data() {
@@ -106,9 +110,11 @@ export default {
 
 <style lang="scss">
 @import "@/assets/scss/_const.scss";
-.nx-content-submenu{
+
+.nx-content-submenu {
 	left: 100px;
 }
+
 .pt-menu-item {
 	position: relative;
 	height: $menuItemHeight;

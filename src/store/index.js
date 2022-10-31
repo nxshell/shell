@@ -10,7 +10,7 @@ function userInfoPlugin() {
     return store => {
         store.subscribe(mutation => {
             if (mutation.type === "setUserInfo") {
-                Storage.save("USERINFO", mutation.payload);
+                Storage.save("USERINFO", mutation.payload, false);
             }
         });
 
@@ -28,8 +28,11 @@ export default new Vuex.Store({
         configPanel: true,
         keyboardToAll: false,
         userLock: false,
-        theme: "light",
+        theme: globalSetting.getProfile('xterm')?.theme,
         showTabs: true,
+        currentSelectedSessionNode: null,
+        activeTabIndex: 0,
+        sessionInstTabs: []
     },
     mutations: {
         setUserInfo(state, newUserInfo) {
@@ -45,14 +48,40 @@ export default new Vuex.Store({
             state.userLock = !!status;
         },
         setTheme(state, theme) {
-            state.theme = theme;
-            globalSetting.setProfile("xterm", { theme: theme })
+            globalSetting.setProfile("xterm", { theme: theme }).then(() => {
+                state.theme = theme;
+                console.log(globalSetting.getProfile('xterm'))
+            })
         },
         setShowTabs(state, status) {
             state.showTabs = !!status
+        },
+        updateCurrentSelectedSessionNode(state, session) {
+            state.currentSelectedSessionNode = session
+        },
+        COMMIT_ACTIVE_TAB_INDEX(state, tabIndex) {
+            state.activeTabIndex = tabIndex
+        },
+        COMMIT_SESSION_TABS(state, sessionTabs) {
+            state.sessionInstTabs = sessionTabs
+        },
+        removeSessionInstTabs(state, sessionTab) {
+
         }
     },
-    actions: {},
+    actions: {
+        updateActiveTabIndex({ commit, state }, tabIndex) {
+            let index = tabIndex
+            if (state.activeTabIndex === tabIndex) {
+                index = state.activeTabIndex - 1
+                index = state.activeTabIndex > 0 ? state.activeTabIndex : 0
+            }
+            commit('COMMIT_ACTIVE_TAB_INDEX', index)
+        },
+        updateSessionInstanceTabs({ commit }, sessionTabs) {
+            commit('COMMIT_SESSION_TABS', sessionTabs)
+        },
+    },
     getters: {
         userInfo(state) {
             return state.userInfo;
@@ -67,10 +96,19 @@ export default new Vuex.Store({
             return state.userLock;
         },
         theme(state) {
-            return state.theme;
+            return globalSetting.getProfile("xterm")?.theme ?? state.theme
         },
         showTabs(state) {
             return state.showTabs
+        },
+        currentSelectedSessionNode(state) {
+            return state.currentSelectedSessionNode
+        },
+        activeTabIndex(state) {
+            return state.activeTabIndex
+        },
+        sessionInstTabs(state) {
+            return state.sessionInstTabs
         }
     },
     plugins: [userInfoPlugin()]

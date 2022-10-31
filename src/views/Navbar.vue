@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import { SESSION_TYPES } from '@/services/session'
 import { createLocalFs } from '@/services/nxsys/localfs'
 import NxShellIcon from '@/assets/logo.png'
@@ -74,7 +74,6 @@ export default {
 			needUpdate: true,
 		}
 	},
-	mixins: [sessionMixin],
 	computed: {
 		...mapState(['userInfo', 'userLock']),
 		avatarUrl() {
@@ -96,17 +95,13 @@ export default {
 			}
 		}
 	},
-
-	async mounted() {
+	mixins: [sessionMixin],
+	mounted() {
 		this.$nextTick(() => {
-			this.$refs.appList?.selectItem(0)
 			this.version = powertools.getVersion()
-			this.getProfileTheme()
 		})
 	},
-
 	methods: {
-		...mapMutations(['setTheme']),
 		goto_login() {
 			const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
 			if (loginInstances.length) {

@@ -5,18 +5,20 @@ import mousetrap from 'mousetrap'
 /**
  * 激活会话Tab
  */
-export function activeSession(sessInst) {
+export async function activeSession(sessInst) {
     if (!sessInst) {
-        return 0
+        return
     }
     const router = sessInst.router
     if (router.path === this.$route.path) {
-        return 0
+        return
     }
-    this.$router.push({ path: router.path })
-    this.currentSessionTabIdx = this.sessionInstTabs.findIndex((inst) => {
+    await this.$router.push({ path: router.path })
+    const activeSessionIndex = this.$store.getters.sessionInstTabs.findIndex((inst) => {
         return inst.data.id === sessInst.id
     })
+    console.log('active session', sessInst.name, activeSessionIndex)
+    await this.$store.dispatch('updateActiveTabIndex', activeSessionIndex)
 }
 
 /**
@@ -39,7 +41,7 @@ export async function handleSessionInstActive(index) {
  */
 export async function updateSessionInstTabs() {
     const instList = this.$sessionManager.getSessionIntances()
-    this.sessionInstTabs = instList.map((inst) => {
+    const sessionTabs = instList.map((inst) => {
         const item = {
             icon: 'setting', title: inst.name, data: inst
         }
@@ -75,14 +77,7 @@ export async function updateSessionInstTabs() {
         // });
         return item
     })
-    if (this.sessionInstTabs.length <= 0) {
-        await this.$sessionManager.createWelcomeSessionInstance()
-    } else {
-        if (this.currentSessionTabIdx >= this.sessionInstTabs.length) {
-            this.currentSessionTabIdx = this.sessionInstTabs.length - 1
-        }
-        await this.handleSessionInstActive(this.currentSessionTabIdx || 0)
-    }
+    await this.$store.dispatch('updateSessionInstanceTabs', sessionTabs)
 }
 
 export function setupBarShortCut() {

@@ -5,6 +5,7 @@ function isWraped(node) {
 const funcCache = Object.create(null);
 
 export function getDataKeyFunc(key) {
+
     if (!key) {
         return () => ""
     }

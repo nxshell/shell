@@ -89,7 +89,8 @@ export default {
         emit({ data, node, multi, contextmenu }) {
             this.$emit("tree-node-select", { data, node, multi, contextmenu });
             this.$emit("state-change");
-        }, selectItem(evt, contextmenu = false) {
+        },
+        selectItem(evt, contextmenu = false) {
             if (contextmenu) {
                 this.selected = true;
                 this.emit({ data: this._nodeData, node: this, multi: false, contextmenu })
@@ -107,7 +108,8 @@ export default {
 
             this.emit({ data: this._nodeData, node: this, multi: evt.ctrlKey });
             evt.stopPropagation();
-        }, handleDblClick() {
+        },
+        handleDblClick() {
             this.$emit("tree-node-open", { data: this._nodeData })
         },
 
@@ -302,12 +304,8 @@ export default {
             }, attrs: {
                 draggable: true, // title: this.T(this._nodeData.text)
             }, on: {
-                click: this.selectItem,
-                dblclick: this.handleDblClick,
-                contextmenu: this.onContextMenu, // 'move-node': this.onMoveNode,
-                ...dragHandlers,
-                "mouseenter": this.handleMouseEnter,
-                "mouseleave": this.handleMouseLeave
+                click: this.selectItem, dblclick: this.handleDblClick, contextmenu: this.onContextMenu, // 'move-node': this.onMoveNode,
+                ...dragHandlers, "mouseenter": this.handleMouseEnter, "mouseleave": this.handleMouseLeave
             }
         }, nxMenuItemWrapper)];
 

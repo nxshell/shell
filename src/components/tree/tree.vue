@@ -1,24 +1,26 @@
 <template>
 	<div class="pt-tree" :class="classList">
-		<pt-tree-item v-for="(node, idx) in renderData" :key="idx"
-		              :level="level"
-		              :draggable="draggable"
-		              :nodeData="node"
-		              :treeRoot="treeRoot || this"
-		              :isFolder="!!node.children"
-		              :autoExpanded="autoExpanded"
-		              :innerPath="innerPath + '/' + idx"
-		              :iconFilter="iconFilter"
-		              :nodeStates="nodeStates"
-		              :dataKey="dataKey"
-		              :additionalRender="additionalRender || addRender"
-		              @tree-node-select="selectNode($event, idx)"
-		              @tree-node-open="handleTreeNodeOpen"
-		              @move-node="handleMoveNode"
-		              @append="appendNode($event, idx)"
-		              @remove="removeNode(idx)"
-		              @contextmenu="handleContextMenu"
-		              @state-change="handleStateChange"
+		<pt-tree-item
+			v-for="(node, idx) in renderData"
+			:key="idx"
+			:level="level"
+			:draggable="draggable"
+			:nodeData="node"
+			:treeRoot="treeRoot || this"
+			:isFolder="!!node.children"
+			:autoExpanded="autoExpanded"
+			:innerPath="innerPath + '/' + idx"
+			:iconFilter="iconFilter"
+			:nodeStates="nodeStates"
+			:dataKey="dataKey"
+			:additionalRender="additionalRender || addRender"
+			@tree-node-select="selectNode($event, idx)"
+			@tree-node-open="handleTreeNodeOpen"
+			@move-node="handleMoveNode"
+			@append="appendNode($event, idx)"
+			@remove="removeNode(idx)"
+			@contextmenu="handleContextMenu"
+			@state-change="handleStateChange"
 		/>
 	</div>
 </template>
@@ -148,11 +150,8 @@ export default {
 			} else {
 				insertPos = index + 1;
 			}
-
-			let treeDataNode = processTreeNodes([treeData])[0];
-
+			const treeDataNode = processTreeNodes([treeData])[0];
 			this.renderData = insert(this.renderData, treeDataNode, insertPos);
-
 			this.$emit("tree-node-data-change", this.renderData);
 		},
 

@@ -1,14 +1,13 @@
-import * as globalSetting from '@/services/globalSetting'
-import { mapGetters } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export const sessionMixin = {
     computed: {
-        ...mapGetters(['theme'])
+        ...mapState(['theme'])
+    },
+    mounted() {
+        this.setTheme(this.$store.getters.theme)
     },
     methods: {
-        getProfileTheme() {
-            const { theme } = globalSetting.getProfile('xterm')
-            return theme ?? 'light'
-        }
+        ...mapMutations(['setTheme']),
     }
 }

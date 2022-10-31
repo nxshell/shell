@@ -1,19 +1,18 @@
 <template>
 	<div ref="nxTabs" class="pt-tab">
 		<div class="content">
-			<Space>
-				<pt-tab-item
-					v-for="(tabItem, idx) in tabs"
-					:key="idx"
-					:icon="tabItem.icon"
-					:title="translate ? T(tabItem.title) : tabItem.title"
-					:selected="idx === currentTab"
-					:showSplit="idx !== currentTab && idx + 1 !== currentTab && idx !== tabs.length - 1 && !flat"
-					:hideClose="hideClose"
-					@click="handleClick(idx)"
-					@close="handleClose(idx)"
-					@contextmenu="handleContextMenu(idx)" />
-			</Space>
+			<pt-tab-item
+				v-for="(tabItem, idx) in tabs"
+				:key="idx"
+				:icon="tabItem.icon"
+				:closable="tabItem.title !== 'Welcome'"
+				:title="translate ? T(tabItem.title) : tabItem.title"
+				:selected="idx === currentTab"
+				:showSplit="idx !== currentTab && idx + 1 !== currentTab && idx !== tabs.length - 1 && !flat"
+				:hideClose="hideClose"
+				@click="handleClick(idx)"
+				@close="handleClose(idx)"
+				@contextmenu="handleContextMenu(idx)" />
 		</div>
 	</div>
 </template>
@@ -21,23 +20,14 @@
 <script>
 import BScroll from '@better-scroll/core'
 import MouseWheel from '@better-scroll/mouse-wheel'
-import Space from '@/components/space'
 
 BScroll.use(MouseWheel)
 export default {
 	name: 'PtTab',
-	components: {Space},
 	props: {
 		tabs: {
 			type: Array,
 			default() {
-				/**
-				 * {
-				 *     icon: 'iconName',
-				 *     title: 'title',
-				 *     data: any
-				 * }
-				 */
 				return []
 			}
 		},
@@ -84,7 +74,7 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => {
-			this.scrollBar = new BScroll(this.$refs.nxTabs, {scrollX: true, mouseWheel: true})
+			this.scrollBar = new BScroll(this.$refs.nxTabs, { scrollX: true, mouseWheel: true })
 		})
 	},
 	methods: {
@@ -120,6 +110,10 @@ export default {
 		display: inline-block;
 		padding: 5px 10px;
 		white-space: nowrap;
+
+		.pt-tab-item:not(:last-child) {
+			margin-right: 8px;
+		}
 	}
 }
 </style>

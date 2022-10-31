@@ -92,9 +92,9 @@
         "sessions-context-menu": {
             "duplicate": "复制会话",
             "close": "关闭会话",
-            "close-left": "关闭左侧会话",
-            "close-right": "关闭右侧会话",
-            "close-other": "关闭其它会话",
+            "close-left": "关闭左侧",
+            "close-right": "关闭右侧",
+            "close-other": "关闭其它",
             "prop": "会话属性...",
             "connect": "连接",
             "sftp": "打开SFTP",

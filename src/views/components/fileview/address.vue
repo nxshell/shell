@@ -14,9 +14,10 @@
 						<span @click="handleChangePath(idx)">{{ entry.entry }}</span>
 						<pt-popper position="bottom-left" :show="entry.showMenu">
 							<pt-menu
-								:menu="entry.subFolderList"
-								@pop-stack="entry.showMenu = false"
 								ref="menu"
+								:menu="entry.subFolderList"
+								:translate="false"
+								@pop-stack="entry.showMenu = false"
 							></pt-menu>
 							<pt-icon
 								slot="reference"
@@ -105,7 +106,7 @@ export default {
 
 	computed: {
 		canScrollToLeft() {
-			return this.btnScroll.scrollLeft == 0
+			return this.btnScroll.scrollLeft === 0
 		},
 
 		canScrollToRight() {
@@ -119,7 +120,7 @@ export default {
 			this.$nextTick(() => {
 				this.detectAddressListWidth()
 			})
-			if (newVal != this.curPath) {
+			if (newVal !== this.curPath) {
 				this.curPath = newVal
 			}
 		}
@@ -175,11 +176,7 @@ export default {
 					}
 				}
 			})
-
 			entry.showMenu = true
-			this.$nextTick(() => {
-				console.log('showMenu', entry.showMenu)
-			})
 		},
 		detectAddressListWidth() {
 			this.btnScroll.contentWidth = this.$refs.address.getBoundingClientRect().width

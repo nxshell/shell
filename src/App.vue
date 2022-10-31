@@ -4,14 +4,14 @@
 		<pt-window
 			:title="T('app.powertools-shell')"
 			:isMainWindow="true"
-			:leftPanel="left_pannel"
-			:topPanel="top_pannel">
+			:leftPanel="left_panel"
+			:topPanel="top_panel">
 			<div slot="left-panel" class="control-panel">
-				<pt-shell-app-nav-bar/>
+				<pt-shell-app-nav-bar />
 			</div>
 			<template slot="main-panel">
 				<keep-alive>
-					<router-view/>
+					<router-view />
 				</keep-alive>
 			</template>
 		</pt-window>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
+import { mapState } from 'vuex'
 
 import PtShellAppNavBar from './views/Navbar'
 import Lang from '../lang'
@@ -28,7 +28,6 @@ import * as globalSetting from './services/globalSetting'
 import * as EventBus from './services/eventbus'
 
 let localeName = navigator.language
-// let localeName = "en-US";
 const defaultLocalName = 'en-US'
 
 async function loadLang(locale) {
@@ -40,10 +39,6 @@ function getUserConfigLanguage() {
 	return globalSetting.getProfile('xterm')?.language ?? null
 }
 
-function getUserConfigTheme() {
-	return globalSetting.getProfile('xterm')?.theme ?? 'light'
-}
-
 export default {
 	name: 'App',
 	components: {
@@ -51,16 +46,15 @@ export default {
 	},
 	data() {
 		return {
-			left_pannel: true,
-			top_pannel: true
+			left_panel: true,
+			top_panel: true
 		}
 	},
 	computed: {
 		...mapState(['configPanel'])
 	},
-
 	async created() {
-		window.document.documentElement.setAttribute('nx-theme', getUserConfigTheme() ? getUserConfigTheme() : 'light')
+		window.document.documentElement.setAttribute('nx-theme', this.$store.getters.theme)
 
 		let _name = getUserConfigLanguage()
 		if (_name) {
@@ -81,8 +75,8 @@ export default {
 
 		EventBus.subscript('enter-fullscreen', async (action) => {
 			try {
-				this.left_pannel = false
-				this.top_pannel = false
+				this.left_panel = false
+				this.top_panel = false
 				EventBus.publish('session-config-panel', 'close')
 				await document.body.requestFullscreen()
 			} catch (e) {
@@ -91,13 +85,13 @@ export default {
 		})
 
 		document.addEventListener('fullscreenchange', () => {
-			let isfullscreen = !!document.fullscreenElement
-			if (!isfullscreen) {
+			const isFullscreen = !!document.fullscreenElement
+			if (!isFullscreen) {
 				if (this.configPanel) {
 					EventBus.publish('session-config-panel', 'open')
 				}
-				this.left_pannel = true
-				this.top_pannel = true
+				this.left_panel = true
+				this.top_panel = true
 			}
 		})
 	}

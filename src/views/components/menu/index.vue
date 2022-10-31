@@ -1,29 +1,31 @@
 <template>
 	<div class="nx-menu-wrapper">
 		<!-- 提示创建会话配置 -->
-		<pt-tree
-			v-if="true"
-			:treeData="sessionConfigsTree"
-			:iconFilter="treeIconFilter"
-			:draggable="true"
-			:nodeStates.sync="sessionConfigsTreeStates"
-			v-context-menu="getSessionConfigTreeContextMenu"
-			ref="sessionTree"
-			@tree-node-select="handleHostSelected"
-			@tree-node-open="handleHostOpen"
-			@move-node="handleTreeNodeMove"
-			@contextmenu="handleSessionTreeContextMenu">
-			<template v-slot:additional="scope">
-				<el-tooltip class="item" effect="dark" content="点击打开SFTP" placement="top-start">
+		<el-scrollbar style="height: calc(100% - 40px)">
+			<pt-tree
+				ref="sessionTree"
+				:treeData="sessionConfigsTree"
+				:iconFilter="treeIconFilter"
+				:draggable="!isSearch"
+				:nodeStates.sync="sessionConfigsTreeStates"
+				v-context-menu="getSessionConfigTreeContextMenu"
+				@tree-node-select="handleHostSelected"
+				@tree-node-open="handleHostOpen"
+				@move-node="handleTreeNodeMove"
+				@contextmenu="handleSessionTreeContextMenu">
+				<template v-slot:additional="scope">
+					<el-tooltip class="item" effect="dark" content="点击打开SFTP" placement="top-start">
 					<span class="session-extend" @click.stop="handleOpenSFTP(scope)">
 						<i class="el-icon-position" />
 					</span>
-				</el-tooltip>
-			</template>
-		</pt-tree>
-		<el-empty v-else-if="sessionConfigsTree.length===0"
-		          :description="T('home.host-manager.session-tree.no-session-data') " />
-		<el-empty v-else :description="T('home.host-manager.session-tree.no-search-result')" />
+					</el-tooltip>
+				</template>
+			</pt-tree>
+			<el-empty v-if="!isSearch && sessionConfigsTree.length === 0"
+			          :description="T('home.host-manager.session-tree.no-session-data') " />
+			<el-empty v-if="isSearch && sessionConfigsTree.length === 0"
+			          :description="T('home.host-manager.session-tree.no-search-result')" />
+		</el-scrollbar>
 	</div>
 </template>
 
@@ -31,9 +33,11 @@
 
 import { treeIconFilter } from '@/views/sysicons'
 import { SESSION_CONFIG_TYPE } from "@/services/sessionMgr";
-import { processSessionConfigTree } from '@/views/components/menu/tools'
+import { processSessionConfigTree, handleSessionTreeContextMenu_Connect } from './tools'
 import Storage from '@/services/storage'
 import * as EventBus from '@/services/eventbus'
+import { mapGetters, mapMutations } from 'vuex'
+import { activeSession } from '@/views/components/tabbar/tabs-utools'
 
 export default {
 	name: 'NxMenus',
@@ -41,7 +45,9 @@ export default {
 	data() {
 		return {
 			sessionConfigsTree: [],
+			isSearch: false,
 			sessionConfigsTreeStates: {},
+			currentSelectSessionNode: null,
 			sessionConfigsTreeContextMenu: {
 				folder: [
 					{
@@ -181,22 +187,40 @@ export default {
 	},
 	watch: {
 		sessionConfigsTreeStates() {
-			Storage.save('HOME-SESSIONTREE-STATE', this.sessionConfigsTreeStates)
-		}
+			Storage.save('HOME-SESSIONTREE-STATE', this.sessionConfigsTreeStates, false)
+		},
 	},
 	computed: {
+		...mapGetters(['currentSelectedSessionNode']),
 		treeIconFilter() {
 			return treeIconFilter
 		}
 	},
 	created() {
-		EventBus.subscript('nx-menu-search', (keywords) => {
-			console.log(keywords)
-		})
 		this.updateSessionTree()
 	},
+	mounted() {
+		// 订阅主机搜索事件
+		EventBus.subscript('nx-menu-search', (keywords) => {
+			this.isSearch = !!keywords
+			const sessionConfigs = this.$sessionManager.getSessionConfigs()
+			this.sessionConfigsTree = this.processSessionConfigTree(sessionConfigs, keywords)
+		})
+		// 订阅新建文件夹事件
+		EventBus.subscript('create-session-folder', (menuData) => {
+			this.$refs.sessionTree.appendNode({ treeData: menuData })
+			this.updateSessionTree()
+		})
+		// 订阅菜单刷新事件
+		EventBus.subscript('refresh-session-tree', () => {
+			this.updateSessionTree()
+		})
+	},
 	methods: {
+		...mapMutations(['updateCurrentSelectedSessionNode']),
+		activeSession,
 		processSessionConfigTree,
+		handleSessionTreeContextMenu_Connect,
 		getSessionConfigTreeContextMenu() {
 			if (this.currentSelectSessionNodeConfigType === SESSION_CONFIG_TYPE.FOLDER) {
 				return this.sessionConfigsTreeContextMenu.folder
@@ -228,7 +252,7 @@ export default {
 		 * @param {Boolean} node.multi 是否是多选，如果是多选则不会创建会话的
 		 */
 		async handleHostSelected(node) {
-			this.currentSelectSessionNode = node
+			this.updateCurrentSelectedSessionNode(node)
 			const { data, multi } = node
 			// 多选的情况下，不创建会话
 			if (multi) {
@@ -249,6 +273,10 @@ export default {
 				// sessInst = await this.$sessionManager.createSessionInstance(sessCfg);
 				return
 			}
+
+			this.$nextTick(() => {
+				this.activeSession(sessInst)
+			})
 		},
 		async handleHostOpen(data) {
 			const sessCfg = data.data.data
@@ -256,6 +284,7 @@ export default {
 				// 目录节点不启动会话实例
 				return
 			}
+			console.log('双击打开一次')
 			await this.$sessionManager.createSessionInstance(sessCfg)
 		},
 		/**
@@ -288,10 +317,9 @@ export default {
 		 * 树右键菜单处理
 		 */
 		handleSessionTreeContextMenu(node) {
-			this.currentSelectSessionNode = node
+			this.updateCurrentSelectedSessionNode(node)
 			const { data } = node
 			const sessCfg = data.data
-
 			this.currentSelectSessionNodeConfigType = sessCfg.type
 		},
 		async handleOpenSFTP(sessCfg) {
@@ -299,7 +327,7 @@ export default {
 		},
 		// 删除会话或者会话目录
 		handleSessionTreeContextMenu_Delete() {
-			const { data, node } = this.currentSelectSessionNode
+			const { data, node } = this.currentSelectedSessionNode
 			const sessCfgData = data.data
 			const sessCfg = this.$sessionManager.getSessionConfigById(sessCfgData._id)
 

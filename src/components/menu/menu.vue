@@ -1,6 +1,6 @@
 <template>
 	<div class="pt-menu">
-		<pt-menu-item v-for="(item, idx) in menu" :key="idx" :item="item" />
+		<pt-menu-item v-for="(item, idx) in menu" :key="idx" :item="item" :translate="translate" />
 	</div>
 </template>
 
@@ -14,7 +14,10 @@ export default {
 			type: Array,
 			required: true
 		},
-
+		translate: {
+			type: Boolean,
+			default: true
+		},
 		parent: Object
 	},
 

@@ -797,7 +797,7 @@ class SessionManager extends EventEmitter {
      */
     matchSessionInstanceByConfig(sessCfg) {
         let instSets = this.sessionConfigAssociated[sessCfg._id];
-        if (!instSets || instSets.size == 0) {
+        if (!instSets || instSets.size === 0) {
             return null;
         }
 

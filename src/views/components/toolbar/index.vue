@@ -4,6 +4,7 @@
 			v-model="searchKeywords"
 			:placeholder="T('home.host-manager.search.placeholder')"
 			class="nx-search-input"
+			clearable
 			suffix-icon="el-icon-search" />
 		<Space :size="5">
 			<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
@@ -21,6 +22,7 @@
 		<el-dialog
 			:title="T(sessionFolderEditDialog.title)"
 			:label-width="80"
+			:close-on-click-modal="false"
 			:visible.sync="sessionFolderEditDialog.showDialog"
 			width="400px">
 			<el-form :model="sessionFolderEditDialog.data">
@@ -41,6 +43,7 @@ import * as EventBus from '@/services/eventbus'
 import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
 import { resetValues } from '../../../../common/utils'
 import Space from '@/components/space/index.vue'
+import { mapState } from 'vuex'
 
 export default {
 	name: 'NxToolbar',
@@ -64,6 +67,9 @@ export default {
 				}
 			},
 		}
+	},
+	computed: {
+		...mapState(['currentSelectedSessionNode'])
 	},
 	watch: {
 		searchKeywords() {
@@ -119,41 +125,39 @@ export default {
 		 * @param {SessionConfig} sessCfg 会话配置
 		 */
 		addSessionConfig(sessCfg) {
-			let treeData = this.processSessionConfigTree([sessCfg])[0]
-			const menuRef = this.$parent.$children[2].$children[0]
-			const sessionTree = menuRef.$refs.sessionTree
-			if (!this.currentSelectSessionNode) {
-				sessionTree.appendNode({ treeData })
+			const treeData = this.processSessionConfigTree([sessCfg])[0]
+			if (!this.currentSelectedSessionNode) {
+				// sessionTree.appendNode({ treeData })
 				this.$sessionManager.addSessionConfig(null, sessCfg)
-				menuRef.updateSessionTree()
+				EventBus.publish('create-session-folder', treeData)
 				return
 			}
-			let { data, node } = this.currentSelectSessionNode
+			let { data, node } = this.currentSelectedSessionNode
 			if (node.isFolder) {
 				node.appendChild(treeData)
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
-				menuRef.updateSessionTree()
+				EventBus.publish('refresh-session-tree', {})
 				return
 			}
 			// 需要判断节点是不是根目录下的节点
 			node = node.getParentNode()
 			if (!node) {
-				sessionTree.appendNode({ treeData })
+				EventBus.publish('create-session-folder', treeData)
 				this.$sessionManager.addSessionConfig(null, sessCfg)
 			} else {
 				let { data } = node.nodeData
 				node.appendSibling(treeData)
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
 			}
-
-			menuRef.updateSessionTree()
+			EventBus.publish('refresh-session-tree', {})
+			this.sessionFolderEditDialog.showDialog = false
 		},
 		async gotoCreateShellSession() {
 			const sessCfg = this.$sessionManager.createShellSessionConfig(this.T('home.profile.default-session-name'))
 			this.addSessionConfig(sessCfg)
 			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
 		},
-		handlerClick(){
+		handlerClick() {
 			if (!this.sessionFolderEditDialog.isEdit) {
 				const sessCfg = new SessionConfig(
 					this.sessionFolderEditDialog.data.folderName,
@@ -162,7 +166,7 @@ export default {
 				this.addSessionConfig(sessCfg)
 			} else {
 				const sessCfg = this.$sessionManager.getSessionConfigById(
-					this.currentSelectSessionNode.node.nodeData.data.data._id
+					this.currentSelectedSessionNode.node.nodeData.data.data._id
 				)
 				sessCfg.update(this.sessionFolderEditDialog.data.folderName)
 				this.sessionFolderEditDialog.showDialog = false
