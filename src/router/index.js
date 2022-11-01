@@ -74,7 +74,8 @@ const routes = [
             {
                 path: "globalsetting/:sessionId",
                 name: "GlobalSetting",
-                component: () => import("../views/profiles/globalSetting.vue")
+                // component: () => import("../views/profiles/globalSetting.vue")
+                component: () => import('@/views/settings/index.vue')
             }
         ]
     },

@@ -13,6 +13,7 @@ import {
 	Form,
 	FormItem,
 	Input,
+	InputNumber,
 	Radio,
 	RadioGroup,
 	RadioButton,
@@ -46,6 +47,7 @@ const element = {
 		Vue.use(Switch)
 		Vue.use(Form).use(FormItem)
 		Vue.use(Input)
+		Vue.use(InputNumber)
 		Vue.use(Dialog)
 		Vue.use(Alert)
 		Vue.use(Scrollbar)

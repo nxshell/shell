@@ -68,7 +68,6 @@ export default {
 			await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},
 		handleSessionInstRemove(index) {
-			debugger
 			const { title, data: session } = this.sessionInstTabs[index]
 			// 首页不需要确认
 			if (title === 'Welcome') {

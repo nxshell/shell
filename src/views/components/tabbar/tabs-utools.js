@@ -17,7 +17,6 @@ export async function activeSession(sessInst) {
     const activeSessionIndex = this.$store.getters.sessionInstTabs.findIndex((inst) => {
         return inst.data.id === sessInst.id
     })
-    console.log('active session', sessInst.name, activeSessionIndex)
     await this.$store.dispatch('updateActiveTabIndex', activeSessionIndex)
 }
 

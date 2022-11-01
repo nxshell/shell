@@ -62,26 +62,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// 左侧工具栏宽度
+$tool-box-width: 295px !global;
+// 顶部Tabs 高度
+$nx-content-tabs: 40px !global;
 .nx-layout-wrapper {
-	// 左侧工具栏宽度
-	--tool-box-width: 295px;
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
+	box-sizing: border-box;
 
 	.nx-layout-left {
-		width: var(--tool-box-width);
-		height: 100vh;
+		width: $tool-box-width;
+		height: calc(100vh - 40px);
 		box-sizing: border-box;
-		padding: 5px;
+		padding: 5px 5px 0;
 	}
 
 	.nx-layout-right {
 		position: relative;
-		width: calc(100% - var(--tool-box-width));
-		height: 100vh;
+		width: calc(100% - #{$tool-box-width});
+		height: calc(100vh - 40px);
 		box-sizing: border-box;
-		$nx-content-tabs: 40px;
 
 		.nx-layout-toggle-bar {
 			height: 72px;
@@ -137,7 +139,7 @@ export default {
 		}
 
 		.nx-content {
-			height: calc(100vh - $nx-content-tabs);
+			height: calc(100vh - #{$nx-content-tabs});
 		}
 	}
 }

@@ -1,7 +1,7 @@
 <template>
 	<div class="nx-menu-wrapper">
 		<!-- 提示创建会话配置 -->
-		<el-scrollbar style="height: calc(100% - 40px)">
+		<el-scrollbar style="height: 100%;">
 			<pt-tree
 				ref="sessionTree"
 				:treeData="sessionConfigsTree"

@@ -50,7 +50,6 @@ export default new Vuex.Store({
         setTheme(state, theme) {
             globalSetting.setProfile("xterm", { theme: theme }).then(() => {
                 state.theme = theme;
-                console.log(globalSetting.getProfile('xterm'))
             })
         },
         setShowTabs(state, status) {
