@@ -57,17 +57,6 @@ a {
   border-radius: 4px;
 }
 
-/** element ui reset **/
-.el-input__inner, .el-textarea__inner {
-  color: var(--n-text-color-base) !important;
-  caret-color: var(--n-text-color-base);
-  border-width: 0 !important;
-  background-color: var(--n-input-bg-color) !important;
-
-  &:focus {
-    background-color: var(--n-input-bg-color) !important;
-  }
-}
 
 .el-dialog {
   background-color: var(--n-color-bg-dialog) !important;
@@ -153,6 +142,53 @@ a {
 
     i {
       color: #B8B8B8 !important;
+    }
+  }
+}
+
+/** element ui reset **/
+.el-input__inner, .el-textarea__inner {
+  color: var(--n-text-color-base) !important;
+  caret-color: var(--n-text-color-base);
+  border-width: 0 !important;
+  background-color: var(--n-input-bg-color) !important;
+
+  &:focus {
+    background-color: var(--n-input-bg-color) !important;
+  }
+}
+
+.el-input {
+  &-group {
+    &__append {
+      border-width: 0 !important;
+      background-color: var(--n-input-bg-color) !important;
+
+      .is-plain:hover, .is-plain:focus {
+        background-color: transparent !important;
+      }
+    }
+  }
+}
+
+.el-select-dropdown {
+  border-color: #424247 !important;
+  background-color: #424247 !important;
+
+  &__item {
+    color: var(--n-text-color-base) !important;
+    background-color: #424247 !important;
+
+    &:hover, &.selected {
+      background-color: var(--n-color-modal) !important;
+    }
+  }
+
+  .popper__arrow {
+    border-bottom-color: #424247 !important;
+
+    &:after {
+      border-bottom-color: #424247 !important;
     }
   }
 }

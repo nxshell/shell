@@ -9,8 +9,9 @@
 			@change="handleFileOpen"
 		/>
 		<slot>
-			<pt-inputbox v-model="fileNames" readonly />
-			<pt-button type="primary" size="small" plain @click="openFile">{{ T('Select') }}</pt-button>
+			<el-input v-model="fileNames" readonly>
+				<el-button slot="append" type="text" size="small" plain @click="openFile">{{ T('Select') }}</el-button>
+			</el-input>
 		</slot>
 	</div>
 </template>
@@ -123,6 +124,7 @@ export default {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	width: 100%;
 
 	.pt-inputbox {
 		flex-grow: 1;

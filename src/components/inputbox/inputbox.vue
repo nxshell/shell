@@ -90,18 +90,12 @@ export default {
 .pt-inputbox {
     position: relative;
     box-sizing: border-box;
-    height: 30px;
-    border-radius: 2px;
-    padding: 1px;
+    height: 32px;
+    border-radius: 4px;
     overflow: hidden;
-
-    background-color: var(--n-bg-color-base);
-    border: solid 1px var(--borderColor);
-    
     transition: all 0.2s;
 
     &.focus {
-        border: solid 1px var(--primaryColor);
         transition: all 0.2s;
     }
 
@@ -112,12 +106,13 @@ export default {
     input {
         border: none;
         outline: none;
-        width: calc(100% - 18px);
-        height: calc(100% - 2px);
-        background-color: var(--n-bg-color-base);
+        width: 100%;
+        height: 100%;
+        background-color: var(--n-input-bg-color);
         color: var(--n-text-color-base);
-
-        padding-left: 15px
+	    border-radius: 4px;
+        padding-left: 12px;
+	    box-sizing: border-box;
     }
 
     /*去掉默认的搜索小图标*/

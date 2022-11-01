@@ -30,6 +30,7 @@ export default {
 	data() {
 		return {
 			sessionContextMenuTabIndex: -1,
+			sessionContextMenuTabType: 'shell',
 			getTabContextMenu: () => {
 				return this.getSessionTabContextMenu()
 			},
