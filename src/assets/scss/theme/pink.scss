@@ -21,8 +21,12 @@
   --n-text-color-light: rgb(217, 219, 233);
   --n-hover-bg-color: var(--pink-color-800);
 
-  --n-button-primary: #63e2b7;
-  --n-button-primary-hover: #7fe7c4;
+  --n-button-primary-text: #ffff;
+  --n-button-primary: var(--pink-color-600);
+  --n-button-primary-hover: var(--pink-color-800);
+  --n-button-default-text: #000;
+  --n-button-default-color: #F2F3F5;
+  --n-button-default-hover: #E5E6EB;
 
   --n-input-bg-color: var(--pink-color-800);
   --n-border-color: var(--pink-color-700);
@@ -33,9 +37,13 @@
   //--n-progress-bar-color: var(--pink-color-A200);
   --n-progress-bar-color: #C51162;
   /* Tabs */
-  --n-tabs-bg-color: var(--pink-color-800);
-  --n-tabs-item-bg-color: var(--pink-color-700);
-  --n-tabs-item-hover-bg-color: var(--pink-color-500);
+  --n-tabs-bg-color: var(--n-bg-color-light);
+  --n-tabs-item-bg-color: var(--pink-color-A700);
+  --n-tabs-item-hover-bg-color: var(--pink-color-800);
+
+  --n-select-bg-color: var( --pink-color-800);
+  --n-select-hover-bg-color: var(--pink-color-700);
+
 
 
   //--primaryColor: var(--pink-color-600);

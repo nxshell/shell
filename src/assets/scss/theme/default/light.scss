@@ -8,20 +8,27 @@
   --n-text-color-light: rgb(51, 54, 57);
   --n-hover-bg-color: rgba(46, 51, 56, 0.05);
 
-  --n-button-primary: #63e2b7;
-  --n-button-primary-hover: #7fe7c4;
+  --n-button-primary-text: #ffff;
+  --n-button-primary: rgb(22 93 255);
+  --n-button-primary-hover: #4080ff;
+  --n-button-default-text: #000;
+  --n-button-default-color: #F2F3F5;
+  --n-button-default-hover: #E5E6EB;
 
-  --n-input-bg-color: rgb(220, 223, 230, 0.8);
-  --n-border-color: rgb(220, 223, 230, 0.8);
+
+  --n-input-bg-color: #f2f3f5;
+  --n-border-color: #f2f3f5;
 
   --n-color-bg-dialog: #ffffff;
   --n-color-modal: #ffffff;
   --n-progress-bar-color: #90CAF9;
 
   /* Tabs */
-  --n-tabs-bg-color: #FAFAFA;
+  --n-tabs-bg-color: var(--n-bg-color-light);
   --n-tabs-item-bg-color: #FFFFFF;
   --n-tabs-item-hover-bg-color: rgba(46, 51, 56, 0.09);
 
 
+  --n-select-bg-color: #fff;
+  --n-select-hover-bg-color: #f2f3f5;
 }

@@ -6,7 +6,7 @@
 			class="nx-search-input"
 			clearable
 			suffix-icon="el-icon-search" />
-		<Space :size="5">
+		<n-space :size="5">
 			<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
 				<span class="host-tree-btn" @click="createFolder">
 					<i class="el-icon-folder-add" />
@@ -17,7 +17,7 @@
 					<i class="el-icon-circle-plus-outline" />
 				</span>
 			</el-tooltip>
-		</Space>
+		</n-space>
 		<!--新建文件夹弹窗-->
 		<el-dialog
 			:title="T(sessionFolderEditDialog.title)"
@@ -42,12 +42,10 @@
 import * as EventBus from '@/services/eventbus'
 import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
 import { resetValues } from '../../../../common/utils'
-import Space from '@/components/space/index.vue'
 import { mapState } from 'vuex'
 
 export default {
 	name: 'NxToolbar',
-	components: { Space },
 	props: {
 		visible: false
 	},
@@ -192,20 +190,25 @@ export default {
 	}
 
 	.host-tree-btn {
-		display: inline-block;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
 		box-sizing: border-box;
-		text-align: center;
 		padding: 5px;
 		width: 32px;
 		height: 32px;
 		line-height: 22px;
-		color: var(--n-text-color-base);
-		border-radius: 4px;
-		background-color: var(--btnPrimaryBackgroundColor);
+		border-radius: 2px;
+		color: var(--n-button-primary-text);
+		background-color: var(--n-button-primary);
+
+		i {
+			font-size: 16px;
+		}
 
 		&:hover {
 			cursor: pointer;
-			background-color: var(--btnPrimaryHoverBackgroundColor);
+			background-color: var(--n-button-primary-hover);
 		}
 	}
 }

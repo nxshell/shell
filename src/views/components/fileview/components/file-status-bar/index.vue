@@ -15,21 +15,19 @@
 			<el-progress :text-inside="true" :stroke-width="24" :percentage="progress" />
 		</div>
 		<div v-if="showProgress" class="status-bar-item progress-status" style="flex: 1;">
-			<Space :size="10">
+			<n-space :size="10">
 				<span class="n-progress-text">{{ progress }}%</span>
 				<el-divider v-if="speed" direction="vertical" />
 				<span v-if="speed" class="n-progress-speed">{{ speed }}</span>
-			</Space>
+			</n-space>
 		</div>
 	</div>
 </template>
 
 <script>
-import Space from '@/components/space'
 
 export default {
 	name: 'FileStatusBar',
-	components: { Space },
 	props: {
 		showProgress: {
 			type: Boolean,

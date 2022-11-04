@@ -3,13 +3,17 @@
 
   --n-bg-color-base: #18181c;
   --n-bg-color-light: #101014;
-  --n-text-color: #000;
+  --n-text-color: #fff;
   --n-text-color-base: rgb(219, 223, 234);
   --n-text-color-light: rgb(217, 219, 233);
-  --n-hover-bg-color: #24263a;
+  --n-hover-bg-color: #42424a;
 
-  --n-button-primary: #63e2b7;
-  --n-button-primary-hover: #7fe7c4;
+  --n-button-primary-text: #ffff;
+  --n-button-primary: rgb(22 93 255);
+  --n-button-primary-hover: #4080ff;
+  --n-button-default-text: #000;
+  --n-button-default-color: #F2F3F5;
+  --n-button-default-hover: #E5E6EB;
 
   --n-input-bg-color: rgba(255, 255, 255, 0.1);
   --n-border-color: rgba(255, 255, 255, 0.1);
@@ -20,7 +24,12 @@
   --n-progress-bar-color: #1976D2;
 
   /* Tabs */
-  --n-tabs-bg-color: #101014;
+  --n-tabs-bg-color: var(--n-bg-color-light);
   --n-tabs-item-bg-color: rgba(255, 255, 255, 0.08);
-  --n-tabs-item-hover-bg-color: rgba(255, 255, 255, 0.12);
+  --n-tabs-item-active:  rgb(22 93 255);
+  --n-tabs-item-hover-bg-color: #4080ff;
+
+
+  --n-select-bg-color: #424248;
+  --n-select-hover-bg-color: #4C4C55;
 }

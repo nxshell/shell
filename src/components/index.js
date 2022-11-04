@@ -59,7 +59,7 @@ import PtXterm from "./xterm/xterm";
 
 import PtMenuManager from "./menu/menuManager";
 import PtContextMenu from "./menu/contextmenu";
-import Space from './space/index.vue'
+import NSpace from './space/index.vue'
 
 
 const components = [
@@ -71,7 +71,7 @@ const components = [
     PtFolder,
 
     PtForm,
-    Space,
+    NSpace,
     PtFormItem,
 
     PtGridView,
@@ -120,8 +120,6 @@ export default {
         Vue.use(PtContextMenu);
         Vue.use(PtConfirm);
         Vue.use(MouseDrag);
-        Vue.use(Space);
-
         Vue.mixin(Pti18n);
         components.forEach((component) => {
             Vue.component(component.name, component);

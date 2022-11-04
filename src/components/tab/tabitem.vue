@@ -1,16 +1,16 @@
 <template>
-	<el-tag
-		v-bind="$attrs"
-		class="pt-tab-item"
-		:class="{ 'pt-tab-item--selected': selected }"
-		@click="onClickHandler"
-		@contextmenu.prevent="handleContextMenu"
-		@close="onCloseHandler">
+	<div class="pt-tab-item" @contextmenu.prevent="handleContextMenu">
+		<el-tag
+			v-bind="$attrs"
+			:class="{ 'pt-tab-item--selected': selected }"
+			@click="onClickHandler"
+			@close="onCloseHandler">
 		<span v-if="icon" class="pt-tab-item-icon">
 			<pt-icon size="custom" :customSize="18" :iconName="iconProp.iconName" :type="iconProp.type" />
 		</span>
-		{{ title }}
-	</el-tag>
+			{{ title }}
+		</el-tag>
+	</div>
 </template>
 
 <script>
@@ -75,34 +75,42 @@ export default {
 
 <style lang="scss" scoped>
 .pt-tab-item {
+	display: inline-block;
 	height: 30px;
-	line-height: 30px;
-	border: none;
-	color: var(--n-text-color-base);
-	background-color: var(--n-tabs-item-bg-color);
 	user-select: none;
 	transition: all 0.2s;
 
-	::v-deep i {
-		color: var(--deactiveTextColor);
+	::v-deep .el-tag {
+		width: 100%;
+		height: 100%;
+		line-height: 30px;
+		border: none;
+		border-radius: 0;
+		color: var(--n-text-color-base);
+		background-color: var(--n-tabs-item-bg-color);
+
+		&.pt-tab-item--selected {
+			background-color: var(--n-tabs-item-active);
+			border-color: var(--n-tabs-item-active);
+			color: var(--n-text-color-base);
+			transition: all 0.2s;
+		}
+
+		i {
+			color: var(--n-text-color-base);
+
+			&:hover {
+				color: var(--n-button-primary-text);
+				background-color: transparent;
+			}
+		}
 
 		&:hover {
-			background-color: transparent;
+			cursor: pointer;
+			color: var(--n-text-color-base);
+			background-color: var(--n-tabs-item-hover-bg-color);
+			transition: all 0.2s;
 		}
-	}
-
-	&:hover {
-		cursor: pointer;
-		color: var(--n-text-color-base);
-		background-color: var(--n-tabs-item-hover-bg-color);
-		transition: all 0.2s;
-	}
-
-	&.pt-tab-item--selected {
-		background-color: var(--n-tabs-item-hover-bg-color);
-		border-color: var(--n-tabs-item-hover-bg-color);
-		color: var(--n-text-color-base);
-		transition: all 0.2s;
 	}
 }
 </style>

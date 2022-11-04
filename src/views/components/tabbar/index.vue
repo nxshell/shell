@@ -21,12 +21,10 @@ import {
 } from '@/views/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
 import { mapState } from 'vuex'
-import Space from '@/components/space'
 import { contextMenuMixin } from './context-menu-mixin'
 
 export default {
 	name: 'TitleBar',
-	components: { Space },
 	data() {
 		return {
 			sessionContextMenuTabIndex: -1,
@@ -74,22 +72,20 @@ export default {
 				session.close()
 				return
 			}
-
 			const isEditor = session && session.type === 'editor'
 			this.$confirm(
 				this.T(`home.session-instance.${ isEditor ? 'save-dialog.message' : 'delete-dialog.title' }`),
 				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
 				{
-					type: 'warning'
+					type: 'warning',
+					closeOnClickModal: false
 				}
 			).then(() => {
 				session.beforeClose()
 				session.close()
 				this.$store.dispatch('updateActiveTabIndex', index)
-			}).catch((error) => {
-				console.error(error)
+			}).catch(() => {
 			})
-			this.activeSession(session)
 		},
 
 		/**

@@ -25,7 +25,6 @@
 	</div>
 </template>
 <script>
-import Space from '@/components/space'
 import TabBar from '@/views/components/tabbar/index.vue'
 import * as EventBus from '@/services/eventbus'
 import NxMenu from '@/views/components/menu'
@@ -33,7 +32,7 @@ import { mapMutations, mapState } from 'vuex'
 
 export default {
 	name: 'Home',
-	components: { Space, NxMenu, TabBar },
+	components: { NxMenu, TabBar },
 	data() {
 		return {}
 	},
@@ -63,9 +62,9 @@ export default {
 
 <style lang="scss" scoped>
 // 左侧工具栏宽度
-$tool-box-width: 295px !global;
+$tool-box-width: 295px;
 // 顶部Tabs 高度
-$nx-content-tabs: 40px !global;
+$nx-content-tabs: 40px;
 .nx-layout-wrapper {
 	display: flex;
 	justify-content: flex-start;

@@ -48,7 +48,8 @@ export default new Vuex.Store({
             state.userLock = !!status;
         },
         setTheme(state, theme) {
-            globalSetting.setProfile("xterm", { theme: theme }).then(() => {
+            const defaultSettings = globalSetting.getProfile("xterm")
+            globalSetting.setProfile("xterm", { ...defaultSettings, theme: theme }).then(() => {
                 state.theme = theme;
             })
         },

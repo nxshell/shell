@@ -5,9 +5,15 @@ import "./contextmenu.scss";
 const PtContextMenu = Vue.extend({
     data() {
         return {
-            menuData: [], sourceEvent: null, selfRect: {
-                left: 0, top: 0, right: 0, height: 0
-            }, visibility: false
+            menuData: [],
+            sourceEvent: null,
+            selfRect: {
+                left: 0,
+                top: 0,
+                right: 0,
+                height: 0
+            },
+            visibility: false
         };
     },
 
@@ -57,7 +63,8 @@ const PtContextMenu = Vue.extend({
     render(h) {
         const menu = h("pt-menu", {
             props: {
-                menu: this.menuData
+                menu: this.menuData,
+                translate: true
             }, on: {
                 "pop-stack": this.handlePopStack
             }
@@ -73,11 +80,16 @@ const PtContextMenu = Vue.extend({
 });
 
 export function showContextMenu(menu, evt) {
+    // 没有内容禁止打开
+    if (!menu || menu.length === 0) {
+        return
+    }
     const contextMenuNode = document.createElement("div");
     document.body.appendChild(contextMenuNode)
     new PtContextMenu({
         data: {
-            menuData: menu, sourceEvent: evt
+            menuData: menu,
+            sourceEvent: evt
         }
     }).$mount(contextMenuNode);
 }

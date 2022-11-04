@@ -26,6 +26,12 @@ class Pti18n {
     }
 
     _T(key, ...args) {
+        try {
+            key.trim()
+        } catch (error) {
+            console.error('无效的国际化Key', key)
+            return ""
+        }
         const keyPaths = key.trim().split(".");
         let value = this.lang;
         for (let nodeKey of keyPaths) {

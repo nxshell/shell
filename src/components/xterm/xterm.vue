@@ -207,7 +207,7 @@ export default {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
 					const { key, type } = ev
-					if (type != 'keydown') {
+					if (type !== 'keydown') {
 						return false
 					}
 					if (['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
@@ -352,7 +352,7 @@ export default {
 
 		handleFileDrop(evt) {
 			evt.preventDefault()
-			if (evt.dataTransfer.items.length == 0) {
+			if (evt.dataTransfer.items.length === 0) {
 				return
 			}
 

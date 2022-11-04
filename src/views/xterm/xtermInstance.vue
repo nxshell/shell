@@ -722,7 +722,8 @@ export default {
 		justify-content: space-between;
 		align-items: center;
 		height: 40px;
-		background-color: var(--lightBackgroundColor);
+		padding: 5px 0 5px 5px;
+		background-color: var(--n-bg-color-base);
 
 		.host-url {
 			flex: 1;
@@ -732,7 +733,7 @@ export default {
 			line-height: 34px;
 			padding: 0 10px;
 			color: var(--n-text-color-base);
-			background-color: var(--n-bg-color-base);
+			background-color: var(--n-bg-color-light);
             margin-right: 5px;
 		}
 		.btn {
@@ -748,7 +749,7 @@ export default {
             margin-right: 5px;
 			&:hover {
 				cursor: pointer;
-				background-color: var(--n-bg-color-base);
+				background-color: var(--n-button-primary-hover);
 			}
 		}
 	}

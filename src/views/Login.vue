@@ -219,7 +219,7 @@ export default {
         border-radius: 10px;
         border: 1px solid var(--borderColor);
 
-        background-color: var(--lightBackgroundColor);
+        background-color: var(--n-bg-color-light);
 
         .pt-avatar {
             margin-right: 20px;

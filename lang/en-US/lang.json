@@ -254,6 +254,22 @@
                 "charset": {
                     "title": "Charsets",
                     "description": "Charset of the terminal"
+                },
+                "lineHeight": {
+                    "title": "Line Height",
+                    "description": "Line Height"
+                },
+                "letterSpacing": {
+                    "title": "Letter Spacing",
+                    "description": "Letter Spacing"
+                },
+                "cursorBlink": {
+                    "title": "Cursor Blink",
+                    "description": "Cursor Blink"
+                },
+                "cursorStyle": {
+                    "title": "Cursor Style",
+                    "description": "Cursor Style"
                 }
             },
             "auth": {

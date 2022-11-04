@@ -1,6 +1,6 @@
 <script lang="jsx">
 export default {
-	name: 'Space',
+	name: 'NSpace',
 	props: {
 		align: {
 			type: String,

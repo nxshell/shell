@@ -7,6 +7,7 @@ import {
 	Select,
 	Option,
 	OptionGroup,
+	Card,
 	Tabs,
 	TabPane,
 	Switch,
@@ -30,7 +31,9 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	Scrollbar,
+	Link,
 	Progress,
+	PageHeader,
 	Divider,
 	Alert,
 	Empty,
@@ -42,6 +45,8 @@ const element = {
 	install: function (Vue) {
 		Vue.use(Avatar)
 		Vue.use(Button)
+		Vue.use(Link)
+		Vue.use(Card)
 		Vue.use(Select).use(Option).use(OptionGroup)
 		Vue.use(Tabs).use(TabPane)
 		Vue.use(Switch)
@@ -57,6 +62,7 @@ const element = {
 		Vue.use(Tree)
 		Vue.use(Empty)
 		Vue.use(Divider)
+		Vue.use(PageHeader)
 		Vue.use(Progress)
 		Vue.use(Dropdown).use(DropdownItem).use(DropdownMenu)
 		Vue.use(Radio).use(RadioButton).use(RadioGroup)

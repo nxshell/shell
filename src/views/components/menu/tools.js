@@ -14,7 +14,8 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
     const walkAndProcess = (parent, cfgNodes) => {
         for (const cfgNode of cfgNodes) {
             let treeNode = {
-                text: cfgNode.name, data: cfgNode.toJSONObject(false)
+                text: cfgNode.name,
+                data: cfgNode.toJSONObject(false)
             }
 
             let children = []
@@ -36,6 +37,58 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
  * 右键打开链接
  */
 export function handleSessionTreeContextMenu_Connect() {
-    console.log('右键打开')
     this.handleHostOpen(this.currentSelectedSessionNode)
+}
+
+/**
+ * 剪切板操作
+ */
+export function treeOpClipboardCut(node) {
+    this.treeOpClipboard.data = node
+    this.treeOpClipboard.operate = 'cut'
+    console.log('剪切板', this.treeOpClipboard)
+}
+
+/**
+ * 粘贴
+ * @param node
+ */
+export function treeOpClipboardCopy(node) {
+    this.treeOpClipboard.data = node
+    this.treeOpClipboard.operate = 'copy'
+    console.log('剪切板', this.treeOpClipboard)
+}
+
+/**
+ * 添加配置
+ * @param {SessionConfig} sessCfg 会话配置
+ */
+export function addSessionConfig(sessCfg) {
+    const menuData = this.processSessionConfigTree([sessCfg])[0]
+    if (!this.currentSelectedSessionNode) {
+        // sessionTree.appendNode({ menuData })
+        this.$sessionManager.addSessionConfig(null, sessCfg)
+        this.$refs.sessionTree.appendNode({ menuData: menuData })
+        this.updateSessionTree()
+        return
+    }
+    let { data, node } = this.currentSelectedSessionNode
+    if (node.isFolder) {
+        node.appendChild(menuData)
+        this.$sessionManager.addSessionConfig(data.data, sessCfg)
+        this.updateSessionTree()
+        return
+    }
+    // 需要判断节点是不是根目录下的节点
+    node = node.getParentNode()
+    if (!node) {
+        this.$refs.sessionTree.appendNode({ menuData: menuData })
+        this.$sessionManager.addSessionConfig(null, sessCfg)
+        this.updateSessionTree()
+    } else {
+        let { data } = node.nodeData
+        node.appendSibling(menuData)
+        this.$sessionManager.addSessionConfig(data.data, sessCfg)
+    }
+    this.updateSessionTree()
 }

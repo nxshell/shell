@@ -42,6 +42,7 @@
 		"nxshell-zmodem.js": "^0.1.10",
 		"pinia": "^2.0.23",
 		"serialport": "^9.2.0",
+		"svg-sprite-loader": "^6.0.11",
 		"telnet-client": "^1.4.9",
 		"uuid": "^8.3.2",
 		"vue": "2.6.14",

@@ -7,7 +7,7 @@
 			<div class="title-bar" :class="{ drag: isMainWindow, deactive: !active }">
 				<toolbar :visible="true" class="title-text" />
 				<div class="window-controls-container" v-if="!IS_MAC_OS">
-					<Space :size="20">
+					<n-space :size="20">
 						<span class="control-btn" @click="doMinimize">
 							<i class="el-icon-minus" />
 						</span>
@@ -17,7 +17,7 @@
 						<span class="control-btn" @click="doClose">
 							<i class="el-icon-close" />
 						</span>
-					</Space>
+					</n-space>
 				</div>
 			</div>
 			<div class="main-container" :style="main_container_fix_style">
@@ -28,13 +28,12 @@
 </template>
 
 <script>
-import Space from '@/components/space';
 import Toolbar from "@/views/components/toolbar";
 
 const IS_MAC_OS = /macintosh/i.test(navigator.userAgent)
 export default {
 	name: 'PtWindow',
-	components: { Space, Toolbar },
+	components: { Toolbar },
 	props: {
 		isMainWindow: {
 			type: Boolean,

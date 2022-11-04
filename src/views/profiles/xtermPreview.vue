@@ -132,13 +132,13 @@
 				// this.$refs.xterm?.write("Welcome to use Superman. \r\n");
 				// this.$refs.xterm?.write(`This is Web Terminal of pod\x1B[1;3;31m abctest\x1B[0m in namespace\x1B[1;3;31m hello\x1B[0m`);
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)
-				w('Documents ',MODES.HIGHLIGHT,FORECOLOR.YELLOW,1,true)
+				w('Documents ',MODES.REVERSED,FORECOLOR.YELLOW,1,true)
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)
-				w('Downloads ',MODES.HIGHLIGHT,FORECOLOR.GREEN,1,true)
+				w('Downloads ',MODES.REVERSED,FORECOLOR.GREEN,1,true)
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)
-				w('Pictures ',MODES.HIGHLIGHT,FORECOLOR.BLUE,1,true)
+				w('Pictures ',MODES.REVERSED,FORECOLOR.BLUE,1,true)
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)
-				w('Music ',MODES.HIGHLIGHT,FORECOLOR.RED,1,true)
+				w('Music ',MODES.REVERSED,FORECOLOR.RED,1,true)
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)
 				w('NxShell ',MODES.HIGHLIGHT,FORECOLOR.MAGENTA,1,true)
 				w('-rwxr-xr-x 1 root ',MODES.HIGHLIGHT,FORECOLOR.WHITE,2)

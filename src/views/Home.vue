@@ -7,7 +7,7 @@
 						v-model="searchSessionKeyword"
 						:placeholder="T('home.host-manager.search.placeholder')"
 						suffix-icon="el-icon-search" />
-					<Space :size="5">
+					<n-space :size="5">
 						<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
 							<span class="host-tree-btn" @click="showAddFolderDialog">
 								<i class="el-icon-folder-add" />
@@ -18,7 +18,7 @@
 								<i class="el-icon-circle-plus-outline" />
 							</span>
 						</el-tooltip>
-					</Space>
+					</n-space>
 				</div>
 				<!--左侧菜单-->
 				<div class="host-tree-view">
@@ -145,12 +145,10 @@ import { getSystemIcon, getSessionIcon, treeIconFilter } from './sysicons'
 import { getFolderIcon } from './fileicons'
 
 import mousetrap from 'mousetrap'
-import Space from '@/components/space'
 
 export default {
 	name: 'Home',
 	components: {
-		Space,
 		PtPopper,
 		// PtXtermSession,
 		PtScrollContainer
@@ -1256,10 +1254,9 @@ export default {
 			width: 32px;
 			height: 32px;
 			line-height: 22px;
-			padding: 5px;
-			color: var(--n-text-color-base);
+			color: var(--n-button-primary-text);
 			border-radius: 4px;
-			background-color: var(--lightBackgroundColor);
+			background-color: var(--n-bg-color-light);
 
 			&:hover {
 				cursor: pointer;
@@ -1272,7 +1269,7 @@ export default {
 		box-sizing: border-box;
 		width: 100%;
 		height: 100%;
-		background-color: var(--lightBackgroundColor);
+		background-color: var(--n-bg-color-light);
 		color: var(--n-text-color-base);
 		outline: none;
 		// border: solid 1px var(--borderColor);

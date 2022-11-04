@@ -1,13 +1,15 @@
 <template>
-	<div class="nx-menu-wrapper">
+	<div class="nx-menu-wrapper" v-context-menu="sessionConfigsTreeContextMenu.empty" @click="handleSessionTreeContainerClick">
 		<!-- 提示创建会话配置 -->
 		<el-scrollbar style="height: 100%;">
 			<pt-tree
 				ref="sessionTree"
+				dataKey="uuid"
 				:treeData="sessionConfigsTree"
 				:iconFilter="treeIconFilter"
 				:draggable="!isSearch"
 				:nodeStates.sync="sessionConfigsTreeStates"
+				:autoExpanded="true"
 				v-context-menu="getSessionConfigTreeContextMenu"
 				@tree-node-select="handleHostSelected"
 				@tree-node-open="handleHostOpen"
@@ -16,7 +18,7 @@
 				<template v-slot:additional="scope">
 					<el-tooltip class="item" effect="dark" content="点击打开SFTP" placement="top-start">
 					<span class="session-extend" @click.stop="handleOpenSFTP(scope)">
-						<i class="el-icon-position" />
+						<i class="el-icon-folder-opened" />
 					</span>
 					</el-tooltip>
 				</template>
@@ -33,10 +35,16 @@
 
 import { treeIconFilter } from '@/views/sysicons'
 import { SESSION_CONFIG_TYPE } from "@/services/sessionMgr";
-import { processSessionConfigTree, handleSessionTreeContextMenu_Connect } from './tools'
+import {
+	processSessionConfigTree,
+	handleSessionTreeContextMenu_Connect,
+	treeOpClipboardCut,
+	treeOpClipboardCopy,
+	addSessionConfig
+} from './tools'
 import Storage from '@/services/storage'
 import * as EventBus from '@/services/eventbus'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { activeSession } from '@/views/components/tabbar/tabs-utools'
 
 export default {
@@ -47,7 +55,6 @@ export default {
 			sessionConfigsTree: [],
 			isSearch: false,
 			sessionConfigsTreeStates: {},
-			currentSelectSessionNode: null,
 			sessionConfigsTreeContextMenu: {
 				folder: [
 					{
@@ -59,9 +66,6 @@ export default {
 						label: 'home.sessions-context-menu.create-session',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_CreateSessionConfig
-					},
-					{
-						type: 'separator'
 					},
 					{
 						label: 'home.sessions-context-menu.cut',
@@ -79,15 +83,9 @@ export default {
 						handler: this.handleSessionTreeContextMenu_Paste
 					},
 					{
-						type: 'separator'
-					},
-					{
 						label: 'home.sessions-context-menu.delete',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_Delete
-					},
-					{
-						type: 'separator'
 					},
 					{
 						label: 'home.sessions-context-menu.rename',
@@ -107,9 +105,6 @@ export default {
 						handler: this.handleSessionTreeContextMenu_SFTP
 					},
 					{
-						type: 'separator'
-					},
-					{
 						label: 'home.sessions-context-menu.cut',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_Cut
@@ -120,20 +115,9 @@ export default {
 						handler: this.handleSessionTreeContextMenu_Copy
 					},
 					{
-						label: 'home.sessions-context-menu.paste',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Paste
-					},
-					{
-						type: 'separator'
-					},
-					{
 						label: 'home.sessions-context-menu.delete',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_Delete
-					},
-					{
-						type: 'separator'
 					},
 					{
 						label: 'home.sessions-context-menu.create',
@@ -150,9 +134,6 @@ export default {
 								handler: this.handleSessionTreeContextMenu_CreateSessionConfig
 							}
 						]
-					},
-					{
-						type: 'separator'
 					},
 					{
 						label: 'home.sessions-context-menu.prop',
@@ -183,6 +164,10 @@ export default {
 					}
 				]
 			},
+			treeOpClipboard: {
+				data: null,
+				operate: ''
+			}
 		}
 	},
 	watch: {
@@ -191,7 +176,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(['currentSelectedSessionNode']),
+		...mapState(['currentSelectedSessionNode']),
 		treeIconFilter() {
 			return treeIconFilter
 		}
@@ -219,31 +204,20 @@ export default {
 	methods: {
 		...mapMutations(['updateCurrentSelectedSessionNode']),
 		activeSession,
+		addSessionConfig,
 		processSessionConfigTree,
+		treeOpClipboardCut,
+		treeOpClipboardCopy,
 		handleSessionTreeContextMenu_Connect,
 		getSessionConfigTreeContextMenu() {
-			if (this.currentSelectSessionNodeConfigType === SESSION_CONFIG_TYPE.FOLDER) {
+			if (this.currentSelectedSessionNodeConfigType === SESSION_CONFIG_TYPE.FOLDER) {
 				return this.sessionConfigsTreeContextMenu.folder
 			}
 
-			if (this.currentSelectSessionNodeConfigType === SESSION_CONFIG_TYPE.NODE) {
+			if (this.currentSelectedSessionNodeConfigType === SESSION_CONFIG_TYPE.NODE) {
 				// TODO: 获取SessionConfig的状态，过滤掉一些无用状态
 				return this.sessionConfigsTreeContextMenu.node
 			}
-		},
-		/**
-		 * 匹配会话Tab页
-		 * 实际上一个会话配置可能会创建多个会话实例出来
-		 * 但是我们在界面上只能选择其中一个
-		 *
-		 * @param {SessionConfig} sessCfg 会话的配置
-		 */
-		matchSessionTab(sessCfg) {
-			let matchedSession = this.$sessionManager.matchSessionInstanceByConfig(sessCfg)
-			if (!matchedSession) {
-				return null
-			}
-			return matchedSession[0]
 		},
 		/**
 		 * 处理主机被选中
@@ -267,15 +241,14 @@ export default {
 				return
 			}
 			// 尝试激活会话实例窗口
-			let sessInst = this.matchSessionTab(sessCfg)
-			if (!sessInst) {
+			const sessionInstance = this.$sessionManager.matchSessionInstanceByConfig(sessCfg)
+			if (!sessionInstance) {
 				// 没有匹配到则创建新的实例
-				// sessInst = await this.$sessionManager.createSessionInstance(sessCfg);
 				return
 			}
 
 			this.$nextTick(() => {
-				this.activeSession(sessInst)
+				this.activeSession(sessionInstance[0])
 			})
 		},
 		async handleHostOpen(data) {
@@ -284,7 +257,6 @@ export default {
 				// 目录节点不启动会话实例
 				return
 			}
-			console.log('双击打开一次')
 			await this.$sessionManager.createSessionInstance(sessCfg)
 		},
 		/**
@@ -320,7 +292,7 @@ export default {
 			this.updateCurrentSelectedSessionNode(node)
 			const { data } = node
 			const sessCfg = data.data
-			this.currentSelectSessionNodeConfigType = sessCfg.type
+			this.currentSelectedSessionNodeConfigType = sessCfg.type
 		},
 		async handleOpenSFTP(sessCfg) {
 			await this.$sessionManager.createSFTPSessionInstance(sessCfg.data)
@@ -330,7 +302,6 @@ export default {
 			const { data, node } = this.currentSelectedSessionNode
 			const sessCfgData = data.data
 			const sessCfg = this.$sessionManager.getSessionConfigById(sessCfgData._id)
-
 			const message =
 				sessCfg.type === SESSION_CONFIG_TYPE.NODE
 					? this.T('home.host-manager.dialog-delete-confirm.delete-node', sessCfg.name)
@@ -349,7 +320,72 @@ export default {
 			const sessionConfigs = this.$sessionManager.getSessionConfigs()
 			this.sessionConfigsTree = this.processSessionConfigTree(sessionConfigs)
 		},
+		treeOpClipboardPaste() {
+			const { data } = this.treeOpClipboard
+			try {
+				return data && this.treeOpClipboard || null
+			} catch (error) {
+				console.error('剪切复制异常', error)
+				return null
+			} finally {
+				// 当前只粘贴一次，避免不必要的麻烦
+				this.treeOpClipboard = {
+					data: null,
+					operate: ''
+				}
+			}
+		},
+		// 剪切会话
+		handleSessionTreeContextMenu_Cut() {
+			this.treeOpClipboardCut(this.currentSelectedSessionNode)
+		},
+		// 复制会话
+		handleSessionTreeContextMenu_Copy() {
+			this.treeOpClipboardCopy(this.currentSelectedSessionNode)
+		},
+		// 粘贴会话
+		handleSessionTreeContextMenu_Paste() {
 
+			const pasteData = this.treeOpClipboardPaste()
+			if (!pasteData) {
+				return
+			}
+			// 追加新的节点
+			const { data: { data: { data: nodeData } }, operate } = pasteData
+			if (operate === 'cut') {
+				// 复制原有节点数据
+				// TODO: 移除原有的节点
+				this.handleTreeNodeMove({
+					dest: this.currentSelectedSessionNode.node.nodeData.data.data,
+					destPosition: 'after',
+					source: nodeData
+				})
+				// return;
+				pasteData.data.node.remove()
+				if (this.currentSelectedSessionNode.node.isFolder) {
+					this.currentSelectedSessionNode.node.appendChild(nodeData)
+				} else {
+					this.currentSelectedSessionNode.node.appendSibling(nodeData, 'after')
+				}
+			} else {
+				const srcSessionConfig = this.$sessionManager.getSessionConfigById(nodeData._id)
+				const newSessionConfig = srcSessionConfig.duplicate()
+				this.addSessionConfig(newSessionConfig)
+			}
+		},
+		/**
+		 * 树容器操作
+		 */
+		handleSessionTreeContainerClick() {
+			this.updateCurrentSelectedSessionNode(null)
+			this.$refs.sessionTree.clearSelection()
+		},
+		// 查看编辑会话配置
+		async handleSessionTreeContextMenu_Prop() {
+			const { data } = this.currentSelectedSessionNode
+			const sessCfg = this.$sessionManager.getSessionConfigById(data.data._id)
+			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
+		},
 	}
 }
 </script>

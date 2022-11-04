@@ -10,7 +10,7 @@
 		</div>
 		<!-- 设置相关 -->
 		<div class="icon-setting-container">
-			<Space vertical align="center">
+			<n-space vertical align="center">
 				<!-- 头像 -->
 				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />
 				<!-- 主题切换按钮 -->
@@ -42,7 +42,7 @@
 				<el-tooltip v-else effect="dark" :content="`当前版本 ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
 				</el-tooltip>
-			</Space>
+			</n-space>
 		</div>
 	</div>
 </template>
@@ -159,6 +159,8 @@ export default {
 		},
 		async handlerVersionUpdate() {
 			// TODO 外链打开github地址
+			const update = 'https://github.com/nxshell/nxshell/releases'
+			powertools.openExterUrl(update)
 		}
 	}
 }

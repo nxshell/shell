@@ -1,29 +1,27 @@
 <template>
-    <span
-	    :title="title"
-	    class="pt-icon-wrapper"
-	    :class="{flat: flat, disabled: disabled}"
-	    @click="onClick">
-        <template v-if="type === 'svg'">
-            <svg class="pt-icon" :class="ptIconClass" :style="ptIconStyle" aria-hidden="true">
-                <use :xlink:href="'#icon-' + iconName"></use>
-            </svg>
-        </template>
-        <template v-if="type === 'img'">
-            <!-- TODO: 需要解决图片加载问题 -->
-            <img class="pt-icon"
-                 :src="iconName"
-                 :class="ptIconClass"
-                 :style="ptIconStyle"
-                 aria-hidden="true" alt="img">
-        </template>
-    </span>
-
+	<span :title="title" class="pt-icon-wrapper" :class="{flat: flat, disabled: disabled}" @click="onClick">
+		<template v-if="type === 'svg'">
+			<svg class="pt-icon" :class="ptIconClass" :style="ptIconStyle" aria-hidden="true">
+				<use :xlink:href="'#icon-' + iconName"></use>
+			</svg>
+		</template>
+		<template v-if="type === 'img'">
+			<!-- TODO: 需要解决图片加载问题 -->
+			<img
+				class="pt-icon"
+				:src="iconName"
+				:class="ptIconClass"
+				:style="ptIconStyle"
+				aria-hidden="true"
+				alt="img"
+			/>
+		</template>
+	</span>
 </template>
 
 <script>
 export default {
-	name: "PtIcon",
+	name: 'PtIcon',
 	props: {
 		/**
 		 * type
@@ -32,11 +30,11 @@ export default {
 		 */
 		type: {
 			type: String,
-			default: "svg"
+			default: 'svg'
 		},
 		size: {
 			type: String,
-			default: "small"
+			default: 'small'
 		},
 		customSize: {
 			type: Number
@@ -66,41 +64,40 @@ export default {
 
 	computed: {
 		ptIconClass() {
-			let cls = ["pt-icon-" + this.size];
+			let cls = ['pt-icon-' + this.size]
 			if (this.circle) {
-				cls.push("circle");
+				cls.push('circle')
 			}
 			if (this.className) {
-				cls.push(this.className);
+				cls.push(this.className)
 			}
 			if (this.disabled) {
-				cls.push("disabled")
+				cls.push('disabled')
 			}
-			return cls;
+			return cls
 		},
 		ptIconStyle() {
-			const style = {};
-			if (this.size === "custom") {
-				style.width = this.customSize + "px";
-				style.height = this.customSize + "px";
+			const style = {}
+			if (this.size === 'custom') {
+				style.width = this.customSize + 'px'
+				style.height = this.customSize + 'px'
 			}
-			return style;
+			return style
 		}
 	},
 
 	methods: {
 		onClick(e) {
 			if (this.disabled) {
-				return;
+				return
 			}
-			this.$emit("click", e);
+			this.$emit('click', e)
 		}
 	}
 }
 </script>
 
 <style lang="scss">
-
 .pt-icon-wrapper {
 	position: relative;
 	display: inline-block;
@@ -109,11 +106,11 @@ export default {
 	&.flat {
 		padding: 5px;
 		border-radius: 50%;
-		transition: all .3s;
+		transition: all 0.3s;
 
 		&:hover {
 			background-color: var(--n-hover-bg-color);
-			transition: all .3s;
+			transition: all 0.3s;
 		}
 
 		&.disabled {

@@ -5,7 +5,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   font-family: "DejaVu Mono", Avenir, Helvetica, Arial, sans-serif, "PingFang SC", "微软雅黑";
   font-size: $fontSize;
   -webkit-font-smoothing: antialiased;
@@ -19,12 +20,19 @@ html, body {
   user-select: none;
 }
 
-html, body, p, div, ul, li, hr {
+html,
+body,
+p,
+div,
+ul,
+li,
+hr {
   box-sizing: content-box;
   @extend %reset-margin-padding;
 }
 
-ul, li {
+ul,
+li {
   list-style: none;
 }
 
@@ -52,7 +60,8 @@ a {
   transition: background-color .3s;
 }
 
-::-webkit-scrollbar-track { /*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
   width: 10px;
   border-radius: 4px;
 }
@@ -111,19 +120,26 @@ a {
 }
 
 .el-button {
+  border-color: transparent !important;
   border-width: 0 !important;
-  //&:focus, &:hover {
-  //  background-color: var(--n-color-hover) !important;
-  //  color: var(--n-text-color-hover) !important;
-  //  border-color: var(--n-border-hover) !important;
-  //}
+
+  &--default {
+    background-color: var(--n-button-default-color) !important;
+
+    &:hover,
+    &:focus {
+      color: var(--n-button-default-text) !important;
+      background-color: var(--n-button-default-hover) !important;
+    }
+  }
 
   &--primary {
     //color: var(--n-color) !important;
     background-color: var(--n-button-primary) !important;
     border-color: var(--n-button-primary) !important;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: var(--n-button-primary-hover) !important;
       //color: var(--n-text-color-base);
     }
@@ -147,7 +163,8 @@ a {
 }
 
 /** element ui reset **/
-.el-input__inner, .el-textarea__inner {
+.el-input__inner,
+.el-textarea__inner {
   color: var(--n-text-color-base) !important;
   caret-color: var(--n-text-color-base);
   border-width: 0 !important;
@@ -164,31 +181,45 @@ a {
       border-width: 0 !important;
       background-color: var(--n-input-bg-color) !important;
 
-      .is-plain:hover, .is-plain:focus {
+      .is-plain:hover,
+      .is-plain:focus {
         background-color: transparent !important;
       }
     }
   }
 }
 
+.el-link {
+  &--default {
+    color: var(--n-text-color-base) !important;
+
+    &:hover,
+    &:focus {
+      color: var(--n-text-color-light) !important;
+    }
+  }
+}
+
 .el-select-dropdown {
-  border-color: #424247 !important;
-  background-color: #424247 !important;
+  border-color: var(--n-select-bg-color) !important;
+  background-color: var(--n-select-bg-color) !important;
 
   &__item {
     color: var(--n-text-color-base) !important;
-    background-color: #424247 !important;
+    // background-color: #424247 !important;
+    background-color: var(--n-select-bg-color) !important;
 
-    &:hover, &.selected {
-      background-color: var(--n-color-modal) !important;
+    &:hover,
+    &.selected {
+      background-color: var(--n-select-hover-bg-color) !important;
     }
   }
 
   .popper__arrow {
-    border-bottom-color: #424247 !important;
+    border-bottom-color: var(--n-select-bg-color) !important;
 
     &:after {
-      border-bottom-color: #424247 !important;
+      border-bottom-color: var(--n-select-bg-color) !important;
     }
   }
 }

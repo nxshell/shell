@@ -108,7 +108,6 @@ export default {
 
 	.content {
 		display: inline-block;
-		padding: 5px 10px;
 		white-space: nowrap;
 
 		.pt-tab-item:not(:last-child) {

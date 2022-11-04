@@ -6,7 +6,7 @@
 		<div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
 			<ul class="address-list" ref="address" @click.stop>
 				<li class="address-list-item host" @click="handleEnableEditPath">
-					<pt-icon size="custom" :customSize="16" type="img" :iconName="IconHost"></pt-icon>
+					<pt-icon size="custom" :customSize="16" type="img" :iconName="IconHost" />
 					<span style="margin-left: 5px">{{ hostInfo.username }}@{{ hostInfo.host }}</span>
 				</li>
 				<template v-if="!isEditable">
@@ -18,7 +18,7 @@
 								:menu="entry.subFolderList"
 								:translate="false"
 								@pop-stack="entry.showMenu = false"
-							></pt-menu>
+							/>
 							<pt-icon
 								slot="reference"
 								v-if="!entry.showMenu"
@@ -27,7 +27,7 @@
 								iconName="arrow-right"
 								className="pop-menu"
 								@click.stop="showFolderList(entry, idx)"
-							></pt-icon>
+							/>
 							<pt-icon
 								slot="reference"
 								v-else
@@ -36,7 +36,7 @@
 								iconName="arrow-down"
 								className="pop-menu"
 								@click.stop="showFolderList(entry, idx)"
-							></pt-icon>
+							/>
 						</pt-popper>
 					</li>
 				</template>

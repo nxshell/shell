@@ -8,7 +8,7 @@
 			}"
 		>
 			<template slot="left">
-				<Space :size="5">
+				<n-space :size="5">
 					<el-tooltip
 						class="item"
 						effect="dark"
@@ -41,7 +41,7 @@
 					>
 						<el-button type="text" icon="el-icon-refresh" :disabled="!refresh" @click="refresh" />
 					</el-tooltip>
-				</Space>
+				</n-space>
 			</template>
 			<pt-file-view-address
 				slot="center"
@@ -141,7 +141,7 @@
 			:close-on-click-modal="false"
 			width="450px"
 		>
-			<Space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{width: '100%'}">
 				<el-input
 					v-model="dirCreateDialog.dirname"
 					:placeholder="T('home.fileview.createdir-dialog.placeholder')"
@@ -153,7 +153,7 @@
 					type="warning"
 					show-icon
 				/>
-			</Space>
+			</n-space>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="handleCreateDirCancel">取 消</el-button>
 				<el-button type="primary" @click="handleCreateDirConfirm">确 定</el-button>
@@ -166,7 +166,7 @@
 			:close-on-click-modal="false"
 			width="400px"
 		>
-			<Space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{width: '100%'}">
 				<el-input v-model="renameDialog.dirname"
 				          :placeholder="T('home.fileview.rename-dialog.placeholder')"></el-input>
 				<el-alert
@@ -176,7 +176,7 @@
 					type="warning"
 					show-icon
 				/>
-			</Space>
+			</n-space>
 
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="handleRenameCancel">取 消</el-button>
@@ -190,7 +190,7 @@
 			:close-on-click-modal="false"
 			width="400px"
 		>
-			<Space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{width: '100%'}">
 				<el-input v-model="chmodDialog.permissions"
 				          :placeholder="T('home.fileview.chmod-dialog.placeholder')"></el-input>
 				<el-alert
@@ -200,7 +200,7 @@
 					type="warning"
 					show-icon
 				/>
-			</Space>
+			</n-space>
 
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="handleCloseChmodDialog">取 消</el-button>
@@ -370,7 +370,6 @@ import PtFileViewAddress from './address'
 import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../../fileicons'
 import { Dirent } from '../../../../common/filesystem/dirent'
 import { createDataTransfer } from '@/services/nxsys/dataTransfer'
-import Space from '@/components/space'
 import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
 
 function sort(dirent1, dirent2) {
@@ -409,8 +408,7 @@ export default {
 	name: 'PtFileView',
 	components: {
 		FileStatusBar,
-		PtFileViewAddress,
-		Space
+		PtFileViewAddress
 	},
 	props: {
 		cwd: {

@@ -40,11 +40,11 @@ export const contextMenuMixin = {
                     }
                 ],
                 welcome: [
-                    {
-                        label: 'home.sessions-context-menu.close',
-                        type: 'normal',
-                        handler: this.handleClose
-                    }
+                    // {
+                    //     label: 'home.sessions-context-menu.close',
+                    //     type: 'normal',
+                    //     handler: this.handleClose
+                    // }
                 ],
                 setting: [
                     {
@@ -139,7 +139,6 @@ export const contextMenuMixin = {
         },
         async handleProp() {
             const sessTabItem = this.sessionInstTabs[this.sessionContextMenuTabIndex]
-            debugger
             const sessionInstance = sessTabItem.data
             const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(sessionInstance.getId())
             await this.$sessionManager.createShellSettingSessionInstance(sessionConfig)
