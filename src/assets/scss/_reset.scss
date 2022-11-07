@@ -140,8 +140,8 @@ a {
 
     &:hover,
     &:focus {
+      color: var(--n-text-color-base) !important;
       background-color: var(--n-button-primary-hover) !important;
-      //color: var(--n-text-color-base);
     }
   }
 
@@ -220,6 +220,25 @@ a {
 
     &:after {
       border-bottom-color: var(--n-select-bg-color) !important;
+    }
+  }
+}
+
+.el-switch {
+  &__label {
+    &--right {
+      color: var(--n-text-color-base) !important;
+    }
+
+    &.is-active {
+      color: var(--n-text-color-active) !important;
+    }
+  }
+
+  &.is-checked {
+    .el-switch__core {
+      border-color: var(--n-switch-active) !important;
+      background-color: var(--n-switch-active) !important;
     }
   }
 }

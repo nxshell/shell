@@ -104,6 +104,7 @@ export default {
 	height: 40px;
 	box-sizing: border-box;
 	overflow: hidden;
+	padding: 0 5px;
 	background-color: var(--n-tabs-bg-color);
 
 	.content {

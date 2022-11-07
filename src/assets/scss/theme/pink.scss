@@ -19,6 +19,7 @@
   --n-text-color: rgba(255, 255, 255, 0.82);
   --n-text-color-base: rgb(219, 223, 234);
   --n-text-color-light: rgb(217, 219, 233);
+  --n-text-color-active: rgb(255, 255, 255);
   --n-hover-bg-color: var(--pink-color-800);
 
   --n-button-primary-text: #ffff;
@@ -39,10 +40,13 @@
   /* Tabs */
   --n-tabs-bg-color: var(--n-bg-color-light);
   --n-tabs-item-bg-color: var(--pink-color-A700);
+  --n-tabs-item-active: var(--pink-color-800);
   --n-tabs-item-hover-bg-color: var(--pink-color-800);
 
   --n-select-bg-color: var( --pink-color-800);
   --n-select-hover-bg-color: var(--pink-color-700);
+
+  --n-switch-active: var(--pink-color-800);
 
 
 

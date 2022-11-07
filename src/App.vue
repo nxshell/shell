@@ -11,7 +11,7 @@
 			</div>
 			<template slot="main-panel">
 				<keep-alive :exclude="['GlobalSetting']">
-					<router-view :key="$route.fullPath" />
+					<router-view />
 				</keep-alive>
 			</template>
 		</pt-window>

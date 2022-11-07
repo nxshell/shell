@@ -6,6 +6,7 @@
   --n-text-color: #000;
   --n-text-color-base: #132847;
   --n-text-color-light: rgb(51, 54, 57);
+  --n-text-color-active: rgb(22 93 255);
   --n-hover-bg-color: rgba(46, 51, 56, 0.05);
 
   --n-button-primary-text: #ffff;
@@ -26,9 +27,12 @@
   /* Tabs */
   --n-tabs-bg-color: var(--n-bg-color-light);
   --n-tabs-item-bg-color: #FFFFFF;
+  --n-tabs-item-active: rgba(46, 51, 56, 0.09);
   --n-tabs-item-hover-bg-color: rgba(46, 51, 56, 0.09);
 
 
   --n-select-bg-color: #fff;
   --n-select-hover-bg-color: #f2f3f5;
+
+  --n-switch-active: rgb(22 93 255);
 }

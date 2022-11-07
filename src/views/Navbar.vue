@@ -1,5 +1,5 @@
 <template>
-	<div class="pt-shell-app-nav-bar">
+	<div class="pt-shell-app-nav-bar" :style="{padding: IS_MACOS ? '38px 10px 10px' : '10px'}">
 		<!-- Logo -->
 		<div class="pt-logo">
 			<el-avatar shape="square" fit="fill" size="small" :src="require('@/assets/logo.png')" />
@@ -56,10 +56,12 @@ import VideoPlay from '@/assets/images/video.png'
 import VideoPause from '@/assets/images/pause.png'
 import { sessionMixin } from '@/mixin/session-mixin'
 
+const IS_MACOS = /macintosh/i.test(navigator.userAgent);
 export default {
 	name: 'PtShellAppNavBar',
 	data() {
 		return {
+			IS_MACOS,
 			apps: [
 				{
 					text: 'NxShell',
@@ -207,7 +209,6 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	box-sizing: border-box;
-	padding: 10px;
 	height: 100vh;
 
 	.pt-logo {

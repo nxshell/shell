@@ -9,6 +9,8 @@ import {
 	OptionGroup,
 	Card,
 	Tabs,
+	Row,
+	Col,
 	TabPane,
 	Switch,
 	Form,
@@ -47,6 +49,8 @@ const element = {
 		Vue.use(Button)
 		Vue.use(Link)
 		Vue.use(Card)
+		Vue.use(Row)
+		Vue.use(Col)
 		Vue.use(Select).use(Option).use(OptionGroup)
 		Vue.use(Tabs).use(TabPane)
 		Vue.use(Switch)
