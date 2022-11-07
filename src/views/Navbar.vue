@@ -55,6 +55,8 @@ import NxShellIcon from '@/assets/logo.png'
 import VideoPlay from '@/assets/images/video.png'
 import VideoPause from '@/assets/images/pause.png'
 import { sessionMixin } from '@/mixin/session-mixin'
+import axios from 'axios'
+import semver from 'semver'
 
 const IS_MACOS = /macintosh/i.test(navigator.userAgent);
 export default {
@@ -73,7 +75,7 @@ export default {
 			captureIcon: VideoPlay,
 			sessionPanel: 'open',
 			version: 'V1.0.0',
-			needUpdate: true,
+			needUpdate: false,
 		}
 	},
 	computed: {
@@ -98,12 +100,22 @@ export default {
 		}
 	},
 	mixins: [sessionMixin],
-	mounted() {
-		this.$nextTick(() => {
-			this.version = powertools.getVersion()
-		})
+	created() {
+		this.version = powertools.getVersion()
+		this.checkAppVersion()
 	},
 	methods: {
+		async checkAppVersion() {
+			const versionUrl = 'http://106.15.238.81:56789/oauth/version'
+			try {
+				const { data: { version = '' } } = await axios.get(versionUrl, { timeout: 6 * 1000 });
+				if (version) {
+					this.needUpdate = !!semver.compare(this.version, version)
+				}
+			} catch (e) {
+				console.error("App版本检测异常", e)
+			}
+		},
 		goto_login() {
 			const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
 			if (loginInstances.length) {
