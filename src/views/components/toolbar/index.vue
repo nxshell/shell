@@ -24,7 +24,8 @@
 			:label-width="80"
 			:close-on-click-modal="false"
 			:visible.sync="sessionFolderEditDialog.showDialog"
-			width="400px">
+			width="400px"
+			@close="handlerClose">
 			<el-form ref="createFolderRef" :model="sessionFolderEditDialog.data" :rules="createFolderRules"
 			         @submit.native.prevent>
 				<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
@@ -100,7 +101,6 @@ export default {
 			this.sessionFolderEditDialog.showDialog = true
 			this.sessionFolderEditDialog.isEdit = false
 			this.sessionFolderEditDialog.title = 'home.host-manager.dialog-edit-folder.add-title'
-			this.$refs.createFolderRef.resetFields();
 			resetValues(this.sessionFolderEditDialog.data)
 		},
 		/**
@@ -184,6 +184,9 @@ export default {
 					return false;
 				}
 			});
+		},
+		handlerClose() {
+			this.$refs.createFolderRef.resetFields()
 		}
 	}
 }
