@@ -25,9 +25,10 @@
 			:close-on-click-modal="false"
 			:visible.sync="sessionFolderEditDialog.showDialog"
 			width="400px">
-			<el-form :model="sessionFolderEditDialog.data">
-				<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')">
-					<el-input v-model="sessionFolderEditDialog.data.folderName"></el-input>
+			<el-form ref="createFolderRef" :model="sessionFolderEditDialog.data" :rules="createFolderRules"
+			         @submit.native.prevent>
+				<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
+					<el-input v-model="sessionFolderEditDialog.data.folderName" @keyup.enter="handlerClick" />
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -64,6 +65,11 @@ export default {
 					folderName: ''
 				}
 			},
+			createFolderRules: {
+				folderName: [
+					{ validator: this.validateFolderName, trigger: 'change' }
+				]
+			}
 		}
 	},
 	computed: {
@@ -80,11 +86,21 @@ export default {
 		})
 	},
 	methods: {
+		validateFolderName(rule, value, callback) {
+			if (!value) {
+				callback(new Error(this.T('home.fileview.createdir-dialog.placeholder')));
+			} else if (/[\/:*?."'<>|]/.test(value)) {
+				callback(new Error(this.T('home.fileview.createdir-dialog.invalid-dir-name')));
+			} else {
+				callback();
+			}
+		},
 		// 新建分组
 		createFolder() {
 			this.sessionFolderEditDialog.showDialog = true
 			this.sessionFolderEditDialog.isEdit = false
 			this.sessionFolderEditDialog.title = 'home.host-manager.dialog-edit-folder.add-title'
+			this.$refs.createFolderRef.resetFields();
 			resetValues(this.sessionFolderEditDialog.data)
 		},
 		/**
@@ -125,9 +141,9 @@ export default {
 		addSessionConfig(sessCfg) {
 			const treeData = this.processSessionConfigTree([sessCfg])[0]
 			if (!this.currentSelectedSessionNode) {
-				// sessionTree.appendNode({ treeData })
 				this.$sessionManager.addSessionConfig(null, sessCfg)
 				EventBus.publish('create-session-folder', treeData)
+				this.sessionFolderEditDialog.showDialog = false
 				return
 			}
 			let { data, node } = this.currentSelectedSessionNode
@@ -135,6 +151,7 @@ export default {
 				node.appendChild(treeData)
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
 				EventBus.publish('refresh-session-tree', {})
+				this.sessionFolderEditDialog.showDialog = false
 				return
 			}
 			// 需要判断节点是不是根目录下的节点
@@ -143,7 +160,7 @@ export default {
 				EventBus.publish('create-session-folder', treeData)
 				this.$sessionManager.addSessionConfig(null, sessCfg)
 			} else {
-				let { data } = node.nodeData
+				const { data } = node.nodeData
 				node.appendSibling(treeData)
 				this.$sessionManager.addSessionConfig(data.data, sessCfg)
 			}
@@ -156,19 +173,17 @@ export default {
 			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
 		},
 		handlerClick() {
-			if (!this.sessionFolderEditDialog.isEdit) {
-				const sessCfg = new SessionConfig(
-					this.sessionFolderEditDialog.data.folderName,
-					SESSION_CONFIG_TYPE.FOLDER
-				)
-				this.addSessionConfig(sessCfg)
-			} else {
-				const sessCfg = this.$sessionManager.getSessionConfigById(
-					this.currentSelectedSessionNode.node.nodeData.data.data._id
-				)
-				sessCfg.update(this.sessionFolderEditDialog.data.folderName)
-				this.sessionFolderEditDialog.showDialog = false
-			}
+			this.$refs.createFolderRef.validate((valid) => {
+				if (valid) {
+					const sessCfg = new SessionConfig(
+						this.sessionFolderEditDialog.data.folderName,
+						SESSION_CONFIG_TYPE.FOLDER
+					)
+					this.addSessionConfig(sessCfg)
+				} else {
+					return false;
+				}
+			});
 		}
 	}
 }
