@@ -487,14 +487,14 @@
                 "block-dev": "块设备",
                 "char-dev": "字符设备",
                 "fifo": "FIFO",
-                "location": "位置:",
-                "perms": "权限:",
-                "size": "大小:",
-                "modify-time": "修改时间:",
+                "location": "位置",
+                "perms": "权限",
+                "size": "大小",
+                "modify-time": "修改时间",
                 "modify-time-format": "$0",
-                "user": "用户:",
-                "group": "组:",
-                "type": "类型:"
+                "user": "用户",
+                "group": "组",
+                "type": "类型"
             },
             "rename-dialog": {
                 "title": "重命名",

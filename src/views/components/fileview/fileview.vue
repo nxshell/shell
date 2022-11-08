@@ -85,49 +85,49 @@
 		<!-- 查看文件属性弹窗 -->
 		<el-dialog :title="T('home.fileview.prop-dialog.file-props')" :visible.sync="filePropDialog.show">
 			<div class="file-prop-dialog">
-				<div class="file-base-info info-block">
-					<pt-icon size="large" type="img" :iconName="filePropDialog.dirent.fileicon"></pt-icon>
-					<div>{{ filePropDialog.dirent.filename }}</div>
-				</div>
-				<hr />
-				<div class="info-block">
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.type') }}</pt-col>
-						<pt-col :span="18">{{ filePropDialog.dirent.type }}</pt-col>
-					</pt-row>
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.location') }}</pt-col>
-						<pt-col :span="18">{{ filePropDialog.dirent.location }}</pt-col>
-					</pt-row>
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.size') }}</pt-col>
-						<pt-col :span="18">{{ filePropDialog.dirent.size | fileSize }}</pt-col>
-					</pt-row>
-				</div>
-				<hr />
-				<div class="info-block">
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.modify-time') }}</pt-col>
-						<pt-col :span="18">
+				<el-scrollbar style="height: 100%">
+					<el-descriptions
+						:column="1"
+						size="large"
+						:colon="false"
+						style="padding: 10px 30px"
+						:labelStyle="{width: '150px'}"
+						:contentStyle="{height: '32px', 'line-height': '32px'}"
+					>
+						<el-descriptions-item :span="10">
+							<template slot="label">
+								<pt-icon
+									size="custom"
+									:customSize="28"
+									type="img"
+									:iconName="filePropDialog.dirent.fileicon"
+								/>
+							</template>
+							{{ filePropDialog.dirent.filename }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.type')" :span="10">
+							{{ filePropDialog.dirent.type }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.location')" :span="10">
+							{{ filePropDialog.dirent.location }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.size')" :span="10">
+							{{ filePropDialog.dirent.size | fileSize }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.modify-time')" :span="10">
 							{{ T('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
-						</pt-col>
-					</pt-row>
-				</div>
-				<hr />
-				<div class="info-block">
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.user') }}</pt-col>
-						<pt-col :span="18">{{ filePropDialog.dirent.user }}</pt-col>
-					</pt-row>
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.group') }}</pt-col>
-						<pt-col :span="18">{{ filePropDialog.dirent.group }}</pt-col>
-					</pt-row>
-					<pt-row :gutter="10">
-						<pt-col :span="6">{{ T('home.fileview.prop-dialog.perms') }}</pt-col>
-						<pt-col :span="6">{{ filePropDialog.dirent.perms }}</pt-col>
-					</pt-row>
-				</div>
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.user')" :span="10">
+							{{ filePropDialog.dirent.user }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.group')" :span="10">
+							{{ filePropDialog.dirent.group }}
+						</el-descriptions-item>
+						<el-descriptions-item :label="T('home.fileview.prop-dialog.perms')" :span="10">
+							{{ filePropDialog.dirent.perms }}
+						</el-descriptions-item>
+					</el-descriptions>
+				</el-scrollbar>
 			</div>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="handleCloseFilePropDialog">取 消</el-button>
@@ -167,8 +167,10 @@
 			width="400px"
 		>
 			<n-space vertical :item-style="{width: '100%'}">
-				<el-input v-model="renameDialog.dirname"
-				          :placeholder="T('home.fileview.rename-dialog.placeholder')"></el-input>
+				<el-input
+					v-model="renameDialog.dirname"
+					:placeholder="T('home.fileview.rename-dialog.placeholder')"
+				></el-input>
 				<el-alert
 					v-if="!isValidRenameDirName"
 					:title="T('home.fileview.rename-dialog.invalid-name')"
@@ -191,8 +193,10 @@
 			width="400px"
 		>
 			<n-space vertical :item-style="{width: '100%'}">
-				<el-input v-model="chmodDialog.permissions"
-				          :placeholder="T('home.fileview.chmod-dialog.placeholder')"></el-input>
+				<el-input
+					v-model="chmodDialog.permissions"
+					:placeholder="T('home.fileview.chmod-dialog.placeholder')"
+				></el-input>
 				<el-alert
 					v-if="!isValidPermissions"
 					:title="T('home.fileview.chmod-dialog.invalid-permissions')"
@@ -216,11 +220,7 @@
 		>
 			<div style="width: 100%">
 				<el-select v-model="moveDialog.dirname" placeholder="请选择">
-					<el-option
-						v-for="(opt, idx) in moveDialog.dirnameList"
-						:key="idx"
-						:label="opt"
-						:value="opt" />
+					<el-option v-for="(opt, idx) in moveDialog.dirnameList" :key="idx" :label="opt" :value="opt" />
 				</el-select>
 			</div>
 			<div slot="footer" class="dialog-footer">
@@ -273,7 +273,7 @@
 					</pt-row>
 				</div>
 				<span
-				><input type="checkbox" v-model="askDialog.keep" /><span>{{
+					><input type="checkbox" v-model="askDialog.keep" /><span>{{
 						T('home.fileview.ask-dialogs.merge.keep')
 					}}</span></span
 				>
@@ -357,7 +357,7 @@
 				</el-button>
 				<el-button @click="handleSkip">{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}</el-button>
 				<el-button @click="handleTransCancel"
-				>{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
+					>{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
 				</el-button>
 			</template>
 		</el-dialog>
@@ -367,9 +367,9 @@
 <script>
 import path from 'path'
 import PtFileViewAddress from './address'
-import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../../fileicons'
-import { Dirent } from '../../../../common/filesystem/dirent'
-import { createDataTransfer } from '@/services/nxsys/dataTransfer'
+import {getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName} from '../../fileicons'
+import {Dirent} from '../../../../common/filesystem/dirent'
+import {createDataTransfer} from '@/services/nxsys/dataTransfer'
 import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
 
 function sort(dirent1, dirent2) {
@@ -398,9 +398,9 @@ function formatFileSize(size, detail = false) {
 		unit = 'KB'
 	}
 	if (detail) {
-		return `${ v }${ unit } (${ size } Bytes)`
+		return `${v}${unit} (${size} Bytes)`
 	} else {
-		return `${ v }${ unit }`
+		return `${v}${unit}`
 	}
 }
 
@@ -741,7 +741,6 @@ export default {
 	},
 
 	mounted() {
-
 		this.$nextTick(async () => {
 			let cwd = this.cwd || '~'
 			// replace space
@@ -801,7 +800,7 @@ export default {
 
 	methods: {
 		formatProgress() {
-			return `${ this.currentProgressStatus.progress } ${ this.currentProgressStatus.speed }%`
+			return `${this.currentProgressStatus.progress} ${this.currentProgressStatus.speed}%`
 		},
 		getDirEntryType(dirent) {
 			const types = {
@@ -866,7 +865,7 @@ export default {
 
 			let List = [...dirList, ...fileList]
 			this.fileItems = List.map((dirent) => {
-				const { icon, type } = this.getIconAndType(dirent)
+				const {icon, type} = this.getIconAndType(dirent)
 				return {
 					name: dirent.name,
 					icon: icon,
@@ -921,8 +920,7 @@ export default {
 				let stat = await fsInstance.lstat(realPath)
 				let dirent = new Dirent(realPath, stat)
 				return dirent
-			} catch (err) {
-			}
+			} catch (err) {}
 			return false
 		},
 
@@ -1116,12 +1114,12 @@ export default {
 					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-upload'))
 				})
 
-				transfer.on('ask', ({ question, args }) => {
+				transfer.on('ask', ({question, args}) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const { progress, remainder, totalFileCount, speed } = args
+					const {progress, remainder, totalFileCount, speed} = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1165,12 +1163,12 @@ export default {
 					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-download'))
 				})
 
-				transfer.on('ask', ({ question, args }) => {
+				transfer.on('ask', ({question, args}) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const { progress, remainder, totalFileCount, speed } = args
+					const {progress, remainder, totalFileCount, speed} = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1554,12 +1552,9 @@ export default {
 			this.handleCloseCreateDirDialog()
 		},
 
-		handlePaste() {
-		},
-		handleCut() {
-		},
-		handleCopy() {
-		},
+		handlePaste() {},
+		handleCut() {},
+		handleCopy() {},
 
 		async deleteFile(filePath) {
 			try {
@@ -1733,8 +1728,7 @@ export default {
 								type: 'info'
 							}
 						)
-					} catch (e) {
-					}
+					} catch (e) {}
 					return
 				}
 				const fs = await this.getFs()
@@ -1815,7 +1809,7 @@ export default {
 .pt-file-view {
 	position: relative;
 	width: 100%;
-	height: calc(100% - 40px);
+	height: 100%;
 
 	.pt-grid-view {
 		height: calc(100% - 72px);
@@ -1832,7 +1826,8 @@ export default {
 }
 
 .file-prop-dialog {
-	width: 400px;
+	width: 100%;
+	height: 400px;
 
 	.info-block {
 		padding: 20px 20px;

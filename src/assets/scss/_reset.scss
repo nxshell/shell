@@ -88,6 +88,10 @@ a {
     color: var(--n-text-color-base) !important;
     padding: 12px 20px !important;
   }
+
+  &__footer {
+    padding: 10px !important;
+  }
 }
 
 .el-form {
@@ -240,5 +244,12 @@ a {
       border-color: var(--n-switch-active) !important;
       background-color: var(--n-switch-active) !important;
     }
+  }
+}
+
+.el-descriptions {
+  &__body {
+    color: var(--n-text-color-light) !important;
+    background-color: var(--n-color-modal) !important;
   }
 }

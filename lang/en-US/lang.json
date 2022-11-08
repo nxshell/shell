@@ -488,14 +488,14 @@
                 "block-dev": "Block Dev",
                 "char-dev": "Char Dev",
                 "fifo": "FIFO",
-                "location": "Location:",
-                "perms": "Permissions:",
-                "size": "Size:",
-                "modify-time": "Modify time:",
+                "location": "Location",
+                "perms": "Permissions",
+                "size": "Size",
+                "modify-time": "Modify time",
                 "modify-time-format": "$0",
-                "user": "User:",
-                "group": "Group:",
-                "type": "Type:"
+                "user": "User",
+                "group": "Group",
+                "type": "Type"
             },
             "rename-dialog": {
                 "title": "Rename",
