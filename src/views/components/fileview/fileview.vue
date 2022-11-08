@@ -83,7 +83,7 @@
 			:speed="currentProgressStatus.speed"
 		/>
 		<!-- 查看文件属性弹窗 -->
-		<el-dialog :title="T('home.fileview.prop-dialog.file-props')" :visible.sync="filePropDialog.show">
+		<el-dialog :title="T('home.fileview.prop-dialog.file-props')" width="40%" :visible.sync="filePropDialog.show">
 			<div class="file-prop-dialog">
 				<el-scrollbar style="height: 100%">
 					<el-descriptions
