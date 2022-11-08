@@ -437,16 +437,14 @@ export default {
 	padding: {
 		left: 5px;
 		top: 5px;
-		height: 5px;
 	}
 
 	.xterm-container {
 		width: calc(100% - 5px);
 		height: calc(100% - 10px);
-
 		::-webkit-scrollbar-thumb {
 			background: #a6a6a6;
-			border-radius: 10px;
+			border-radius: 4px;
 		}
 	}
 	.xterm-link-tip {
@@ -457,7 +455,7 @@ export default {
 
 		border-radius: 3px;
 		font-size: 14px;
-		padding: 0px 10px;
+		padding: 0 10px;
 		background-color: lightgray;
 	}
 
