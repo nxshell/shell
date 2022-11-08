@@ -53,6 +53,8 @@ import {
 	addSessionConfig,
 	handleOpenSFTP,
 	handleSessionTreeContextMenu_SFTP,
+	handleSessionTreeContextMenu_SaveConfig,
+	handleSessionTreeContextMenu_ImportConfig,
 	handleSessionTreeContextMenu_RenameFolder
 } from './tools'
 import Storage from '@/services/storage'
@@ -226,6 +228,8 @@ export default {
 		handleSessionTreeContextMenu_Connect,
 		handleOpenSFTP,
 		handleSessionTreeContextMenu_SFTP,
+		handleSessionTreeContextMenu_SaveConfig,
+		handleSessionTreeContextMenu_ImportConfig,
 		handleSessionTreeContextMenu_RenameFolder,
 		getSessionConfigTreeContextMenu() {
 			if (this.currentSelectedSessionNodeConfigType === SESSION_CONFIG_TYPE.FOLDER) {
