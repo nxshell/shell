@@ -137,22 +137,6 @@ export default {
 						handler: this.handleSessionTreeContextMenu_Delete
 					},
 					{
-						label: 'home.sessions-context-menu.create',
-						type: 'submenu',
-						submenu: [
-							{
-								label: 'home.sessions-context-menu.create-folder',
-								type: 'normal',
-								handler: this.handleSessionTreeContextMenu_CreateFolder
-							},
-							{
-								label: 'home.sessions-context-menu.create-session',
-								type: 'normal',
-								handler: this.handleSessionTreeContextMenu_CreateSessionConfig
-							}
-						]
-					},
-					{
 						label: 'home.sessions-context-menu.prop',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_Prop
