@@ -1,6 +1,6 @@
 <template>
 	<div class="pt-file-view-address" :class="{editable: isEditable}">
-		<span class="btn-scroll left" :class="{disabled:canScrollToLeft}" @click.stop="scrollToLeft">
+		<span class="btn-scroll left" :class="{disabled: canScrollToLeft}" @click.stop="scrollToLeft">
 			<i class="el-icon-caret-left" />
 		</span>
 		<div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
@@ -13,12 +13,17 @@
 					<li v-for="(entry, idx) in parsedPath" :key="entry.entry + '/' + idx" class="address-list-item">
 						<span @click="handleChangePath(idx)">{{ entry.entry }}</span>
 						<pt-popper position="bottom-left" :show="entry.showMenu">
-							<pt-menu
-								ref="menu"
-								:menu="entry.subFolderList"
-								:translate="false"
-								@pop-stack="entry.showMenu = false"
-							/>
+							<div class="jump-box">
+								<el-scrollbar style="height: 100%">
+									<pt-menu
+										ref="menu"
+										:menu="entry.subFolderList"
+										:translate="false"
+										@pop-stack="entry.showMenu = false"
+										style="background-color: transparent"
+									/>
+								</el-scrollbar>
+							</div>
 							<pt-icon
 								slot="reference"
 								v-if="!entry.showMenu"
@@ -53,7 +58,7 @@
 			/>
 		</div>
 
-		<span class="btn-scroll right" :class="{disabled:canScrollToRight}" @click.stop="scrollToRight">
+		<span class="btn-scroll right" :class="{disabled: canScrollToRight}" @click.stop="scrollToRight">
 			<i class="el-icon-caret-right" />
 		</span>
 	</div>
@@ -165,7 +170,7 @@ export default {
 				})
 				.join('/')
 
-			dirPath = path.resolve(`/${ dirPath }`, '..')
+			dirPath = path.resolve(`/${dirPath}`, '..')
 			const folderList = await this.getFolderList(dirPath)
 			entry.subFolderList = folderList.map((folder) => {
 				return {
@@ -211,7 +216,7 @@ export default {
 				})
 				.join('/')
 
-			this.$emit('change', `/${ path }`)
+			this.$emit('change', `/${path}`)
 		},
 
 		handleEnableEditPath() {
@@ -302,7 +307,7 @@ export default {
 
 		&.disabled {
 			i {
-				color: #B8B8B8;
+				color: #b8b8b8;
 			}
 		}
 	}
@@ -361,5 +366,10 @@ export default {
 		background-color: var(--n-bg-color-base);
 		flex-grow: 0;
 	}
+}
+.jump-box {
+	height: 300px;
+	box-shadow: inset 0px 0px 10px var(--n-jump-box-shadow);
+	background-color: var(--n-bg-color-base);
 }
 </style>
