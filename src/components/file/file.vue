@@ -125,16 +125,5 @@ export default {
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
-
-	.pt-inputbox {
-		flex-grow: 1;
-	}
-
-	.pt-button {
-		flex-shrink: 1;
-		width: 60px;
-		min-width: 60px;
-		height: 26px;
-	}
 }
 </style>

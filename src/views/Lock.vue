@@ -1,125 +1,154 @@
 <template>
-    <div class="lock-page">
-        <div class="center" v-if="lock">
-            <div class="lock-desc">{{  T("lock.lock_desc") }}</div>
-            <div class="item">
-                <label class="password-note">{{ T("lock.password_desc") }}</label>
-                <pt-inputbox type="password"
-                    v-model="password"
-                    className="password-input"
-                    slot="center"
-                />
-            </div>
-            <div class="item">
-                <label class="password-note">{{ T("lock.password_verify") }}</label>
-                <pt-inputbox type="password"
-                    v-model="password_verify"
-                    className="password-input"
-                    slot="center"
-                />
-            </div>
-            <div class="item">
-                <pt-button class="btn" type="primary" size="small" @click="handleOk" >{{ T("components.OK") }}</pt-button>
-                <pt-button class="btn" type="primary" size="small" @click="back" >{{ T("components.Cancel") }}</pt-button>
-            </div>
-        </div>
-        <div class="center" v-else>
-            <div class="lock-desc">{{ T("lock.unlock_desc") }}</div>
-            <div class="item">
-                <label class="password-note">{{ T("lock.unlock_password_desc") }}</label>
-                <pt-inputbox type="password"
-                    v-model="password_input"
-                    className="password-input"
-                    slot="center"
-                />
-            </div>
-            <div class="item">
-                <pt-button class="btn" type="primary" size="small" @click="handleUnLock" >{{ T("components.OK") }}</pt-button>
-            </div>
-        </div>
-    </div>
+	<div class="lock-page">
+		<div class="n-lock-config">
+			<div class="n-lock-config__header">
+				<n-space v-if="lock">
+					<i class="el-icon-lock"></i>
+					{{ T('lock.lock_desc') }}
+				</n-space>
+				<n-space v-else>
+					<i class="el-icon-unlock"></i>
+					{{ T('lock.unlock_desc') }}
+				</n-space>
+			</div>
+			<el-form ref="form" label-width="80px" @submit.native.prevent>
+				<el-form-item v-if="lock" :label="T('lock.password_desc')">
+					<el-input
+						v-model="password"
+						:type="`${showPassword ? 'text' : 'password'}`"
+						placeholder="请输入锁屏密码"
+					>
+						<n-icon
+							slot="suffix"
+							:name="`${showPassword ? 'eye-open' : 'eye-close'}`"
+							size="15"
+							@click="handleShowPassword"
+						/>
+					</el-input>
+				</el-form-item>
+				<el-form-item v-if="lock" :label="T('lock.password_verify')">
+					<el-input
+						v-model="password_verify"
+						:type="`${showPasswordVerify ? 'text' : 'password'}`"
+						placeholder="请再次输入锁屏密码"
+					>
+						<n-icon
+							slot="suffix"
+							:name="`${showPasswordVerify ? 'eye-open' : 'eye-close'}`"
+							size="15"
+							@click="showPasswordVerify = !showPasswordVerify"
+						/>
+					</el-input>
+				</el-form-item>
+				<el-form-item v-if="!lock" :label="T('lock.unlock_password_desc')">
+					<el-input
+						v-model="password_input"
+						:type="`${showUnlockPassword ? 'text' : 'password'}`"
+						placeholder="请再次输入锁屏密码"
+					>
+						<n-icon
+							slot="suffix"
+							:name="`${showUnlockPassword ? 'eye-open' : 'eye-close'}`"
+							size="15"
+							@click="showUnlockPassword = !showUnlockPassword"
+						/>
+					</el-input>
+				</el-form-item>
+			</el-form>
+			<div v-if="lock" class="n-lock-config__footer">
+				<n-space :size="105">
+					<el-button @click="back">{{ T('components.Cancel') }}</el-button>
+					<el-button type="primary" @click="handleOk">{{ T('components.OK') }}</el-button>
+				</n-space>
+			</div>
+			<div v-else class="n-lock-config__footer">
+				<el-button type="primary" @click="handleUnLock">{{ T('components.OK') }}</el-button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import {mapState, mapMutations} from 'vuex'
 
 export default {
-    data() {
-        return {
-            lock: true,
-            password: "",
-            password_verify: "",
-            password_input: ""
-        }
-    },
-    computed: {
-        ...mapState(["userLock"]),
-    },
-    methods: {
-        ...mapMutations(['setUserLock']),
-        back() {
-            this.$router.back();
-        },
+	data() {
+		return {
+			lock: true,
+			password: '',
+			password_verify: '',
+			password_input: '',
+			showPassword: false,
+			showPasswordVerify: false,
+			showUnlockPassword: false
+		}
+	},
+	computed: {
+		...mapState(['userLock'])
+	},
+	methods: {
+		...mapMutations(['setUserLock']),
+		back() {
+			this.$router.back()
+		},
 
-        handleOk() {
-            if (this.password == this.password_verify) {
-                this.lock = false;
-                this.setUserLock(false);
-            }
-        },
-
-        handleUnLock() {
-            if (this.password_input == this.password) {
-                this.lock = true;
-                this.password_input = "";
-                this.setUserLock(true);
-                this.back();
-            }
-        },
-    }
+		handleOk() {
+			if (this.password == this.password_verify) {
+				this.lock = false
+				this.setUserLock(false)
+			} else {
+				this.$message({
+					message: '请确认输入的密码',
+					type: 'error'
+				})
+			}
+		},
+		handleShowPassword() {
+			this.showPassword = !this.showPassword
+		},
+		handleUnLock() {
+			if (this.password_input == this.password) {
+				this.lock = true
+				this.password_input = ''
+				this.setUserLock(true)
+				this.back()
+			} else {
+				this.$message({
+					message: '密码输入错误！',
+					type: 'error'
+				})
+			}
+		}
+	}
 }
 </script>
 
 <style lang="scss">
-
 .lock-page {
-    background-color: var(--n-bg-color-base);
-    width: 100%;
-    height: 100%;
-    font-size: 20px;
-
-    color: var(--n-text-color-base);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-
-    .lock-desc {
-        font-size: 20px;
-        color: var(--n-text-color-base);
-        margin-bottom: 25px;
-    }
-
-    .item {
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-
-        .btn {
-            width: 20%;
-            min-width: 40px;
-        }
-    }
-
-    .password-note {
-        margin-right: 10px;
-        color: var(--n-text-color-base);
-        font-size: 15px;
-    }
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	font-size: 20px;
+	color: var(--n-text-color-base);
+	background-color: var(--n-bg-color-base);
+	.n-lock-config {
+		&__header {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 80px;
+			font-size: 20px;
+			font-weight: 800;
+		}
+		&__footer {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+	}
 }
-
 </style>
