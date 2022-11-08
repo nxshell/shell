@@ -1,7 +1,7 @@
 <template>
 	<div class="n-file-status-bar-wrapper">
-		<div class="n-progress-graph-line-rail" :style="{width: progressWidth}"></div>
-		<div class="status-bar-item">
+		<div class="n-progress-graph-line-rail" :style="{width: progressWidth}" />
+		<div v-if="!showProgress" class="status-bar-item">
 			{{
 				selectedLength > 0
 					? T('home.fileview.mainview.total-selected-count', fileTotal, selectedLength)
@@ -11,10 +11,7 @@
 		<div v-if="showProgress" class="status-bar-item">
 			<span class="status-description">{{ progressDesc }}</span>
 		</div>
-		<div v-if="false" class="status-bar-item" style="width: 300px;">
-			<el-progress :text-inside="true" :stroke-width="24" :percentage="progress" />
-		</div>
-		<div v-if="showProgress" class="status-bar-item progress-status" style="flex: 1;">
+		<div v-if="showProgress" class="status-bar-item progress-status" style="flex: 1">
 			<n-space :size="10">
 				<span class="n-progress-text">{{ progress }}%</span>
 				<el-divider v-if="speed" direction="vertical" />
@@ -25,7 +22,6 @@
 </template>
 
 <script>
-
 export default {
 	name: 'FileStatusBar',
 	props: {
@@ -43,7 +39,7 @@ export default {
 		},
 		progressDesc: {
 			type: String,
-			default: ""
+			default: ''
 		},
 		progress: {
 			type: Number,
@@ -59,12 +55,12 @@ export default {
 	},
 	computed: {
 		progressWidth() {
-			return `${ this.progress }%`
+			return `${this.progress}%`
 		}
 	},
 	methods: {
 		formatProgress() {
-			return `${ this.progress }% ${ this.speed }`
+			return `${this.progress}% ${this.speed}`
 		}
 	}
 }
@@ -78,7 +74,7 @@ export default {
 	}
 
 	50% {
-		opacity: .5;
+		opacity: 0.5;
 	}
 
 	100% {
@@ -130,7 +126,6 @@ export default {
 		margin-right: 10px;
 		color: var(--n-text-color-base);
 
-
 		.n-progress-text {
 			display: inline-block;
 			width: 30px;
@@ -146,7 +141,8 @@ export default {
 
 		::v-deep .el-progress {
 			&-bar {
-				&__outer, &__inner {
+				&__outer,
+				&__inner {
 					border-radius: 0 !important;
 				}
 			}
