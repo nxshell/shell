@@ -5,10 +5,11 @@
 			:placeholder="T('home.host-manager.search.placeholder')"
 			class="nx-search-input"
 			clearable
-			suffix-icon="el-icon-search" />
+			suffix-icon="el-icon-search"
+		/>
 		<n-space :size="5">
 			<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
-				<span class="host-tree-btn" @click="createFolder">
+				<span class="host-tree-btn" @click="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
@@ -19,57 +20,27 @@
 			</el-tooltip>
 		</n-space>
 		<!--新建文件夹弹窗-->
-		<el-dialog
-			:title="T(sessionFolderEditDialog.title)"
-			:label-width="80"
-			:close-on-click-modal="false"
-			:visible.sync="sessionFolderEditDialog.showDialog"
-			width="400px"
-			@close="handlerClose">
-			<el-form ref="createFolderRef" :model="sessionFolderEditDialog.data" :rules="createFolderRules"
-			         @submit.native.prevent>
-				<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
-					<el-input v-model="sessionFolderEditDialog.data.folderName" @keyup.enter="handlerClick" />
-				</el-form-item>
-			</el-form>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="sessionFolderEditDialog.showDialog = false">取 消</el-button>
-				<el-button type="primary" @click="handlerClick">确 定</el-button>
-			</span>
-		</el-dialog>
+		<nx-folder-dialog ref="createFolderRef" @ok="handleOk" />
 	</div>
 </template>
 
 <script>
 import * as EventBus from '@/services/eventbus'
-import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
-import { resetValues } from '../../../../common/utils'
-import { mapState } from 'vuex'
+import {SESSION_CONFIG_TYPE, SessionConfig} from '@/services/sessionMgr'
+import {mapState} from 'vuex'
+import NxFolderDialog from '../folderDialog/index.vue'
 
 export default {
 	name: 'NxToolbar',
 	props: {
 		visible: false
 	},
+	components: {NxFolderDialog},
 	data() {
 		return {
 			searchKeywords: '',
-			/**
-			 * 会话目录编辑框
-			 */
-			sessionFolderEditDialog: {
-				showDialog: false,
-				isEdit: false,
-				title: '',
-				editId: -1,
-				data: {
-					folderName: ''
-				}
-			},
 			createFolderRules: {
-				folderName: [
-					{ validator: this.validateFolderName, trigger: 'change' }
-				]
+				folderName: [{validator: this.validateFolderName, trigger: 'change'}]
 			}
 		}
 	},
@@ -89,19 +60,12 @@ export default {
 	methods: {
 		validateFolderName(rule, value, callback) {
 			if (!value) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.placeholder')));
+				callback(new Error(this.T('home.fileview.createdir-dialog.placeholder')))
 			} else if (/[\/:*?."'<>|]/.test(value)) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.invalid-dir-name')));
+				callback(new Error(this.T('home.fileview.createdir-dialog.invalid-dir-name')))
 			} else {
-				callback();
+				callback()
 			}
-		},
-		// 新建分组
-		createFolder() {
-			this.sessionFolderEditDialog.showDialog = true
-			this.sessionFolderEditDialog.isEdit = false
-			this.sessionFolderEditDialog.title = 'home.host-manager.dialog-edit-folder.add-title'
-			resetValues(this.sessionFolderEditDialog.data)
 		},
 		/**
 		 * 处理会话配置树
@@ -136,57 +100,46 @@ export default {
 		},
 		/**
 		 * 添加配置
-		 * @param {SessionConfig} sessCfg 会话配置
+		 * @param {SessionConfig} sessionConfig 会话配置
 		 */
-		addSessionConfig(sessCfg) {
-			const treeData = this.processSessionConfigTree([sessCfg])[0]
+		addSessionConfig(sessionConfig) {
+			const treeData = this.processSessionConfigTree([sessionConfig])[0]
 			if (!this.currentSelectedSessionNode) {
-				this.$sessionManager.addSessionConfig(null, sessCfg)
+				this.$sessionManager.addSessionConfig(null, sessionConfig)
 				EventBus.publish('create-session-folder', treeData)
-				this.sessionFolderEditDialog.showDialog = false
 				return
 			}
-			let { data, node } = this.currentSelectedSessionNode
+			let {data, node} = this.currentSelectedSessionNode
 			if (node.isFolder) {
 				node.appendChild(treeData)
-				this.$sessionManager.addSessionConfig(data.data, sessCfg)
+				this.$sessionManager.addSessionConfig(data.data, sessionConfig)
 				EventBus.publish('refresh-session-tree', {})
-				this.sessionFolderEditDialog.showDialog = false
 				return
 			}
 			// 需要判断节点是不是根目录下的节点
 			node = node.getParentNode()
 			if (!node) {
 				EventBus.publish('create-session-folder', treeData)
-				this.$sessionManager.addSessionConfig(null, sessCfg)
+				this.$sessionManager.addSessionConfig(null, sessionConfig)
 			} else {
-				const { data } = node.nodeData
+				const {data} = node.nodeData
 				node.appendSibling(treeData)
-				this.$sessionManager.addSessionConfig(data.data, sessCfg)
+				this.$sessionManager.addSessionConfig(data.data, sessionConfig)
 			}
 			EventBus.publish('refresh-session-tree', {})
-			this.sessionFolderEditDialog.showDialog = false
 		},
 		async gotoCreateShellSession() {
-			const sessCfg = this.$sessionManager.createShellSessionConfig(this.T('home.profile.default-session-name'))
-			this.addSessionConfig(sessCfg)
-			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
+			const sessionConfig = this.$sessionManager.createShellSessionConfig(
+				this.T('home.profile.default-session-name')
+			)
+			this.addSessionConfig(sessionConfig)
+			await this.$sessionManager.createShellSettingSessionInstance(sessionConfig)
 		},
-		handlerClick() {
-			this.$refs.createFolderRef.validate((valid) => {
-				if (valid) {
-					const sessCfg = new SessionConfig(
-						this.sessionFolderEditDialog.data.folderName,
-						SESSION_CONFIG_TYPE.FOLDER
-					)
-					this.addSessionConfig(sessCfg)
-				} else {
-					return false;
-				}
-			});
+		handleCreateFolder() {
+			this.$refs.createFolderRef?.show('')
 		},
-		handlerClose() {
-			this.$refs.createFolderRef.resetFields()
+		handleOk(emitData) {
+			this.addSessionConfig(emitData)
 		}
 	}
 }
@@ -204,7 +157,7 @@ export default {
 	.nx-search-input {
 		width: 213px;
 		margin-right: 5px;
-		transition: background-color .3s var(--n-bezier);
+		transition: background-color 0.3s var(--n-bezier);
 	}
 
 	.host-tree-btn {

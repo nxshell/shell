@@ -20,8 +20,8 @@ import {
 	updateSessionInstTabs
 } from '@/views/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
-import { mapState } from 'vuex'
-import { contextMenuMixin } from './context-menu-mixin'
+import {mapState} from 'vuex'
+import {contextMenuMixin} from './context-menu-mixin'
 
 export default {
 	name: 'TitleBar',
@@ -31,7 +31,7 @@ export default {
 			sessionContextMenuTabType: 'shell',
 			getTabContextMenu: () => {
 				return this.getSessionTabContextMenu()
-			},
+			}
 		}
 	},
 	mixins: [contextMenuMixin],
@@ -66,7 +66,7 @@ export default {
 			await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},
 		handleSessionInstRemove(index) {
-			const { title, data: session } = this.sessionInstTabs[index]
+			const {title, data: session} = this.sessionInstTabs[index]
 			// 首页不需要确认
 			if (title === 'Welcome') {
 				session.close()
@@ -74,18 +74,19 @@ export default {
 			}
 			const isEditor = session && session.type === 'editor'
 			this.$confirm(
-				this.T(`home.session-instance.${ isEditor ? 'save-dialog.message' : 'delete-dialog.title' }`),
-				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
+				this.T(`home.session-instance.${isEditor ? 'save-dialog.message' : 'delete-dialog.title'}`),
+				this.T(`home.session-instance.${isEditor ? 'save-dialog.title' : 'delete-dialog.message'}`),
 				{
 					type: 'warning',
 					closeOnClickModal: false
 				}
-			).then(() => {
-				session.beforeClose()
-				session.close()
-				this.$store.dispatch('updateActiveTabIndex', index)
-			}).catch(() => {
-			})
+			)
+				.then(() => {
+					session.beforeClose()
+					session.close()
+					this.$store.dispatch('updateActiveTabIndex', index)
+				})
+				.catch(() => {})
 		},
 
 		/**
@@ -93,7 +94,9 @@ export default {
 		 */
 		handleSessionTabsContextMenu(tabItemIdx) {
 			this.sessionContextMenuTabIndex = tabItemIdx
-			const { data: { type } } = this.sessionInstTabs[tabItemIdx]
+			const {
+				data: {type}
+			} = this.sessionInstTabs[tabItemIdx]
 			this.sessionContextMenuTabType = type
 		},
 		getSessionTabContextMenu() {
@@ -102,7 +105,7 @@ export default {
 				menus = this.sessionTabContextMenu['unknown']
 			}
 			return menus
-		},
+		}
 	}
 }
 </script>
@@ -111,8 +114,6 @@ export default {
 .nx-tabs-wrapper {
 	width: 100%;
 	height: 100%;
-
-
 }
 
 .el-popover {

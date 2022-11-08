@@ -66,14 +66,14 @@ export function treeOpClipboardCopy(node) {
 export function addSessionConfig(sessCfg) {
     const menuData = this.processSessionConfigTree([sessCfg])[0]
     if (!this.currentSelectedSessionNode) {
-        // sessionTree.appendNode({ menuData })
         this.$sessionManager.addSessionConfig(null, sessCfg)
-        this.$refs.sessionTree.appendNode({ menuData: menuData })
+        this.$refs.sessionTree.appendNode({ treeData: menuData })
         this.updateSessionTree()
         return
     }
     let { data, node } = this.currentSelectedSessionNode
     if (node.isFolder) {
+        debugger
         node.appendChild(menuData)
         this.$sessionManager.addSessionConfig(data.data, sessCfg)
         this.updateSessionTree()
@@ -82,7 +82,7 @@ export function addSessionConfig(sessCfg) {
     // 需要判断节点是不是根目录下的节点
     node = node.getParentNode()
     if (!node) {
-        this.$refs.sessionTree.appendNode({ menuData: menuData })
+        this.$refs.sessionTree.appendNode({ treeData: menuData })
         this.$sessionManager.addSessionConfig(null, sessCfg)
         this.updateSessionTree()
     } else {
@@ -92,3 +92,20 @@ export function addSessionConfig(sessCfg) {
     }
     this.updateSessionTree()
 }
+
+export function handleOpenSFTP(data) {
+    this.$sessionManager.createSFTPSessionInstance(data)
+}
+
+export function handleSessionTreeContextMenu_SFTP() {
+    const { data: { data } } = this.currentSelectedSessionNode
+    this.$sessionManager.createSFTPSessionInstance(data)
+}
+
+// 重命名会话文件夹
+export function handleSessionTreeContextMenu_RenameFolder() {
+    const folderName = this.currentSelectedSessionNode.data.data.name
+    this.isEdit = true
+    this.$refs.folderDialogRef.show(folderName)
+}
+
