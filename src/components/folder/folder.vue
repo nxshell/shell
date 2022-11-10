@@ -2,7 +2,7 @@
 	<div class="pt-file">
 		<input type="text" style="display: none" />
 		<slot>
-			<el-input v-model="fileNames" readonly class="n-input-file">
+			<el-input v-model="fileNames" v-bind="$attrs" readonly class="n-input-file">
 				<template #suffix>
 					<el-button type="primary" icon="el-icon-folder-opened" class="n-file-button" @click="openFolder" />
 				</template>
@@ -51,6 +51,7 @@ export default {
 			}
 			this.fileNames = selectedFiles.filePaths[0]
 			this.$emit('input', this.fileNames)
+			this.$emit('change')
 		}
 	}
 }

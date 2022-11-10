@@ -16,28 +16,10 @@
 								<el-select v-model="settingsForm[termTheme.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in termTheme.options"
+										:label="item.label"
 										:value="item.value"
 										:key="index"
-									>
-										<template #default>
-											<div class="n-theme-color">
-												<div class="n-theme-color-tag-wrapper">
-													<span
-														class="n-theme-color-tag"
-														v-for="(item, index) in xtermTheme[item.label]"
-														:key="index"
-														:style="{
-															display: 'inline-block',
-															width: '10px',
-															height: '10px',
-															'background-color': item
-														}"
-													></span>
-												</div>
-												{{ T(item.label) }}
-											</div>
-										</template>
-									</el-option>
+									/>
 								</el-select>
 							</el-col>
 						</el-row>
@@ -172,11 +154,7 @@
 								T('home.profile.system.nxconfig.title')
 							}}</el-col>
 							<el-col :span="16">
-								<pt-folder
-									v-model="settingsForm['nxconfig']"
-									type="text"
-									@change="handlerSettingChange"
-								/>
+								<pt-folder v-model="settingsForm['nxconfig']" @change="handlerSettingChange" />
 							</el-col>
 						</el-row>
 					</el-col>
