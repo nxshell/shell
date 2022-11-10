@@ -2,8 +2,11 @@
 	<div class="pt-file">
 		<input type="text" style="display: none" />
 		<slot>
-			<pt-inputbox v-model="fileNames" />
-			<pt-button type="primary" size="small" plain @click="openFolder">{{ T('Select') }}</pt-button>
+			<el-input v-model="fileNames" readonly class="n-input-file">
+				<template #suffix>
+					<el-button type="primary" icon="el-icon-folder-opened" class="n-file-button" @click="openFolder" />
+				</template>
+			</el-input>
 		</slot>
 	</div>
 </template>
@@ -46,7 +49,6 @@ export default {
 			if (selectedFiles.canceled) {
 				return
 			}
-			console.log('open folder ', selectedFiles.filePaths[0])
 			this.fileNames = selectedFiles.filePaths[0]
 			this.$emit('input', this.fileNames)
 		}
@@ -54,22 +56,19 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-file {
 	position: relative;
 	display: flex;
-	justify-content: space-around;
+	justify-content: flex-start;
 	align-items: center;
 
-	.pt-inputbox {
-		flex-grow: 1;
-	}
+	.n-input-file {
+		width: auto !important;
 
-	.pt-button {
-		flex-shrink: 1;
-		width: 60px;
-		min-width: 60px;
-		height: 26px;
+		::v-deep .el-input__suffix {
+			right: 0 !important;
+		}
 	}
 }
 </style>

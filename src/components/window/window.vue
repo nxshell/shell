@@ -137,6 +137,7 @@ export default {
 
 	width: 100%;
 	height: 100%;
+	min-width: 1000px;
 
 	&.not-macos {
 		// border: 1px solid var(--windowBorderColor);

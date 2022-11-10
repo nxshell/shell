@@ -18,8 +18,8 @@
             </div>
             <div class="pt-dialog-footer">
                 <slot name="footer">
-                    <pt-button type="primary" size="small" @click="handleOk" focus>{{ T("components.OK") }}</pt-button>
-                    <pt-button size="small" @click="handleCancel">{{ T("components.Cancel") }}</pt-button>
+                    <el-button type="primary" size="small" @click="handleOk" focus>{{ T("components.OK") }}</el-button>
+                    <el-button size="small" @click="handleCancel">{{ T("components.Cancel") }}</el-button>
                 </slot>
             </div>
         </div>
@@ -51,7 +51,7 @@ export default {
             drag: {
                 isDrag: false,
                 movementX: 0,
-                movementY: 0 
+                movementY: 0
             }
         };
     },

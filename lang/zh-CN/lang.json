@@ -268,8 +268,8 @@
                     "description": "光标是否闪烁"
                 },
                 "cursorStyle": {
-                    "title": "光标的样式",
-                    "description": "光标的样式"
+                    "title": "光标样式",
+                    "description": "光标样式"
                 }
             },
             "auth": {

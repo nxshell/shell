@@ -1,5 +1,5 @@
 <template>
-	<div class="pt-xterm" @dragover.prevent @drop="handleFileDrop">
+	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop">
 		<div class="xterm-search" v-if="searchShow">
 			<div class="search-input">
 				<pt-inputbox
@@ -9,7 +9,8 @@
 					:placeholder="T('components.pt-xterm.search-placeholder')"
 					slot="center"
 					@keydown.enter.native="searchDown"
-					ref="searchinput" />
+					ref="searchinput"
+				/>
 			</div>
 			<div class="search-icons">
 				<pt-icon
@@ -18,21 +19,24 @@
 					size="small"
 					flat
 					:title="T('components.pt-xterm.search-up')"
-					@click="searchUp" />
+					@click="searchUp"
+				/>
 				<pt-icon
 					iconName="direction-down"
 					slot="right"
 					size="small"
 					flat
 					:title="T('components.pt-xterm.search-down')"
-					@click="searchDown" />
+					@click="searchDown"
+				/>
 				<pt-icon
 					iconName="close"
 					slot="right"
 					size="small"
 					flat
 					:title="T('components.pt-xterm.search-close')"
-					@click="searchClose" />
+					@click="searchClose"
+				/>
 			</div>
 		</div>
 		<div class="keyboard-input" v-show="sendToAllTerm">
@@ -49,7 +53,8 @@
 		<div
 			v-if="urlTip"
 			class="xterm-link-tip"
-			:style="{ left: urlTipPosition.left + 'px', top: urlTipPosition.top + 'px' }">
+			:style="{left: urlTipPosition.left + 'px', top: urlTipPosition.top + 'px'}"
+		>
 			{{ T('components.pt-xterm.open-url') }}
 		</div>
 	</div>
@@ -59,11 +64,11 @@
 import mousetrap from 'mousetrap'
 import debounce from 'lodash/debounce'
 import '../../../node_modules/xterm/css/xterm.css'
-import { Terminal } from 'xterm'
-import { WebLinksAddon } from 'xterm-addon-web-links'
-import { FitAddon } from 'xterm-addon-fit'
-import { WebglAddon } from 'xterm-addon-webgl'
-import { SearchAddon } from 'xterm-addon-search'
+import {Terminal} from 'xterm'
+import {WebLinksAddon} from 'xterm-addon-web-links'
+import {FitAddon} from 'xterm-addon-fit'
+import {WebglAddon} from 'xterm-addon-webgl'
+import {SearchAddon} from 'xterm-addon-search'
 
 export default {
 	name: 'PtXterm',
@@ -93,7 +98,8 @@ export default {
 			logging: false,
 			searchWord: '',
 			searchShow: false,
-			zoom: 0
+			zoom: 0,
+			backgroundColor: ''
 		}
 	},
 
@@ -125,10 +131,8 @@ export default {
 		this.$nextTick(() => {
 			this.$ptElementResizeDetector.listenTo(this.$el, this.nativeResizeHandler)
 			//this.resizeObserve.observe(this.$el);
-			console.group("终端初始化")
-			const options = { cursorBlink: true, cursorStyle: 'underline',wordSeparator: ' /:?,;.', ...this.options }
-			console.log(options)
-			console.groupEnd()
+			const options = {wordSeparator: ' /:?,;.', ...this.options}
+			this.backgroundColor = this.options?.theme?.background
 			this.terminal = new Terminal(options)
 			this.terminal.loadAddon(
 				new WebLinksAddon(
@@ -140,7 +144,7 @@ export default {
 					},
 					{
 						tooltipCallback: (evt, uri, location) => {
-							const { actualCellWidth, actualCellHeight } = this.terminal._core._renderService.dimensions
+							const {actualCellWidth, actualCellHeight} = this.terminal._core._renderService.dimensions
 
 							// show tip
 							this.urlTip = uri
@@ -190,7 +194,7 @@ export default {
 				this.$emit('termdata', data)
 			})
 
-			this.terminal.onResize(({ cols, rows }) => {
+			this.terminal.onResize(({cols, rows}) => {
 				this.$emit('resize', cols, rows)
 			})
 
@@ -206,7 +210,7 @@ export default {
 			this.terminal.attachCustomKeyEventHandler((ev) => {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
-					const { key, type } = ev
+					const {key, type} = ev
 					if (type !== 'keydown') {
 						return false
 					}
@@ -434,17 +438,23 @@ export default {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	padding: {
-		left: 5px;
-		top: 5px;
-	}
+	padding: 5px;
+	box-sizing: border-box;
 
 	.xterm-container {
-		width: calc(100% - 5px);
-		height: calc(100% - 10px);
+		width: 100%;
+		height: 100%;
 		::-webkit-scrollbar-thumb {
-			background: #a6a6a6;
+			width: 4px;
 			border-radius: 4px;
+			background: rgba(144, 147, 153, 0.3);
+			transition: 0.3s background-color;
+		}
+		.xterm {
+			height: 100%;
+			.xterm-viewport {
+				right: -8px !important;
+			}
 		}
 	}
 	.xterm-link-tip {

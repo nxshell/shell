@@ -1,13 +1,12 @@
 <template>
-	<div class="nxshell-profile-xterm-preview">
-		<div class="nxshell-profile-xterm-container">
-			<pt-xterm :options="options" ref="xterm"></pt-xterm>
-		</div>
+	<div class="n-xterm-preview" :style="{'background-color': backgroundColor}">
+		<pt-xterm ref="xterm" :options="options" />
 	</div>
 </template>
 
 <script>
 import xtermTheme from 'xterm-theme'
+import {settingFormReset} from '../constants/default.js'
 
 let default_font_family = null
 
@@ -45,18 +44,21 @@ export default {
 	name: 'NxTerminalPreview',
 	props: {
 		context: {
-			fontWeight: '',
-			fontSize: 14,
-			fontFamily: '',
-      theme: {}
+			type: Object,
+			required: true,
+			default: () => {
+				return settingFormReset
+			}
 		}
 	},
 
 	data() {
 		return {
+			settingFormReset,
 			options: {
 				mode: 'webgl'
-			}
+			},
+			backgroundColor: '#000'
 		}
 	},
 
@@ -67,33 +69,26 @@ export default {
 
 		'context.fontWeight'() {
 			this.setOption('fontWeight', this.context?.fontWeight)
-			this.fit()
 		},
 
 		'context.fontSize'() {
 			this.setOption('fontSize', this.context?.fontSize)
-			this.fit()
 		},
 
 		'context.lineHeight'() {
-      this.setOption('lineHeight',this.context?.lineHeight)
-
-    },
+			this.setOption('lineHeight', this.context?.lineHeight)
+		},
 		'context.letterSpacing'() {
-      this.setOption('letterSpacing',this.context?.letterSpacing)
-			this.fit()
-    },
+			this.setOption('letterSpacing', this.context?.letterSpacing)
+		},
 		'context.cursorBlink'() {
-      this.setOption('cursorBlink',this.context?.cursorBlink)
-			this.fit()
-    },
+			this.setOption('cursorBlink', this.context?.cursorBlink)
+		},
 		'context.cursorStyle'() {
-      this.setOption('cursorStyle',this.context?.cursorStyle)
-    },
-
+			this.setOption('cursorStyle', this.context?.cursorStyle)
+		},
 		'context.fontFamily'() {
 			this.setOption('fontFamily', this.getfontFamily())
-			this.fit()
 		}
 	},
 
@@ -101,10 +96,15 @@ export default {
 		this.$nextTick(() => {
 			this.writePreviewData()
 			// initialize theme info
+			if (!this.context) {
+				this.context = settingFormReset
+			}
 			this.setTheme(this.getTheme())
-			this.setOption('fontWeight', this.context?.fontWeight)
-			this.setOption('fontSize', this.context?.fontSize)
-			this.fit()
+			for (const key in this.context) {
+				if (key !== 'theme') {
+					this.setOption(key, this.context[key])
+				}
+			}
 		})
 	},
 
@@ -113,6 +113,7 @@ export default {
 			let theme = {}
 			if (this.context?.xtermTheme !== 'default') {
 				theme = xtermTheme[this.context?.xtermTheme]
+				this.backgroundColor = theme.background
 			}
 			return theme
 		},
@@ -155,11 +156,12 @@ export default {
 
 		setTheme(theme = {}) {
 			this.$refs.xterm?.setTheme(theme)
+			this.fit()
 		},
 
 		setOption(name, value) {
 			this.$refs.xterm?.setOption(name, value)
-      this.fit()
+			this.fit()
 		},
 
 		getOption(name) {
@@ -174,16 +176,13 @@ export default {
 </script>
 
 <style lang="scss">
-.nxshell-profile-xterm-preview {
+.n-xterm-preview {
 	position: relative;
-
-	width: 480px;
-	height: 240px;
-	padding-top: 20px;
-
-	.nxshell-profile-xterm-container {
-		width: 100%;
-		height: 220px;
-	}
+	height: 220px;
+	padding: 5px;
+	width: 90%;
+	min-width: 400px;
+	max-width: 500px;
+	box-sizing: border-box;
 }
 </style>
