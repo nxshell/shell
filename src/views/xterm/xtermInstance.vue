@@ -605,7 +605,7 @@ export default {
 				fontFamily: 'courier-new, courier, monospace'
 			}
 			font = font === 'default' ? globalXtermProfile.fontFamily : font
-			if (font === 'default') {
+			if (font === 'default' || !font) {
 				return '"DejaVu Mono", courier-new, courier, monospace'
 			}
 			return font

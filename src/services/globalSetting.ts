@@ -43,3 +43,15 @@ export async function setProfile(categoryName: GlobalCategoryType, profile: IPro
 
     // Notify applications
 }
+
+export async function updateProfile(catagoryName: GlobalCatagoryType, profile: IProfile): Promise<void> {
+    let old = globalCatagory[catagoryName] || {};
+    for (const _k in profile) {
+        if (profile.hasOwnProperty(_k)) {
+            old[_k] = profile[_k]
+        }
+    }
+    globalCatagory[catagoryName] = old;
+    // save profile
+    await storeGlobalProfile();
+}

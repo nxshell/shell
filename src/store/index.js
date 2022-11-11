@@ -49,7 +49,7 @@ export default new Vuex.Store({
         },
         setTheme(state, theme) {
             const defaultSettings = globalSetting.getProfile("xterm")
-            globalSetting.setProfile("xterm", { ...defaultSettings, theme: theme }).then(() => {
+            globalSetting.updateProfile("xterm", { ...defaultSettings, theme: theme }).then(() => {
                 state.theme = theme;
             })
         },
