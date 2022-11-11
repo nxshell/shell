@@ -122,8 +122,6 @@ export default {
 			}
 		},
 		goto_login() {
-			debugger
-			console.log('德拉古')
 			const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
 			if (loginInstances.length) {
 				return
