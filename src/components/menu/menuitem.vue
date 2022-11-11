@@ -18,7 +18,7 @@
 					<span class="item-icon"><!--占位--></span>
 					<span class="item-label">{{ translate ? T(label) : label }}</span>
 					<span class="item-accelerator">{{ accelerator }}</span>
-					<pt-icon iconName="arrow-right" size="small" className="item-submenu-arrow" />
+					<n-icon name="arrow-right" size="18" className="item-submenu-arrow" />
 				</div>
 			</template>
 		</pt-popper>
@@ -128,7 +128,7 @@ export default {
 		hr {
 			border: none;
 			height: 1px;
-			background-color: var(--borderColor);
+			background-color: var(--n-bg-color-base);
 		}
 	}
 

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home1 from '../views/Home-1.vue'
+import MainLayout from '@/layout/MainLayout.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -24,7 +24,7 @@ const routes = [
 	{
 		path: '/',
 		name: 'Home',
-		component: Home1,
+		component: MainLayout,
 		children: [
 			{
 				path: 'welcome/:id',
@@ -74,7 +74,6 @@ const routes = [
 			{
 				path: 'globalsetting/:sessionId',
 				name: 'GlobalSetting',
-				// component: () => import('../views/profiles/globalSetting.vue')
 				component: () => import('@/views/settings/index.vue')
 			}
 		]

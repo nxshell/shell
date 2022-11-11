@@ -12,7 +12,7 @@
         @mouseup="handleViewMouseup"
         @mousemove="handleViewMousemove"
     > -->
-        <div v-if="selection.isShow" 
+        <div v-if="selection.isShow"
             class="select-rect"
             :style="{
                 left: (selectionRect.left) + 'px',
@@ -35,7 +35,7 @@
                         @click="handleSort(column.dataKey)"
                     >
                         {{ T(column.label) }}
-                        
+
                     </li>
                     <span class="resize" v-mouse-drag="getColumnResizeHandler(idx)"></span>
                 </div>
@@ -299,7 +299,7 @@ export default {
                 this.getViewSize();
             } catch(e) {
             }
-            
+
             let render_total = 500;
             this.view.renderStart = 0;
             this.view.renderEnd = render_total > this._items.length ? this._items.length : render_total;
@@ -353,7 +353,7 @@ export default {
                 if (col >= startCol && col <= endCol &&
                     row >= startRow && row <= endRow
                 ) {
-                    this.items[i].selected = true;    
+                    this.items[i].selected = true;
                 } else {
                     this.items[i].selected = false;
                 }
@@ -388,7 +388,7 @@ export default {
                 stepCount = stepCount > realLen ? realLen : stepCount;
                 this.view.renderStart += stepCount;
                 this.view.renderEnd += stepCount;
-                
+
                 this.items = this._items.slice(this.view.renderStart, this.view.renderEnd);
                 this.$refs.scrollContainter.scrollTo(0, this.view.scrollY - 10);
             }
@@ -592,7 +592,7 @@ export default {
             } else if (evt.key === "ArrowRight" && this.mode !== "detail") {
                 moveCursor = 1;
             } else if (evt.code === "Space") {
-                evt.ctrlKey ? 
+                evt.ctrlKey ?
                     this.selectMultiItem(this.selection.lastSelectItemIndex) :
                     this.selectOneItem(this.selection.lastSelectItemIndex)
             }
@@ -656,7 +656,7 @@ export default {
         box-sizing: border-box;
         z-index: 1;
 
-        border: 1px solid  var(--borderColor);
+        border: 1px solid  var(--n-bg-color-base);
         background-color: rgba(0, 0, 0, .2);
     }
 
@@ -664,9 +664,9 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
-        
+
         height: 30px;
-        // border-bottom: 1px solid var(--borderColor);
+        // border-bottom: 1px solid var(--n-bg-color-base);
         box-sizing: border-box;
         z-index: 2;
 
@@ -697,7 +697,7 @@ export default {
                 width: 2px;
                 height: 30px;
                 line-height: 30px;
-                border-right: 2px solid var(--borderColor);
+                border-right: 2px solid #E5E6EB;
                 cursor: col-resize;
             }
         }

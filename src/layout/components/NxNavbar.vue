@@ -5,14 +5,15 @@
 			<el-avatar shape="square" fit="fill" size="small" :src="require('@/assets/logo.png')" />
 		</div>
 		<!-- 用户头像 -->
-		<div class="capture" @click.prevent="doCapture" v-show="false">
-			<pt-icon type="img" :iconName="captureIcon" size="medium" className="icon-setting" />
+		<div v-if="false" class="capture" @click.prevent="doCapture">
+			<n-icon type="img" :name="captureIcon" size="28" className="icon-setting" />
 		</div>
 		<!-- 设置相关 -->
 		<div class="icon-setting-container">
 			<n-space vertical align="center">
 				<!-- 头像 -->
-				<el-avatar v-show="false" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />
+				<!--<el-avatar v-show="true" shape="square" fit="fill" :src="avatarUrl" @click="goto_login" />-->
+				<el-button v-if="false" type="text" icon="el-icon-user" @click="goto_login"></el-button>
 				<!-- 主题切换按钮 -->
 				<el-dropdown trigger="click" placement="bottom-end" @command="toggleTheme">
 					<el-button type="text" :icon="themeIcon" />
@@ -34,10 +35,10 @@
 				<el-tooltip v-if="needUpdate" effect="dark" content="有新版本，点击进行升级" placement="bottom">
 					<el-button
 						type="text"
-						:class="{ 'version-btn': needUpdate }"
+						:class="{'version-btn': needUpdate}"
 						icon="el-icon-sold-out"
 						@click="handlerVersionUpdate"
-					></el-button>
+					/>
 				</el-tooltip>
 				<el-tooltip v-else effect="dark" :content="`当前版本 ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
@@ -48,19 +49,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { SESSION_TYPES } from '@/services/session'
-import { createLocalFs } from '@/services/nxsys/localfs'
+import {mapMutations, mapState} from 'vuex'
+import {SESSION_TYPES} from '@/services/session'
+import {createLocalFs} from '@/services/nxsys/localfs'
 import NxShellIcon from '@/assets/logo.png'
 import VideoPlay from '@/assets/images/video.png'
 import VideoPause from '@/assets/images/pause.png'
-import { sessionMixin } from '@/mixin/session-mixin'
 import axios from 'axios'
 import semver from 'semver'
 
-const IS_MACOS = /macintosh/i.test(navigator.userAgent);
+const IS_MACOS = /macintosh/i.test(navigator.userAgent)
 export default {
-	name: 'PtShellAppNavBar',
+	name: 'NxNavbar',
 	data() {
 		return {
 			IS_MACOS,
@@ -75,11 +75,11 @@ export default {
 			captureIcon: VideoPlay,
 			sessionPanel: 'open',
 			version: 'V1.0.0',
-			needUpdate: false,
+			needUpdate: false
 		}
 	},
 	computed: {
-		...mapState(['userInfo', 'userLock']),
+		...mapState(['userInfo', 'userLock', 'theme']),
 		avatarUrl() {
 			return this.userInfo ? this.userInfo.user_avatar : ''
 		},
@@ -99,24 +99,31 @@ export default {
 			}
 		}
 	},
-	mixins: [sessionMixin],
 	created() {
 		this.version = powertools.getVersion()
 		this.checkAppVersion()
 	},
+	mounted() {
+		this.setTheme(this.$store.getters.theme)
+	},
 	methods: {
+		...mapMutations(['setTheme']),
 		async checkAppVersion() {
 			const versionUrl = 'http://106.15.238.81:56789/oauth/version'
 			try {
-				const { data: { version = '' } } = await axios.get(versionUrl, { timeout: 6 * 1000 });
+				const {
+					data: {version = ''}
+				} = await axios.get(versionUrl, {timeout: 6 * 1000})
 				if (version) {
 					this.needUpdate = !!semver.compare(this.version, version)
 				}
 			} catch (e) {
-				console.error("App版本检测异常", e)
+				console.error('App版本检测异常', e)
 			}
 		},
 		goto_login() {
+			debugger
+			console.log('德拉古')
 			const loginInstances = this.$sessionManager.matchSessionInstanceBySessionType(SESSION_TYPES.LOGIN)
 			if (loginInstances.length) {
 				return
@@ -154,8 +161,8 @@ export default {
 		async saveCaptureFile() {
 			const save_buffer = await powertools.captureStop()
 			const coreService = powertools.getService('powertools-core')
-			const { canceled, filePath } = await coreService.showSaveDialog({
-				defaultPath: `nxshell-capture-${ Date.now() }.webm`
+			const {canceled, filePath} = await coreService.showSaveDialog({
+				defaultPath: `nxshell-capture-${Date.now()}.webm`
 			})
 			if (canceled) {
 				return
@@ -249,8 +256,8 @@ export default {
 		}
 
 		.version-btn {
-			color: #1DE9B6 !important;
-			text-shadow: 0 0 7px #1DE9B6;
+			color: #1de9b6 !important;
+			text-shadow: 0 0 7px #1de9b6;
 			animation: breathe 2.7s ease-in-out 0s infinite alternate;
 			-webkit-animation: breathe 2.7s ease-in-out 0s infinite alternate;
 		}

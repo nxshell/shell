@@ -161,7 +161,7 @@ export default {
 
 	/** 大小  */
 	&.pt-button--default {
-		border: solid 1px var(--borderColor);
+		border: solid 1px var(--n-bg-color-base);
 		background-color: var(--n-bg-color-base);
 		color: var(--n-text-color-base);
 		transition: all 0.2s;

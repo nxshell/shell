@@ -6,38 +6,42 @@
 		:close-on-click-modal="false"
 	>
 		<div v-if="type === 'auth'">
-			<pt-form-item :label="T('components.auth.authType.title')">
-				<el-select v-model="authType" style="width: 100%;">
-					<el-option v-for="item in options" :key="item.value" :label="T(item.label)" :value="item.value">
-					</el-option>
-				</el-select>
-			</pt-form-item>
-			<pt-form-item
-				:label="T('components.auth.username.title')"
-				v-if="authType === 'password' || authType === 'publickey' || authType === 'keyboard-interactive'"
-			>
-				<el-input v-model="authUserName" :placeholder="authUserName" disabled />
-			</pt-form-item>
-			<pt-form-item :label="T('components.auth.password.title')" v-if="authType === 'password'">
-				<el-input ref="password" type="password" v-model="authPassword" @keydown.enter.native="doOK" />
-			</pt-form-item>
-			<pt-form-item :label="T('components.auth.publickey.title')" v-if="authType === 'publickey'">
-				<pt-file v-model="authPublicKey" type="text" />
-			</pt-form-item>
-			<pt-form-item :label="T('components.auth.passphrase.title')" v-if="authType === 'publickey'">
-				<el-input v-model="authPassphrase" type="password" @keydown.enter.native="doOK" />
-			</pt-form-item>
+			<el-form label-position="left" label-width="80px" @submit.native.prevent>
+				<el-form-item :label="T('components.auth.authType.title')">
+					<el-select v-model="authType" style="width: 100%;">
+						<el-option v-for="item in options" :key="item.value" :label="T(item.label)" :value="item.value">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item
+					v-if="['password','publickey','keyboard-interactive'].includes(authType)"
+					:label="T('components.auth.username.title')"
+				>
+					<el-input v-model="authUserName" :placeholder="authUserName" disabled />
+				</el-form-item>
+				<el-form-item v-if="authType === 'password'" :label="T('components.auth.password.title')">
+					<el-input ref="password" type="password" v-model="authPassword" @keydown.enter.native="doOK" />
+				</el-form-item>
+				<el-form-item v-if="authType === 'publickey'" :label="T('components.auth.publickey.title')">
+					<pt-file v-model="authPublicKey" type="text" />
+				</el-form-item>
+				<el-form-item v-if="authType === 'publickey'" :label="T('components.auth.passphrase.title')">
+					<el-input v-model="authPassphrase" type="password" @keydown.enter.native="doOK" />
+				</el-form-item>
+			</el-form>
 		</div>
-		<pt-form-item :label="T('components.auth.username.title')" v-else-if="type === 'username'">
-			<el-input ref="username" type="text" v-model="authUserName" @keydown.enter.native="doOK" />
-		</pt-form-item>
+		<el-form v-else-if="type === 'username'" label-position="left" label-width="80px" @submit.native.prevent>
+			<el-form-item :label="T('components.auth.username.title')">
+				<el-input ref="username" type="text" v-model="authUserName" @keydown.enter.native="doOK" />
+			</el-form-item>
+		</el-form>
 		<div class="prompt" v-else>
 			<div>{{ promptName }}</div>
 			<el-input ref="prompt" type="text" v-model="promptValue" />
 		</div>
 		<div slot="footer" class="dialog-footer">
 			<el-button @click="handleCancel">取 消</el-button>
-			<el-button type="primary" @click="handleOk">确 定</el-button>
+			<el-button type="primary" @click="doOK">确 定</el-button>
 		</div>
 	</el-dialog>
 </template>
@@ -185,6 +189,6 @@ export default {
 
 	height: $selectHeight;
 
-	border: solid 1px var(--borderColor);
+	border: solid 1px var(--n-bg-color-base);
 }
 </style>

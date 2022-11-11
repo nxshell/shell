@@ -6,7 +6,7 @@
 		<div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
 			<ul class="address-list" ref="address" @click.stop>
 				<li class="address-list-item host" @click="handleEnableEditPath">
-					<pt-icon size="custom" :customSize="16" type="img" :iconName="IconHost" />
+					<n-icon size="16" type="img" :name="IconHost" />
 					<span style="margin-left: 5px">{{ hostInfo.username }}@{{ hostInfo.host }}</span>
 				</li>
 				<template v-if="!isEditable">
@@ -24,23 +24,21 @@
 									/>
 								</el-scrollbar>
 							</div>
-							<pt-icon
-								slot="reference"
+							<n-icon
 								v-if="!entry.showMenu"
-								size="custom"
-								:customSize="12"
-								iconName="arrow-right"
+								size="12"
+								name="arrow-right"
 								className="pop-menu"
 								@click.stop="showFolderList(entry, idx)"
-							/>
-							<pt-icon
 								slot="reference"
+							/>
+							<n-icon
 								v-else
-								size="custom"
-								:customSize="12"
-								iconName="arrow-down"
+								size="12"
+								name="arrow-down"
 								className="pop-menu"
 								@click.stop="showFolderList(entry, idx)"
+								slot="reference"
 							/>
 						</pt-popper>
 					</li>
@@ -261,7 +259,7 @@ export default {
 	width: 100%;
 	border-radius: 3px;
 
-	border: 1px solid var(--borderColor);
+	border: 1px solid var(--n-bg-color-base);
 	background-color: var(--n-bg-color-light);
 
 	color: var(--n-text-color-base);

@@ -1,39 +1,31 @@
 <template>
-	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop">
+	<div class="pt-xterm" @dragover.prevent @drop="handleFileDrop">
 		<div class="xterm-search" v-if="searchShow">
 			<div class="search-input">
-				<pt-inputbox
-					type="search"
+				<el-input
+					ref="searchInputRef"
 					v-model="searchWord"
-					round
 					:placeholder="T('components.pt-xterm.search-placeholder')"
 					slot="center"
 					@keydown.enter.native="searchDown"
-					ref="searchinput"
 				/>
 			</div>
 			<div class="search-icons">
-				<pt-icon
-					iconName="direction-up"
+				<n-icon
+					name="direction-up"
 					slot="right"
-					size="small"
-					flat
 					:title="T('components.pt-xterm.search-up')"
 					@click="searchUp"
 				/>
-				<pt-icon
-					iconName="direction-down"
+				<n-icon
+					name="direction-down"
 					slot="right"
-					size="small"
-					flat
 					:title="T('components.pt-xterm.search-down')"
 					@click="searchDown"
 				/>
-				<pt-icon
-					iconName="close"
+				<n-icon
+					n="close"
 					slot="right"
-					size="small"
-					flat
 					:title="T('components.pt-xterm.search-close')"
 					@click="searchClose"
 				/>
@@ -98,8 +90,7 @@ export default {
 			logging: false,
 			searchWord: '',
 			searchShow: false,
-			zoom: 0,
-			backgroundColor: ''
+			zoom: 0
 		}
 	},
 
@@ -132,7 +123,6 @@ export default {
 			this.$ptElementResizeDetector.listenTo(this.$el, this.nativeResizeHandler)
 			//this.resizeObserve.observe(this.$el);
 			const options = {wordSeparator: ' /:?,;.', ...this.options}
-			this.backgroundColor = this.options?.theme?.background
 			this.terminal = new Terminal(options)
 			this.terminal.loadAddon(
 				new WebLinksAddon(
@@ -160,10 +150,7 @@ export default {
 							this.urlTip = ''
 						},
 						willLinkActivate(evt, uri) {
-							if (!evt.ctrlKey) {
-								return false
-							}
-							return true
+							return evt.ctrlKey
 						}
 					}
 				)
@@ -403,8 +390,8 @@ export default {
 			this.searchWord = s
 			this.searchShow = true
 			setTimeout(() => {
-				this.$refs.searchinput.dofocus()
-			}, 0)
+				this.$refs.searchInputRef?.focus()
+			}, 100)
 		},
 		keyboardInputAllow(allow) {
 			this.showOn = !!allow
@@ -444,19 +431,23 @@ export default {
 	.xterm-container {
 		width: 100%;
 		height: 100%;
+
 		::-webkit-scrollbar-thumb {
 			width: 4px;
 			border-radius: 4px;
 			background: rgba(144, 147, 153, 0.3);
 			transition: 0.3s background-color;
 		}
+
 		.xterm {
 			height: 100%;
+
 			.xterm-viewport {
 				right: -8px !important;
 			}
 		}
 	}
+
 	.xterm-link-tip {
 		position: absolute;
 		height: 30px;

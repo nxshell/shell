@@ -37,7 +37,7 @@
 
 <script>
 import PtProfileView from '../components/profile/profileview'
-import XTermTheme from '../profiles/xtermTheme'
+import XTermTheme from './xtermTheme'
 import * as globalSetting from '../../services/globalSetting'
 
 export default {
@@ -756,7 +756,6 @@ export default {
 			// 尝试读取全局配置
 			let globalXtermConfig = globalSetting.getProfile('xterm') || {}
 			const configData = merge(sessionInst.sessionCfg.config.config, globalXtermConfig)
-
 			this.$set(this.sessionsStates, sessId, {
 				profileCurSection: 'base',
 				isNew: !!sessionInst.sessionCfg.config.config,

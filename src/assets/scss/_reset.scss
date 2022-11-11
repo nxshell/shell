@@ -126,7 +126,7 @@ a {
   border-color: transparent !important;
 
   &--default {
-    background-color: var(--n-button-default-color) !important;
+    background-color: var(--n-button-default) !important;
 
     &:hover,
     &:focus {
@@ -160,6 +160,27 @@ a {
 
     i {
       color: #B8B8B8 !important;
+    }
+  }
+
+  &--danger {
+    background-color: var(--n-button-danger) !important;
+    border-color: var(--n-button-danger) !important;
+
+    &:hover {
+      background-color: var(--n-button-danger-hover) !important;
+      border-color: var(--n-button-danger-hover) !important;
+    }
+  }
+
+
+  &--warning {
+    background-color: var(--n-button-warning) !important;
+    border-color: var(--n-button-warning) !important;
+
+    &:hover {
+      background-color: var(--n-button-warning-hover) !important;
+      border-color: var(--n-button-warning-hover) !important;
     }
   }
 }
@@ -261,6 +282,12 @@ a {
   }
 }
 
+.el-checkbox {
+  &__label {
+    color: var(--n-text-color-base) !important;
+  }
+}
+
 .el-descriptions {
   &__body {
     color: var(--n-text-color-light) !important;
@@ -292,7 +319,7 @@ a {
         }
       }
 
-      &__orig-radio:checked+.el-radio-button__inner {
+      &__orig-radio:checked + .el-radio-button__inner {
         box-shadow: var(--n-button-primary) !important;
         background-color: var(--n-button-primary) !important;
       }

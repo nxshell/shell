@@ -16,7 +16,7 @@
 								<el-select v-model="settingsForm[termTheme.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in termTheme.options"
-										:label="item.label"
+										:label="T(item.label)"
 										:value="item.value"
 										:key="index"
 									/>

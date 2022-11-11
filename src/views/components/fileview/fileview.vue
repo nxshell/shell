@@ -228,136 +228,136 @@
 				<el-button type="primary" @click="handleMoveConfirm">确 定</el-button>
 			</div>
 		</el-dialog>
-		<el-dialog :title="askDialog.title" :visible.sync="askDialog.show" width="600px">
+		<el-dialog :title="askDialog.title" :visible.sync="askDialog.show" :close-on-click-modal="false">
 			<!-- 合并目录 -->
-			<div v-if="askDialog.questionType === 'merge'" class="ask-dialog">
-				<p class="message">{{ T('home.fileview.ask-dialogs.merge.message', askDialog.args.name) }}</p>
-				<div v-if="askDialog.questionType === 'merge'" class="file-summary">
-					<pt-row :gutter="20">
-						<pt-col :span="12">
-							<pt-row :gutter="10">
-								<pt-col :span="8">
-									<pt-icon size="large" type="img" :iconName="askDialog.icon"></pt-icon>
-								</pt-col>
-								<pt-col :span="16">
-									<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
-												askDialog.args.src.lastModify
-											)
-										}}
-									</p>
-								</pt-col>
-							</pt-row>
-						</pt-col>
-						<pt-col :span="12">
-							<pt-row :gutter="10">
-								<pt-col :span="8">
-									<pt-icon size="large" type="img" :iconName="askDialog.icon"></pt-icon>
-								</pt-col>
-								<pt-col :span="16">
-									<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
-												askDialog.args.dest.lastModify
-											)
-										}}
-									</p>
-								</pt-col>
-							</pt-row>
-						</pt-col>
-					</pt-row>
-				</div>
-				<span
-					><input type="checkbox" v-model="askDialog.keep" /><span>{{
-						T('home.fileview.ask-dialogs.merge.keep')
-					}}</span></span
+			<template v-if="askDialog.questionType === 'merge'">
+				<el-descriptions
+					:title="T('home.fileview.ask-dialogs.merge.message', askDialog.args.name)"
+					:colon="false"
+					:column="2"
 				>
-				<el-checkbox v-model="askDialog.keep">{{ T('home.fileview.ask-dialogs.merge.keep') }}</el-checkbox>
-			</div>
+					<el-descriptions-item>
+						<template slot="label">
+							<n-icon size="32" type="img" :name="askDialog.icon" />
+						</template>
+						<div class="n-description">
+							<n-space vertical>
+								<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>
+									{{
+										T(
+											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
+											askDialog.args.src.lastModify
+										)
+									}}
+								</p>
+							</n-space>
+						</div>
+					</el-descriptions-item>
+					<el-descriptions-item>
+						<template slot="label">
+							<n-icon size="32" type="img" :name="askDialog.icon" />
+						</template>
+						<div class="n-description">
+							<n-space vertical>
+								<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>
+									{{
+										T(
+											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
+											askDialog.args.src.lastModify
+										)
+									}}
+								</p>
+							</n-space>
+						</div>
+					</el-descriptions-item>
+					<el-descriptions-item labelStyle="margin-right: 0;">
+						<el-checkbox v-model="askDialog.keep">
+							{{ T('home.fileview.ask-dialogs.merge.keep') }}
+						</el-checkbox>
+					</el-descriptions-item>
+				</el-descriptions>
+			</template>
 			<!-- 覆盖文件 -->
-			<div v-if="askDialog.questionType === 'overwrite'" class="ask-dialog">
-				<p class="message">{{ T('home.fileview.ask-dialogs.overwrite.message', askDialog.args.name) }}</p>
-				<div class="file-summary">
-					<pt-row :gutter="20">
-						<pt-col :span="12">
-							<pt-row :gutter="10">
-								<pt-col :span="8">
-									<pt-icon size="large" type="img" :iconName="askDialog.icon"></pt-icon>
-								</pt-col>
-								<pt-col :span="16">
-									<p>
-										{{
-											T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name)
-										}}
-									</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.overwrite.file-info-size',
-												askDialog.args.src.size
-											)
-										}}
-									</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
-												askDialog.args.src.lastModify
-											)
-										}}
-									</p>
-								</pt-col>
-							</pt-row>
-						</pt-col>
-						<pt-col :span="12">
-							<pt-row :gutter="10">
-								<pt-col :span="8">
-									<pt-icon size="large" type="img" :iconName="askDialog.icon"></pt-icon>
-								</pt-col>
-								<pt-col :span="16">
-									<p>
-										{{
-											T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name)
-										}}
-									</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.overwrite.file-info-size',
-												askDialog.args.dest.size
-											)
-										}}
-									</p>
-									<p>
-										{{
-											T(
-												'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
-												askDialog.args.dest.lastModify
-											)
-										}}
-									</p>
-								</pt-col>
-							</pt-row>
-						</pt-col>
-					</pt-row>
-				</div>
-				<el-checkbox v-model="askDialog.keep">{{ T('home.fileview.ask-dialogs.overwrite.keep') }}</el-checkbox>
-			</div>
+			<template v-if="askDialog.questionType === 'overwrite'">
+				<el-descriptions
+					:title="T('home.fileview.ask-dialogs.overwrite.message', askDialog.args.name)"
+					:colon="false"
+					:column="2"
+				>
+					<el-descriptions-item>
+						<template slot="label">
+							<n-icon size="32" type="img" :name="askDialog.icon" />
+						</template>
+						<div class="n-description">
+							<n-space vertical>
+								<p>
+									{{ T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+								</p>
+								<p>
+									{{
+										T('home.fileview.ask-dialogs.overwrite.file-info-size', askDialog.args.src.size)
+									}}
+								</p>
+								<p>
+									{{
+										T(
+											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
+											askDialog.args.src.lastModify
+										)
+									}}
+								</p>
+							</n-space>
+						</div>
+					</el-descriptions-item>
+					<el-descriptions-item>
+						<template slot="label">
+							<n-icon size="32" type="img" :name="askDialog.icon" />
+						</template>
+						<div class="n-description">
+							<n-space vertical>
+								<p>
+									{{ T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+								</p>
+								<p>
+									{{
+										T(
+											'home.fileview.ask-dialogs.overwrite.file-info-size',
+											askDialog.args.dest.size
+										)
+									}}
+								</p>
+								<p>
+									{{
+										T(
+											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
+											askDialog.args.dest.lastModify
+										)
+									}}
+								</p>
+							</n-space>
+						</div>
+					</el-descriptions-item>
+					<el-descriptions-item labelStyle="margin-right: 0;">
+						<el-checkbox v-model="askDialog.keep">
+							{{ T('home.fileview.ask-dialogs.overwrite.keep') }}
+						</el-checkbox>
+					</el-descriptions-item>
+				</el-descriptions>
+			</template>
 			<template #footer>
-				<el-button v-if="askDialog.questionType === 'merge'" type="danger" @click="handleMergeFolder">
+				<el-button v-if="askDialog.questionType === 'merge'" type="primary" @click="handleMergeFolder">
 					{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
 				</el-button>
-				<el-button v-if="askDialog.questionType === 'overwrite'" type="primary" @click="handleOverwrite">
+				<el-button v-if="askDialog.questionType === 'overwrite'" type="danger" @click="handleOverwrite">
 					{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
 				</el-button>
-				<el-button @click="handleSkip">{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}</el-button>
-				<el-button @click="handleTransCancel"
-					>{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
+				<el-button type="warning" @click="handleSkip">
+					{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}
+				</el-button>
+				<el-button @click="handleTransCancel">
+					{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
 				</el-button>
 			</template>
 		</el-dialog>
@@ -1786,9 +1786,12 @@ export default {
 				name: (a, b) => {
 					let v = a[key].localeCompare(b[key])
 					return that.sortBy ? v : -v
+				},
+				type: (a, b) => {
+					let v = a[key].localeCompare(b[key])
+					return that.sortBy ? v : -v
 				}
 			}
-
 			let sort = sorts[key]
 			if (sort) {
 				this.fileItems = this.fileItems.sort(sort)
@@ -1821,7 +1824,7 @@ export default {
 	}
 
 	::v-deep .el-input__inner {
-		border: 1px solid var(--borderColor) !important;
+		border: 1px solid var(--n-bg-color-base) !important;
 	}
 }
 

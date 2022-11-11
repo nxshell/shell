@@ -8,6 +8,13 @@
 					<el-input v-model="editValue" v-if="type === 'text'" type="text" />
 					<el-input v-model="editValue" v-if="type === 'number'" type="text" />
 					<el-input v-model="editValue" v-if="type === 'password'" type="password" />
+					<el-switch v-model="editValue" v-if="type === 'switch'" />
+					<el-input v-model="editValue" v-if="type === 'input'" />
+					<el-radio-group v-if="type === 'radio-group'" v-model="editValue">
+						<el-radio-button v-for="(r,index) in options" :label="r.value" :key="index">
+							{{ r.label }}
+						</el-radio-button>
+					</el-radio-group>
 					<pt-file v-model="editValue" type="text" v-if="type === 'file'" />
 					<pt-folder v-model="editValue" type="text" v-if="type === 'folder'" />
 					<el-select v-model="editValue" v-if="type === 'select'" style="width: 100%;">
@@ -31,6 +38,13 @@
 					<el-input v-model="editValue" v-if="type === 'text'" type="text" />
 					<el-input v-model="editValue" v-if="type === 'number'" type="text" />
 					<el-input v-model="editValue" v-if="type === 'password'" type="password" />
+					<el-switch v-model="editValue" v-if="type === 'switch'" />
+					<el-input v-model="editValue" v-if="type === 'input'" />
+					<el-radio-group v-if="type === 'radio-group'" v-model="editValue">
+						<el-radio-button v-for="(r,index) in options" :label="r.value" :key="index">
+							{{ r.label }}
+						</el-radio-button>
+					</el-radio-group>
 					<pt-file v-model="editValue" type="text" v-if="type === 'file'" />
 					<pt-folder v-model="editValue" type="text" v-if="type === 'folder'" />
 					<el-select v-model="editValue" v-if="type === 'select'" style="width: 100%;">
@@ -49,8 +63,8 @@ export default {
 	props: {
 		title: String,
 		description: String,
-		value: [String, Number, Array],
-		defaultValue: [String, Number],
+		value: [String, Number, Array, Boolean],
+		defaultValue: [String, Number, Boolean],
 		type: String,
 		options: Array,
 		show: Boolean,
@@ -69,8 +83,9 @@ export default {
 
 	watch: {
 		value(newVal) {
-			if (this.editValue != newVal) {
+			if (this.editValue !== newVal) {
 				this.editValue = newVal
+				console.log('新的参数值', newVal)
 			}
 		},
 		editValue(newVal) {

@@ -250,7 +250,7 @@ export default {
 	box-sizing: content-box;
 
 	&.pt-tree-border {
-		border: solid 1px var(--borderColor);
+		border: solid 1px var(--n-bg-color-base);
 	}
 
 	.pt-tree-item {

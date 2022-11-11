@@ -238,7 +238,7 @@ export default {
 	background-color: var(--n-bg-color-base);
 
 	::v-deep .el-input__inner {
-		border: 1px solid var(--borderColor) !important;
+		border: 1px solid var(--n-bg-color-base) !important;
 	}
 
 	.nx-edit-file-open {

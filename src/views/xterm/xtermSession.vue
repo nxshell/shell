@@ -1,46 +1,5 @@
 <template>
 	<div class="pt-xterm-session">
-		<pt-toolbar v-if="false">
-			<pt-icon
-				iconName="copy"
-				slot="left"
-				size="small"
-				:title="T('home.session-instance.duplicate-session')"
-				flat
-				@click="copySession"
-				v-show="toolbarShow" />
-			<pt-icon
-				iconName="refresh"
-				slot="left"
-				size="small"
-				:title="T('home.session-instance.reconnect')"
-				flat
-				@click="reconSession"
-				v-show="toolbarShow" />
-			<pt-inputbox
-				type="text"
-				v-model="currentSessionInfo.url"
-				className="host-url"
-				round
-				readonly
-				slot="center" />
-			<pt-icon
-				iconName="ftp"
-				slot="right"
-				size="small"
-				flat
-				:title="T('home.session-instance.SFTP')"
-				@click="openSFTP"
-				v-show="toolbarShow" />
-			<pt-icon
-				iconName="redirect"
-				slot="right"
-				size="small"
-				flat
-				:title="tunnelTitle"
-				@click="openTunnel"
-				v-show="toolbarShow" />
-		</pt-toolbar>
 		<div class="xterm-container" ref="xterm_container">
 			<!-- <pt-xterm ref="xterm" @key="onXtermKey" @resize="onXtermResize"/> -->
 			<xterm-instance
@@ -53,7 +12,7 @@
 				@split_screen="handleSplit"
 				@titleChange="onTitleChange"
 				@change-theme="handleChangeTheme($event, sessId)"
-				@remove-session="removeSession(idx)"></xterm-instance>
+				@remove-session="removeSession(idx)" />
 		</div>
 	</div>
 </template>
@@ -104,11 +63,7 @@ export default {
 		},
 		toolbarShow() {
 			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.currentSessionId)
-			if (sessionConfig && sessionConfig.config.protocal == 'ssh') {
-				return true
-			} else {
-				return false
-			}
+			return sessionConfig && sessionConfig.config.protocal === 'ssh';
 		},
 		xtermWrapper() {
 			let width = '100%'
@@ -142,12 +97,13 @@ export default {
 			return {
 				width,
 				height,
-				'min-width': `${min_width} px`
+				'min-width': `${ min_width } px`
 			}
 		}
 	},
 
-	created() {},
+	created() {
+	},
 
 	mounted() {
 		this.$nextTick(() => {
@@ -175,7 +131,8 @@ export default {
 		}
 	},
 
-	deactivated() {},
+	deactivated() {
+	},
 
 	methods: {
 		getxtermwitdh() {
@@ -192,9 +149,9 @@ export default {
 				// 为了更方便的处理，这里先用http代替protocol ssh
 				let sessionURL = {}
 				try {
-					sessionURL = new URL(`http://${hostAddress || 'localhost'}`)
+					sessionURL = new URL(`http://${ hostAddress || 'localhost' }`)
 				} catch (e) {
-					sessionURL.href = `ssh://${username}:****@${hostAddress}:${hostPort}`
+					sessionURL.href = `ssh://${ username }:****@${ hostAddress }:${ hostPort }`
 				}
 
 				sessionURL.port = hostPort || 22
@@ -208,13 +165,13 @@ export default {
 				url = sessionURL.href.replace('http', 'ssh')
 			} else if (config.protocal == 'telnet') {
 				const { hostAddress, hostTelnetPort, username, password } = config
-				url = `telnet://${hostAddress}:${hostTelnetPort}`
+				url = `telnet://${ hostAddress }:${ hostTelnetPort }`
 			} else if (config.protocal == 'localshell') {
 				url = 'LocalShell Tool'
 			} else {
 				// serial protocol
 				const { port } = config
-				url = `serial@${port}`
+				url = `serial@${ port }`
 			}
 			return url
 		},
@@ -313,6 +270,7 @@ export default {
 		// margin-right: 5px;
 		color: var(--secondaryTextColor);
 		transition: color 0.2s;
+
 		&:hover {
 			color: var(--n-text-color-base);
 			transition: color 0.2s;

@@ -1,5 +1,5 @@
 <template>
-	<div class="xterm-instance" :style="backgroundColor" @mousedown.middle="handleSelectPaste">
+	<div class="xterm-instance" :style="{'background-color': backgroundColor}" @mousedown.middle="handleSelectPaste">
 		<div class="session-toolbar">
 			<span class="host-url">{{ currentSessionInfo.url }}</span>
 			<el-tooltip
@@ -60,7 +60,7 @@ import * as EventBus from '../../services/eventbus'
 
 import { xzmodem } from './xzmodem.js'
 import { create_iconv } from './iconv.js'
-import { createLogger } from '../../services/nxsys/logger'
+import { createLogger } from '@/services/nxsys/logger'
 import mousetrap from 'mousetrap'
 
 export default {
@@ -79,7 +79,7 @@ export default {
 		return {
 			mousetrap: null,
 			tunnelMapTitle: {},
-			theme: null,
+			backgroundColor: '#000',
 			sessionInstance: null,
 			enableSendToAllTerm: false,
 			xtermMenu: [
@@ -217,11 +217,6 @@ export default {
 
 	computed: {
 		...mapGetters(['keyboardToAll']),
-		backgroundColor() {
-			return {
-				backgroundColor: this.theme?.background || 'black'
-			}
-		},
 		currentSessionInfo() {
 			const currentSessionInfo = {
 				url: ''
@@ -239,11 +234,7 @@ export default {
 		},
 		toolbarShow() {
 			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
-			if (sessionConfig && sessionConfig.config.protocal == 'ssh') {
-				return true
-			} else {
-				return false
-			}
+			return sessionConfig && sessionConfig.config.protocal === 'ssh';
 		},
 		tunnelTitle() {
 			return this.tunnelMapTitle[this.sessionInstanceId]
@@ -267,15 +258,15 @@ export default {
 		...mapMutations(['setKeyboardToAll']),
 		genrateUrlBySessionCfg(config) {
 			let url = ''
-			if (config.protocal == 'ssh') {
+			if (config.protocal === 'ssh') {
 				const { hostAddress, hostPort, username, password, authType } = config
 				// URL对于SSH这种自定义protocol的解析都是当做类似file的解析方式
 				// 为了更方便的处理，这里先用http代替protocol ssh
 				let sessionURL = {}
 				try {
-					sessionURL = new URL(`http://${hostAddress || 'localhost'}`)
+					sessionURL = new URL(`http://${ hostAddress || 'localhost' }`)
 				} catch (e) {
-					sessionURL.href = `ssh://${username}:****@${hostAddress}:${hostPort}`
+					sessionURL.href = `ssh://${ username }:****@${ hostAddress }:${ hostPort }`
 				}
 
 				sessionURL.port = hostPort || 22
@@ -287,15 +278,15 @@ export default {
 				}
 				// 把输出的http协议转换为ssh
 				url = sessionURL.href.replace('http', 'ssh')
-			} else if (config.protocal == 'telnet') {
+			} else if (config.protocal === 'telnet') {
 				const { hostAddress, hostTelnetPort, username, password } = config
-				url = `telnet://${hostAddress}:${hostTelnetPort}`
-			} else if (config.protocal == 'localshell') {
+				url = `telnet://${ hostAddress }:${ hostTelnetPort }`
+			} else if (config.protocal === 'localshell') {
 				url = 'LocalShell Tool'
 			} else {
 				// serial protocol
 				const { port } = config
-				url = `serial@${port}`
+				url = `serial@${ port }`
 			}
 			return url
 		},
@@ -343,19 +334,23 @@ export default {
 			const sftpDirt = this.title || '/'
 			let sftCfg = { ...sessionConfig }
 			sftCfg.config = { ...sftCfg.config, sftpDirt: sftpDirt, connId: connId }
-			this.$sessionManager.createSFTPSessionInstance(sftCfg)
+			await this.$sessionManager.createSFTPSessionInstance(sftCfg)
 		},
 		init() {
 			this.sessionInstance = this.$sessionManager.getSessionInstanceById(this.sessionInstanceId)
 			let sessionCfg = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
 			const globalXtermProfile = globalSetting.getProfile('xterm') || {}
+
 			this.options = {
-				fontSize: this.getFontSize(sessionCfg.config.fontSize),
+				...globalXtermProfile, ...sessionCfg.config,
 				fontWeight: this.getFontWeight(sessionCfg.config.fontWeight),
-				theme: this.getTheme(sessionCfg.config.xtermTheme || 'default'),
-				fontFamily: this.getFontFamily(sessionCfg.config.fontFamily || 'default')
+				theme: this.getTheme(sessionCfg.config.xtermTheme || "default"),
+				fontFamily: this.getFontFamily(sessionCfg.config.fontFamily || "default")
 			}
-			this.handleChangeTheme(this.options.theme)
+			// 优化会话窗口背景样式
+			if (xtermTheme[this.options?.xtermTheme]) {
+				this.backgroundColor = xtermTheme[this.options?.xtermTheme].background
+			}
 
 			// charset covert
 			this.iconv_charset = sessionCfg.config.charset || 'UTF-8'
@@ -598,13 +593,6 @@ export default {
 			return theme
 		},
 
-		getFontSize(size) {
-			const globalXtermProfile = globalSetting.getProfile('xterm') || {}
-			size = size === 'default' ? globalXtermProfile.fontSize : size
-			size = size === 'default' ? 12 : size
-			return parseInt(size)
-		},
-
 		getFontWeight(size) {
 			const globalXtermProfile = globalSetting.getProfile('xterm') || {}
 			size = size === 'default' ? globalXtermProfile.fontWeight : size
@@ -622,12 +610,6 @@ export default {
 			}
 			return font
 		},
-
-		handleChangeTheme(theme) {
-			this.theme = theme
-			//this.$emit("change-theme", theme)
-		},
-
 		getLogFileName() {
 			const logDirectory = powertools.getLogDirty()
 			const config = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
@@ -717,6 +699,7 @@ export default {
 .xterm-instance {
 	width: 100%;
 	height: 100%;
+
 	.session-toolbar {
 		display: flex;
 		justify-content: space-between;
@@ -734,8 +717,9 @@ export default {
 			padding: 0 10px;
 			color: var(--n-text-color-base);
 			background-color: var(--n-bg-color-light);
-            margin-right: 5px;
+			margin-right: 5px;
 		}
+
 		.btn {
 			display: inline-block;
 			box-sizing: border-box;
@@ -746,13 +730,16 @@ export default {
 			padding: 5px;
 			color: var(--n-text-color-base);
 			border-radius: 4px;
-            margin-right: 5px;
+			margin-right: 5px;
+
 			&:hover {
 				cursor: pointer;
+				color: var(--n-button-primary-text);
 				background-color: var(--n-button-primary-hover);
 			}
 		}
 	}
+
 	.xterm-pt {
 		height: calc(100% - 48px);
 	}

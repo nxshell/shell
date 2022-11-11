@@ -1,15 +1,15 @@
 <template>
     <pt-popper :show="show" :position="'center'" :zIndex="9999">
         <div class="pt-dialog-modal-mask"></div>
-        <div class="pt-dialog" :class="{macos: ISMACOS}" :style="dlgMovement">
+        <div class="pt-dialog" :class="{macos: IS_MACOS}" :style="dlgMovement">
             <div class="pt-dialog-titlebar">
-                <span v-if="ISMACOS" class="btn-mac-close" @click="handleCancel">
+                <span v-if="IS_MACOS" class="btn-mac-close" @click="handleCancel">
                     <span class="btn-close"></span>
                 </span>
-                <div class="title-text" :class="{macos: ISMACOS}" v-mouse-drag="getDragHandler()">
+                <div class="title-text" :class="{macos: IS_MACOS}" v-mouse-drag="getDragHandler()">
                     {{ title }}
                 </div>
-                <span v-if="!ISMACOS" class="btn-close-bg" @click="handleCancel">
+                <span v-if="!IS_MACOS" class="btn-close-bg" @click="handleCancel">
                     <span class="btn-close"></span>
                 </span>
             </div>
@@ -29,7 +29,7 @@
 <script>
 import PtPopper from "../base/popper";
 
-const ISMACOS = /macintosh/i.test(navigator.userAgent);
+const IS_MACOS = /macintosh/i.test(navigator.userAgent);
 
 export default {
     name: "PtDialog",
@@ -47,7 +47,7 @@ export default {
 
     data() {
         return {
-            ISMACOS,
+            IS_MACOS,
             drag: {
                 isDrag: false,
                 movementX: 0,
@@ -119,7 +119,7 @@ export default {
     z-index: 1;
 
     background-color: var(--n-bg-color-base);
-    border: 1px solid var(--borderColor);
+    border: 1px solid var(--n-bg-color-base);
     box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.4);
 
     &.macos {

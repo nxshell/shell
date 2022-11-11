@@ -1,5 +1,5 @@
 export const settingFormReset = {
-	fontFamily: 'Consolas',
+	fontFamily: '"DejaVu Mono", courier-new, courier, monospace',
 	fontSize: '12',
 	fontWeight: 'normal',
 	charset: 'UTF-8',

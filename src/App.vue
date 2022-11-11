@@ -1,27 +1,23 @@
 <template>
 	<div id="app" class="main-window mycolor">
-		<!--  -->
-		<pt-window
+		<nx-layout
 			:title="T('app.powertools-shell')"
 			:isMainWindow="true"
 			:leftPanel="left_panel"
 			:topPanel="top_panel">
-			<div slot="left-panel" class="control-panel">
-				<pt-shell-app-nav-bar />
-			</div>
 			<template slot="main-panel">
 				<keep-alive :exclude="['GlobalSetting']">
 					<router-view />
 				</keep-alive>
 			</template>
-		</pt-window>
+		</nx-layout>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import NxLayout from '@/layout/NxLayout'
 
-import PtShellAppNavBar from './views/Navbar'
 import Lang from '../lang'
 
 import * as globalSetting from './services/globalSetting'
@@ -42,7 +38,7 @@ function getUserConfigLanguage() {
 export default {
 	name: 'App',
 	components: {
-		PtShellAppNavBar
+		NxLayout
 	},
 	data() {
 		return {

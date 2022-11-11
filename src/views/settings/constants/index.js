@@ -5,12 +5,12 @@ export const fontFamily = {
     name: 'fontFamily',
     title: 'home.profile.terminal.font-family.title',
     description: 'home.profile.terminal.font-family.description',
-    defaultValue: 'default',
+    defaultValue: '"DejaVu Mono", courier-new, courier, monospace',
     type: 'select',
     options: [
         {
             label: 'home.profile.terminal.font-family.options.default',
-            value: 'default'
+            value: '"DejaVu Mono", courier-new, courier, monospace'
         },
         {
             label: 'home.profile.terminal.font-family.options.lucida-console',
@@ -226,29 +226,42 @@ export const lineHeight = {
     name: 'lineHeight',
     title: 'home.profile.terminal.lineHeight.title',
     description: 'home.profile.terminal.lineHeight.description',
-    defaultValue: 'xterm',
+    defaultValue: 1.2,
     type: 'input'
 }
 export const letterSpacing = {
     name: 'letterSpacing',
     title: 'home.profile.terminal.letterSpacing.title',
     description: 'home.profile.terminal.letterSpacing.description',
-    defaultValue: 'xterm',
+    defaultValue: 1,
     type: 'input'
 }
 export const cursorBlink = {
     name: 'cursorBlink',
     title: 'home.profile.terminal.cursorBlink.title',
     description: 'home.profile.terminal.cursorBlink.description',
-    defaultValue: 'xterm',
+    defaultValue: true,
     type: 'switch'
 }
 export const cursorStyle = {
     name: 'cursorStyle',
     title: 'home.profile.terminal.cursorStyle.title',
     description: 'home.profile.terminal.cursorStyle.description',
-    defaultValue: 'xterm',
-    type: 'radio'
+    defaultValue: 'block',
+    type: 'radio-group',
+    options:[
+        {
+            label: '█',
+            value: 'block'
+        },
+        {
+            label: '|',
+            value: 'bar'
+        },{
+            label: '▁',
+            value: 'underline'
+        },
+    ]
 }
 export const xterm = {
     name: 'xterm',

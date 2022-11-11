@@ -5,9 +5,7 @@
 			:class="{ 'pt-tab-item--selected': selected }"
 			@click="onClickHandler"
 			@close="onCloseHandler">
-		<span v-if="icon" class="pt-tab-item-icon">
-			<pt-icon size="custom" :customSize="18" :iconName="iconProp.iconName" :type="iconProp.type" />
-		</span>
+			<n-icon size="18" :name="iconProp.iconName" :type="iconProp.type" />
 			{{ title }}
 		</el-tag>
 	</div>
