@@ -26,16 +26,16 @@
 </template>
 
 <script>
-import { processTreeNodes, getDataKeyFunc } from "./treeNode";
-import { insert } from "../../../common/utils";
+import { processTreeNodes, getDataKeyFunc } from './treeNode'
+import { insert } from '../../../common/utils'
 
 export default {
-	name: "PtTree",
+	name: 'PtTree',
 	props: {
 		treeData: {
 			type: Array,
 			default() {
-				return [];
+				return []
 			}
 		},
 		isRoot: {
@@ -59,12 +59,12 @@ export default {
 		},
 		innerPath: {
 			type: String,
-			default: ""
+			default: ''
 		},
 		treeRoot: {
 			type: Object,
 			default() {
-				return null;
+				return null
 			}
 		},
 		/**
@@ -73,66 +73,66 @@ export default {
 		 */
 		iconFilter: Function,
 
-		className: "",
+		className: '',
 		// TODO: add lazy load code here
 		showBorder: false,
 		nodeStates: {
 			type: Object,
 			default() {
-				return null;
+				return null
 			}
 		},
 		dataKey: {
 			type: String,
-			default: ""
+			default: ''
 		}
 	},
 	data() {
 		return {
 			renderData: [],
 			addRender: null
-		};
+		}
 	},
 
 	watch: {
 		treeData() {
-			this.processRenderData();
+			this.processRenderData()
 		}
 	},
 
 	computed: {
 		classList() {
 			if (!this.isRoot) {
-				return [];
+				return []
 			}
-			let classList = [];
+			let classList = []
 			if (this.showBorder) {
-				classList.push('pt-tree-border');
+				classList.push('pt-tree-border')
 			}
 			if (this.className) {
-				classList.push(this.className);
+				classList.push(this.className)
 			}
 
-			return classList;
+			return classList
 		}
 	},
 
 	created() {
-		this.processRenderData();
+		this.processRenderData()
 	},
 
 	mounted() {
-		this.addRender = this.$scopedSlots.additional;
+		this.addRender = this.$scopedSlots.additional
 	},
 
 	methods: {
 		processRenderData() {
 			if (!this.isRoot) {
-				this.renderData = this.treeData;
+				this.renderData = this.treeData
 				return
 			}
-
-			this.renderData = processTreeNodes(this.treeData, this.autoExpanded, this.nodeStates, this.dataKey);
+			debugger
+			this.renderData = processTreeNodes(this.treeData, this.autoExpanded, this.nodeStates, this.dataKey)
 		},
 
 		/**
@@ -143,16 +143,16 @@ export default {
 		 * @param {Number} index 当前节点的位置
 		 */
 		appendNode({ treeData, pos }, index) {
-			let insertPos = undefined;
-			index = typeof index == "number" ? index : this.renderData.length - 1;
-			if (pos === "before") {
-				insertPos = index;
+			let insertPos = undefined
+			index = typeof index == 'number' ? index : this.renderData.length - 1
+			if (pos === 'before') {
+				insertPos = index
 			} else {
-				insertPos = index + 1;
+				insertPos = index + 1
 			}
-			const treeDataNode = processTreeNodes([treeData])[0];
-			this.renderData = insert(this.renderData, treeDataNode, insertPos);
-			this.$emit("tree-node-data-change", this.renderData);
+			const treeDataNode = processTreeNodes([treeData])[0]
+			this.renderData = insert(this.renderData, treeDataNode, insertPos)
+			this.$emit('tree-node-data-change', this.renderData)
 		},
 
 		/**
@@ -160,90 +160,90 @@ export default {
 		 * @param {Number} index 移除的节点索引
 		 */
 		removeNode(index) {
-			this.renderData.splice(index, 1);
+			this.renderData.splice(index, 1)
 		},
 
 		walkNodesAndSet(value, excludeNodePath) {
 			const walkAndSet = (nodes, path) => {
 				for (let i = 0; i < nodes.length; i++) {
-					const node = nodes[i];
-					const curPath = `${ path }/${ i }`;
+					const node = nodes[i]
+					const curPath = `${path}/${i}`
 					if (curPath !== excludeNodePath) {
-						node.selected = value;
+						node.selected = value
 					}
 
 					if (node.children) {
-						walkAndSet(node.children, curPath);
+						walkAndSet(node.children, curPath)
 					}
 				}
 			}
 
-			walkAndSet(this.renderData, "");
+			walkAndSet(this.renderData, '')
 		},
 
 		handleStateChange() {
 			if (!this.isRoot) {
-				this.$emit("state-change");
-				return;
+				this.$emit('state-change')
+				return
 			}
-			const newStates = Object.create(null);
-			const readDataKey = getDataKeyFunc(this.dataKey);
+			const newStates = Object.create(null)
+			const readDataKey = getDataKeyFunc(this.dataKey)
 			const walk = (nodes) => {
-				nodes.forEach(node => {
-					const stateKey = readDataKey(node.data);
+				nodes.forEach((node) => {
+					const stateKey = readDataKey(node.data)
 					newStates[stateKey] = {
 						selected: node.selected
 					}
-					if ("expanded" in node) {
-						newStates[stateKey].expanded = node.expanded;
+					if ('expanded' in node) {
+						newStates[stateKey].expanded = node.expanded
 					}
 
 					if (node.children) {
-						walk(node.children);
+						walk(node.children)
 					}
 				})
 			}
+			console.log('this---', this.renderData)
+			walk(this.renderData)
 
-			walk(this.renderData);
-
-			this.$emit("update:nodeStates", newStates)
+			this.$emit('update:nodeStates', newStates)
 		},
 
 		selectNode({ data, node, multi, contextmenu }, idx) {
 			if (this.isRoot && !multi) {
 				// 只有到达树的根的时候，并且非多选项，才进行树所有的节点遍历及值的设置
-				this.walkNodesAndSet(false, node.innerPath);
+				this.walkNodesAndSet(false, node.innerPath)
 			}
 
 			// 树的跟节点，并且是contextmenu触发，则不向父级传递
 			if (this.isRoot && contextmenu) {
-				return;
+				return
 			}
 
-			this.$emit("tree-node-select", { data, node, multi, contextmenu });
+			this.$emit('tree-node-select', { data, node, multi, contextmenu })
 		},
 
 		handleTreeNodeOpen(evt) {
-			this.$emit("tree-node-open", evt);
+			this.$emit('tree-node-open', evt)
 		},
 
 		handleContextMenu(context) {
-			this.$emit("contextmenu", context);
+			this.$emit('contextmenu', context)
 		},
 
 		handleMoveNode(evt) {
-			this.$emit("move-node", evt);
+			this.$emit('move-node', evt)
 		},
 
 		clearSelection() {
-			this.walkNodesAndSet(false, "");
+			this.walkNodesAndSet(false, '')
 		}
 	}
 }
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_const.scss";
+@import '@/assets/scss/_const.scss';
 
 .pt-tree {
 	position: relative;
@@ -336,7 +336,6 @@ export default {
 				padding-right: 0;
 			}
 		}
-
 	}
 }
 </style>

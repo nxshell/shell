@@ -185,7 +185,8 @@ export default {
 	created() {
 		this.updateSessionTree()
 	},
-	mounted() {
+	async mounted() {
+		this.sessionConfigsTreeStates = await Storage.read("HOME-SESSIONTREE-STATE");
 		// 订阅主机搜索事件
 		EventBus.subscript('nx-menu-search', (keywords) => {
 			this.isSearch = !!keywords
@@ -311,16 +312,13 @@ export default {
 					: this.T('home.host-manager.dialog-delete-confirm.delete-folder', sessCfg.name)
 			this.$confirm(message, this.T('home.host-manager.dialog-delete-confirm.title'), {
 				type: 'warning'
+			}).then(() => {
+				this.$sessionManager.removeSessionConfig(sessCfg)
+				node.remove()
+				debugger
+				this.updateSessionTree()
+				this.handleSessionTreeContainerClick()
 			})
-				.then(() => {
-					this.$sessionManager.removeSessionConfig(sessCfg)
-					node.remove()
-					this.updateSessionTree()
-					this.handleSessionTreeContainerClick()
-				})
-				.catch((err) => {
-					// console.error(err)
-				})
 		},
 		updateSessionTree() {
 			const sessionConfigs = this.$sessionManager.getSessionConfigs()
