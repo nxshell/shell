@@ -569,7 +569,7 @@ export default {
         getFontFamily(font) {
             const globalXtermProfile = globalSetting.getProfile("xterm") || {fontFamily: 'courier-new, courier, monospace'};
             font = font === 'default' ? globalXtermProfile.fontFamily: font;
-            if(font === 'default') {
+            if(font === 'default' || !font) {
                 return '"DejaVu Mono", courier-new, courier, monospace';
             }
             return font;
