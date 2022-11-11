@@ -44,14 +44,14 @@ export async function setProfile(categoryName: GlobalCategoryType, profile: IPro
     // Notify applications
 }
 
-export async function updateProfile(catagoryName: GlobalCatagoryType, profile: IProfile): Promise<void> {
-    let old = globalCatagory[catagoryName] || {};
+export async function updateProfile(catagoryName: GlobalCategoryType, profile: IProfile): Promise<void> {
+    let old = globalCategory[catagoryName] || {};
     for (const _k in profile) {
         if (profile.hasOwnProperty(_k)) {
             old[_k] = profile[_k]
         }
     }
-    globalCatagory[catagoryName] = old;
+    globalCategory[catagoryName] = old;
     // save profile
     await storeGlobalProfile();
 }
