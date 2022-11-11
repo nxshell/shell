@@ -30,7 +30,7 @@ export async function handleSessionInstActive(index) {
 	if (!sessTabItem) {
 		return
 	}
-	this.activeSession(sessTabItem.data)
+	await this.activeSession(sessTabItem.data)
 }
 
 /**

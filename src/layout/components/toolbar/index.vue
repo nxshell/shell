@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" v-bind="$attrs" class="nx-toolbar">
+	<div v-bind="$attrs" class="nx-toolbar">
 		<el-input
 			v-model="searchKeywords"
 			:placeholder="T('home.host-manager.search.placeholder')"
@@ -32,9 +32,6 @@ import NxFolderDialog from '../../../views/components/folderDialog'
 
 export default {
 	name: 'NxToolbar',
-	props: {
-		visible: false
-	},
 	components: {NxFolderDialog},
 	data() {
 		return {

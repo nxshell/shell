@@ -56,7 +56,7 @@ export default {
 		return {
 			settingFormReset,
 			options: {
-				mode: 'webgl'
+				mode: 'xterm'
 			},
 			backgroundColor: '#000'
 		}
@@ -66,15 +66,12 @@ export default {
 		'context.xtermTheme'() {
 			this.setTheme(this.getTheme())
 		},
-
 		'context.fontWeight'() {
 			this.setOption('fontWeight', this.context?.fontWeight)
 		},
-
 		'context.fontSize'() {
 			this.setOption('fontSize', this.context?.fontSize)
 		},
-
 		'context.lineHeight'() {
 			this.setOption('lineHeight', this.context?.lineHeight)
 		},

@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import {treeIconFilter} from '@/views/sysicons'
-import {SESSION_CONFIG_TYPE} from '@/services/sessionMgr'
+import { treeIconFilter } from '@/views/sysicons'
+import { SESSION_CONFIG_TYPE } from '@/services/sessionMgr'
 import {
 	processSessionConfigTree,
 	handleSessionTreeContextMenu_Connect,
@@ -57,15 +57,15 @@ import {
 	handleSessionTreeContextMenu_ImportConfig,
 	handleSessionTreeContextMenu_RenameFolder
 } from './tools'
-import Storage from '@/services/storage/index.d'
+import Storage from '@/services/storage/index'
 import * as EventBus from '@/services/eventbus'
-import {mapState, mapMutations} from 'vuex'
-import {activeSession} from '@/layout/components/tabbar/tabs-utools'
+import { mapState, mapMutations } from 'vuex'
+import { activeSession } from '@/layout/components/tabbar/tabs-utools'
 import NxFolderDialog from '../../../views/components/folderDialog'
 
 export default {
 	name: 'NxMenus',
-	components: {NxFolderDialog},
+	components: { NxFolderDialog },
 	data() {
 		return {
 			sessionConfigsTree: [],
@@ -194,7 +194,7 @@ export default {
 		})
 		// 订阅新建文件夹事件
 		EventBus.subscript('create-session-folder', (menuData) => {
-			this.$refs.sessionTree.appendNode({treeData: menuData})
+			this.$refs.sessionTree.appendNode({ treeData: menuData })
 			this.updateSessionTree()
 		})
 		// 订阅菜单刷新事件
@@ -233,7 +233,7 @@ export default {
 		 */
 		async handleHostSelected(node) {
 			this.updateCurrentSelectedSessionNode(node)
-			const {data, multi} = node
+			const { data, multi } = node
 			// 多选的情况下，不创建会话
 			if (multi) {
 				return
@@ -275,7 +275,7 @@ export default {
 		 *                                          after: 目标节点是兄弟节点，在兄弟节点之后
 		 * @param {Object} nodeInfo.source          源节点
 		 */
-		async handleTreeNodeMove({dest, destPosition, source}) {
+		async handleTreeNodeMove({ dest, destPosition, source }) {
 			const destNode = this.$sessionManager.getSessionConfigById(dest._id)
 			/** @type {SessionConfig} */
 			const sourceNode = this.$sessionManager.getSessionConfigById(source._id)
@@ -284,7 +284,7 @@ export default {
 			if (destPosition === 'parent') {
 				destNode.addSessionConfig(sourceNode)
 			} else {
-				const {index} = destNode._parent.findSubSessionConfig(dest._id)
+				const { index } = destNode._parent.findSubSessionConfig(dest._id)
 				const destIndex = index + (destPosition === 'before' ? 0 : 1)
 				destNode._parent.addSessionConfig(sourceNode, destIndex)
 			}
@@ -296,13 +296,13 @@ export default {
 		 */
 		handleSessionTreeContextMenu(node) {
 			this.updateCurrentSelectedSessionNode(node)
-			const {data} = node
+			const { data } = node
 			const sessCfg = data.data
 			this.currentSelectedSessionNodeConfigType = sessCfg.type
 		},
 		// 删除会话或者会话目录
 		handleSessionTreeContextMenu_Delete() {
-			const {data, node} = this.currentSelectedSessionNode
+			const { data, node } = this.currentSelectedSessionNode
 			const sessCfgData = data.data
 			const sessCfg = this.$sessionManager.getSessionConfigById(sessCfgData._id)
 			const message =
@@ -327,7 +327,7 @@ export default {
 			this.sessionConfigsTree = this.processSessionConfigTree(sessionConfigs)
 		},
 		treeOpClipboardPaste() {
-			const {data} = this.treeOpClipboard
+			const { data } = this.treeOpClipboard
 			try {
 				return (data && this.treeOpClipboard) || null
 			} catch (error) {
@@ -358,7 +358,7 @@ export default {
 			// 追加新的节点
 			const {
 				data: {
-					data: {data: nodeData}
+					data: { data: nodeData }
 				},
 				operate
 			} = pasteData
@@ -392,14 +392,14 @@ export default {
 		},
 		// 查看编辑会话配置
 		async handleSessionTreeContextMenu_Prop() {
-			const {data} = this.currentSelectedSessionNode
+			const { data } = this.currentSelectedSessionNode
 			const sessCfg = this.$sessionManager.getSessionConfigById(data.data._id)
 			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
 		},
 		handleOk(folderSessionConfig) {
 			if (this.isEdit) {
-				const {name} = folderSessionConfig
-				const {data} = this.currentSelectedSessionNode
+				const { name } = folderSessionConfig
+				const { data } = this.currentSelectedSessionNode
 				const sessConfigData = data.data
 				const sessionConfig = this.$sessionManager.getSessionConfigById(sessConfigData._id)
 				sessionConfig.update(name)

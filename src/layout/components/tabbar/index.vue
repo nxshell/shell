@@ -20,8 +20,8 @@ import {
 	updateSessionInstTabs
 } from '@/layout/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
-import {mapState} from 'vuex'
-import {contextMenuMixin} from './context-menu-mixin'
+import { mapState } from 'vuex'
+import { contextMenuMixin } from './context-menu-mixin'
 
 export default {
 	name: 'NxTabMenu',
@@ -66,7 +66,7 @@ export default {
 			await this.handleSessionInstRemove(this.sessionContextMenuTabIndex)
 		},
 		handleSessionInstRemove(index) {
-			const {title, data: session} = this.sessionInstTabs[index]
+			const { title, data: session } = this.sessionInstTabs[index]
 			// 首页不需要确认
 			if (title === 'Welcome') {
 				session.close()
@@ -74,8 +74,8 @@ export default {
 			}
 			const isEditor = session && session.type === 'editor'
 			this.$confirm(
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.message' : 'delete-dialog.title'}`),
-				this.T(`home.session-instance.${isEditor ? 'save-dialog.title' : 'delete-dialog.message'}`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.message' : 'delete-dialog.title' }`),
+				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
 				{
 					type: 'warning',
 					closeOnClickModal: false
@@ -86,7 +86,8 @@ export default {
 					session.close()
 					this.$store.dispatch('updateActiveTabIndex', index)
 				})
-				.catch(() => {})
+				.catch(() => {
+				})
 		},
 
 		/**
@@ -95,7 +96,7 @@ export default {
 		handleSessionTabsContextMenu(tabItemIdx) {
 			this.sessionContextMenuTabIndex = tabItemIdx
 			const {
-				data: {type}
+				data: { type }
 			} = this.sessionInstTabs[tabItemIdx]
 			this.sessionContextMenuTabType = type
 		},

@@ -191,7 +191,7 @@ export default {
 			fontList: [],
 			settingsDefinition: [],
 			terminalOptions: {
-				mode: 'webgl'
+				mode: 'xterm'
 			},
 			charset,
 			fontFamily,

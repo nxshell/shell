@@ -1,5 +1,5 @@
 <template>
-	<div class="pt-xterm" @dragover.prevent @drop="handleFileDrop">
+	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop">
 		<div class="xterm-search" v-if="searchShow">
 			<div class="search-input">
 				<el-input
@@ -24,7 +24,7 @@
 					@click="searchDown"
 				/>
 				<n-icon
-					n="close"
+					name="close"
 					slot="right"
 					:title="T('components.pt-xterm.search-close')"
 					@click="searchClose"
@@ -56,11 +56,11 @@
 import mousetrap from 'mousetrap'
 import debounce from 'lodash/debounce'
 import '../../../node_modules/xterm/css/xterm.css'
-import {Terminal} from 'xterm'
-import {WebLinksAddon} from 'xterm-addon-web-links'
-import {FitAddon} from 'xterm-addon-fit'
-import {WebglAddon} from 'xterm-addon-webgl'
-import {SearchAddon} from 'xterm-addon-search'
+import { Terminal } from 'xterm'
+import { WebLinksAddon } from 'xterm-addon-web-links'
+import { FitAddon } from 'xterm-addon-fit'
+import { WebglAddon } from 'xterm-addon-webgl'
+import { SearchAddon } from 'xterm-addon-search'
 
 export default {
 	name: 'PtXterm',
@@ -90,7 +90,8 @@ export default {
 			logging: false,
 			searchWord: '',
 			searchShow: false,
-			zoom: 0
+			zoom: 0,
+			backgroundColor: '#000'
 		}
 	},
 
@@ -122,7 +123,13 @@ export default {
 		this.$nextTick(() => {
 			this.$ptElementResizeDetector.listenTo(this.$el, this.nativeResizeHandler)
 			//this.resizeObserve.observe(this.$el);
-			const options = {wordSeparator: ' /:?,;.', ...this.options}
+			const options = { wordSeparator: ' /:?,;.', ...this.options }
+			// 优化xterm终端边距
+			if (options.hasOwnProperty('theme')) {
+				const { background = '#000' } = options.theme
+				this.backgroundColor = background
+			}
+
 			this.terminal = new Terminal(options)
 			this.terminal.loadAddon(
 				new WebLinksAddon(
@@ -134,7 +141,7 @@ export default {
 					},
 					{
 						tooltipCallback: (evt, uri, location) => {
-							const {actualCellWidth, actualCellHeight} = this.terminal._core._renderService.dimensions
+							const { actualCellWidth, actualCellHeight } = this.terminal._core._renderService.dimensions
 
 							// show tip
 							this.urlTip = uri
@@ -181,7 +188,7 @@ export default {
 				this.$emit('termdata', data)
 			})
 
-			this.terminal.onResize(({cols, rows}) => {
+			this.terminal.onResize(({ cols, rows }) => {
 				this.$emit('resize', cols, rows)
 			})
 
@@ -197,15 +204,15 @@ export default {
 			this.terminal.attachCustomKeyEventHandler((ev) => {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
-					const {key, type} = ev
+					const { key, type } = ev
 					if (type !== 'keydown') {
 						return false
 					}
 					if (['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
 						// trigger to global process
-						mousetrap.trigger(`alt+${key}`)
+						mousetrap.trigger(`alt+${ key }`)
 					} else {
-						this.$emit('shortcut', `alt+${key}`)
+						this.$emit('shortcut', `alt+${ key }`)
 					}
 					return false
 				} else {
@@ -320,6 +327,8 @@ export default {
 		},
 
 		setTheme(theme = {}) {
+			// 优化xterm终端边距
+			this.backgroundColor = theme.background
 			this.terminal?.setOption('theme', theme)
 		},
 
@@ -441,10 +450,6 @@ export default {
 
 		.xterm {
 			height: 100%;
-
-			.xterm-viewport {
-				right: -8px !important;
-			}
 		}
 	}
 

@@ -706,6 +706,7 @@ export default {
 		align-items: center;
 		height: 40px;
 		padding: 5px 0 5px 5px;
+		box-sizing: border-box;
 		background-color: var(--n-bg-color-base);
 
 		.host-url {
@@ -741,7 +742,7 @@ export default {
 	}
 
 	.xterm-pt {
-		height: calc(100% - 48px);
+		height: calc(100% - 40px);
 	}
 }
 </style>

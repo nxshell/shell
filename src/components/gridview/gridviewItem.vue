@@ -180,10 +180,6 @@ export default {
 			display: flex;
 			align-items: center;
 			padding: 0 5px;
-
-			.pt-icon {
-				margin-right: 5px;
-			}
 		}
 
 		.ext-fields {
@@ -201,10 +197,6 @@ export default {
 	}
 
 	&.detail {
-		.pt-icon {
-			margin-right: 5px;
-		}
-
 		.name {
 			&.normal {
 				white-space: nowrap;
@@ -216,12 +208,6 @@ export default {
 				position: relative;
 				z-index: 1;
 			}
-		}
-	}
-
-	&.small {
-		.pt-icon {
-			margin-right: 5px;
 		}
 	}
 

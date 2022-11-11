@@ -263,9 +263,9 @@ export default {
 
     render(createElement) {
         // 图标和标题
-        const renderItem = [createElement("pt-icon", {
+        const renderItem = [createElement("n-icon", {
             props: {
-                iconName: this.iconProp.iconName, type: this.iconProp.type
+                name: this.iconProp.iconName, type: this.iconProp.type
             }
         }), createElement("span", {
             "class": {
