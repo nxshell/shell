@@ -85,7 +85,6 @@ export default {
 		value(newVal) {
 			if (this.editValue !== newVal) {
 				this.editValue = newVal
-				console.log('新的参数值', newVal)
 			}
 		},
 		editValue(newVal) {

@@ -28,7 +28,7 @@
 import * as EventBus from '@/services/eventbus'
 import {SESSION_CONFIG_TYPE, SessionConfig} from '@/services/sessionMgr'
 import {mapState} from 'vuex'
-import NxFolderDialog from '../folderDialog/index.vue'
+import NxFolderDialog from '../../../views/components/folderDialog'
 
 export default {
 	name: 'NxToolbar',

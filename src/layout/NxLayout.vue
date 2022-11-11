@@ -5,7 +5,9 @@
 		</div>
 		<div class="main-panel">
 			<div class="title-bar" :class="{ drag: isMainWindow, deactive: !active }">
-				<toolbar :visible="true" class="title-text" />
+				<!-- 顶部工具栏 -->
+				<nx-toolbar />
+				<!-- 右侧开关 -->
 				<div class="window-controls-container" v-if="!IS_MAC_OS">
 					<n-space :size="20">
 						<span class="control-btn" @click="doMinimize">
@@ -28,13 +30,12 @@
 </template>
 
 <script>
-import Toolbar from "@/views/components/toolbar";
-import NxNavbar from '@/layout/components/NxNavbar'
+import { NxNavbar, NxToolbar } from "@/layout/components";
 
 const IS_MAC_OS = /macintosh/i.test(navigator.userAgent)
 export default {
 	name: 'NxLayout',
-	components: { Toolbar, NxNavbar },
+	components: { NxToolbar, NxNavbar },
 	props: {
 		isMainWindow: {
 			type: Boolean,

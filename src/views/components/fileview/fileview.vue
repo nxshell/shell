@@ -96,11 +96,10 @@
 					>
 						<el-descriptions-item :span="10">
 							<template slot="label">
-								<pt-icon
-									size="custom"
-									:customSize="28"
+								<n-icon
+									size="28"
 									type="img"
-									:iconName="filePropDialog.dirent.fileicon"
+									:name="filePropDialog.dirent.fileicon"
 								/>
 							</template>
 							{{ filePropDialog.dirent.filename }}

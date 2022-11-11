@@ -18,13 +18,13 @@ import {
 	handleSessionInstActive,
 	setupBarShortCut,
 	updateSessionInstTabs
-} from '@/views/components/tabbar/tabs-utools'
+} from '@/layout/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
 import {mapState} from 'vuex'
 import {contextMenuMixin} from './context-menu-mixin'
 
 export default {
-	name: 'TitleBar',
+	name: 'NxTabMenu',
 	data() {
 		return {
 			sessionContextMenuTabIndex: -1,

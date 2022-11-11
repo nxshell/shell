@@ -1,7 +1,7 @@
 <template>
 	<div class="nx-layout-wrapper">
 		<div v-if="configPanel" class="nx-layout-left">
-			<nx-menu ref="menuRef" />
+			<nx-menus ref="menuRef" />
 		</div>
 		<div class="nx-layout-right" :style="{width: `calc(100% - ${configPanel ? 295 : 0}px)`}">
 			<!-- toggle-bar	-->
@@ -14,7 +14,7 @@
 				<div class="nx-layout-toggle-bar__bottom"></div>
 			</div>
 			<div v-if="showTabs" class="nx-content-tabs">
-				<tab-bar />
+				<nx-tab-menu />
 			</div>
 			<div class="nx-content" :style="{height: `calc(100% - ${showTabs ? '40px':'0px' })`}">
 				<keep-alive>
@@ -25,14 +25,13 @@
 	</div>
 </template>
 <script>
-import TabBar from '@/views/components/tabbar/index.vue'
 import * as EventBus from '@/services/eventbus'
-import NxMenu from '@/views/components/menu'
+import { NxMenus, NxTabMenu } from './components'
 import { mapMutations, mapState } from 'vuex'
 
 export default {
 	name: 'Home',
-	components: { NxMenu, TabBar },
+	components: { NxMenus, NxTabMenu },
 	data() {
 		return {}
 	},

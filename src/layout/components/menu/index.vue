@@ -57,11 +57,11 @@ import {
 	handleSessionTreeContextMenu_ImportConfig,
 	handleSessionTreeContextMenu_RenameFolder
 } from './tools'
-import Storage from '@/services/storage'
+import Storage from '@/services/storage/index.d'
 import * as EventBus from '@/services/eventbus'
 import {mapState, mapMutations} from 'vuex'
-import {activeSession} from '@/views/components/tabbar/tabs-utools'
-import NxFolderDialog from '../folderDialog/index.vue'
+import {activeSession} from '@/layout/components/tabbar/tabs-utools'
+import NxFolderDialog from '../../../views/components/folderDialog'
 
 export default {
 	name: 'NxMenus',
