@@ -73,7 +73,7 @@
 			@file-drop="handleFileDrop"
 			@file-sort="handleFileSort"
 			v-context-menu="handleGetContextMenu"
-		></pt-grid-view>
+		/>
 		<file-status-bar
 			:file-total="fileList.length"
 			:selected-length="selectedItems.length"

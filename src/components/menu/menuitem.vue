@@ -12,7 +12,7 @@
 			:show="showSubmenu"
 			:zIndex="10000"
 		>
-			<pt-menu :menu="item.submenu" @pop-stack="showSubmenu = false" ref="submenu" />
+			<pt-menu :menu="item.submenu" :translate="true" @pop-stack="showSubmenu = false" ref="submenu" />
 			<template slot="reference">
 				<div class="pt-menu-item-container">
 					<span class="item-icon"><!--占位--></span>

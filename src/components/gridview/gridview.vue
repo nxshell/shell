@@ -21,10 +21,7 @@
                 height: (selectionRect.bottom - selectionRect.top) + 'px',
             }"
         ></div>
-        <div v-if="mode === 'detail'"
-            class="grid-view-header"
-            @contextmenu.stop
-        >
+	    <div v-if="mode === 'detail'" class="grid-view-header" @contextmenu.stop>
             <ul class="columns">
                 <div v-for="(column, idx) in columns" :key="column.dataKey + idx">
                     <li class="column"
@@ -35,7 +32,6 @@
                         @click="handleSort(column.dataKey)"
                     >
                         {{ T(column.label) }}
-
                     </li>
                     <span class="resize" v-mouse-drag="getColumnResizeHandler(idx)"></span>
                 </div>
@@ -44,11 +40,7 @@
         <scroll-container type="vertical" :size="10" @scroll="handleViewScroll" ref="scrollContainter"
             @scrollTop="handleScrollTop" @scrollBottom="handleScrollBottom"
         >
-            <div class="item-container"
-                :class="{
-                    detail: mode === 'detail'
-                }"
-            >
+	        <div class="item-container" :class="{detail: mode === 'detail'}">
                 <div class="item-placeholder" v-if="selection.isShow"
                     :style="{
                         height: viewVisual.topPlaceholderSize + 'px'
@@ -66,7 +58,7 @@
                     @select="handleSelectItem($event, idx)"
                     @open="handleOpenItem(idx)"
                     @contextmenu="handleContextMenu(idx)"
-                ></pt-grid-view-item>
+                />
                 <div class="item-placeholder" v-if="selection.isShow"
                     :style="{
                         height: viewVisual.bottomPlaceholderSize + 'px'
@@ -265,7 +257,7 @@ export default {
             }
         },
         mouseYDelta() {
-            return this.mode == "detail" ? 40 : 10;
+            return this.mode === "detail" ? 40 : 10;
         }
     },
 
@@ -350,13 +342,7 @@ export default {
             for (let i = 0; i < this.items.length; i++) {
                 let col = i % this.view.cols;
                 let row = Math.floor(i / this.view.cols);
-                if (col >= startCol && col <= endCol &&
-                    row >= startRow && row <= endRow
-                ) {
-                    this.items[i].selected = true;
-                } else {
-                    this.items[i].selected = false;
-                }
+                this.items[i].selected = col >= startCol && col <= endCol && row >= startRow && row <= endRow;
             }
         },
 
@@ -610,7 +596,7 @@ export default {
 
         handleFileDrop(evt) {
             evt.preventDefault();
-            if (evt.dataTransfer.items.length == 0) {
+            if (evt.dataTransfer.items.length === 0) {
                 return;
             }
 

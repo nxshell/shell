@@ -47,12 +47,6 @@ export default {
 			default: 18
 		}
 	},
-	watch: {
-		size(n, o) {
-			if (typeof n === 'string') {
-			}
-		}
-	},
 	computed: {
 		isExternal() {
 			// return isExternal(this.name)
@@ -67,12 +61,12 @@ export default {
 					return 12
 				case 'small':
 					return 18
-				case 'middle':
+				case 'medium':
 					return 24
 				case 'large':
 					return 32
 				case 'huge':
-					return 128
+					return 64
 				default:
 					try {
 						return parseInt(this.size)

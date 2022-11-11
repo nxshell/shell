@@ -34,7 +34,7 @@
 						{{ field.fieldValue }}
 					</span>
 				</template>
-				<template v-if="mode == 'tile'">
+				<template v-if="mode === 'tile'">
 					<n-icon :name="value.icon" :size="iconSize" :type="value.iconType || 'svg'" />
 					<div class="tile-fields">
 						<span>{{ value.name }}</span>
@@ -73,15 +73,6 @@ export default {
 		},
 
 		extFields() {
-			// return Object.keys(this.value).map((fieldName) => {
-			//     if (fieldName == "icon" || fieldName == "name") {
-			//         return;
-			//     }
-			//     return {
-			//         fieldName,
-			//         fieldValue: this.value[fieldName]
-			//     };
-			// }).filter(x => x);
 			return this.columns
 				.map((col) => {
 					if (col.dataKey === 'name') {
