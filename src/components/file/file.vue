@@ -44,7 +44,6 @@ export default {
 		},
 
 		async transform(files, transFunc) {
-			console.log(files)
 			let count = !!this.multi ? files.length : 1
 			let ret = []
 			let fileNames = []
@@ -91,7 +90,6 @@ export default {
 		},
 
 		handleFileOpen() {
-			console.log('opend', this.$refs.file.files)
 			if (this.$refs.file.files.length === 0) {
 				return
 			}

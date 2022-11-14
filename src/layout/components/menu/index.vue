@@ -307,7 +307,6 @@ export default {
 			}).then(() => {
 				this.$sessionManager.removeSessionConfig(sessCfg)
 				node.remove()
-				debugger
 				this.updateSessionTree()
 				this.handleSessionTreeContainerClick()
 			})

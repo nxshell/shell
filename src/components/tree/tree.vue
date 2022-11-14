@@ -131,7 +131,6 @@ export default {
 				this.renderData = this.treeData
 				return
 			}
-			debugger
 			this.renderData = processTreeNodes(this.treeData, this.autoExpanded, this.nodeStates, this.dataKey)
 		},
 

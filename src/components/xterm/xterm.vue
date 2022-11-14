@@ -125,7 +125,7 @@ export default {
 			//this.resizeObserve.observe(this.$el);
 			const options = { wordSeparator: ' /:?,;.', ...this.options }
 			// 优化xterm终端边距
-			if (options.hasOwnProperty('theme')) {
+			if (options.hasOwnProperty('theme') && options.theme) {
 				const { background = '#000' } = options.theme
 				this.backgroundColor = background
 			}

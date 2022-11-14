@@ -46,7 +46,6 @@ export function handleSessionTreeContextMenu_Connect() {
 export function treeOpClipboardCut(node) {
 	this.treeOpClipboard.data = node
 	this.treeOpClipboard.operate = 'cut'
-	console.log('剪切板', this.treeOpClipboard)
 }
 
 /**
@@ -56,7 +55,6 @@ export function treeOpClipboardCut(node) {
 export function treeOpClipboardCopy(node) {
 	this.treeOpClipboard.data = node
 	this.treeOpClipboard.operate = 'copy'
-	console.log('剪切板', this.treeOpClipboard)
 }
 
 /**
