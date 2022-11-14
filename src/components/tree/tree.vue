@@ -202,9 +202,7 @@ export default {
 					}
 				})
 			}
-			console.log('this---', this.renderData)
 			walk(this.renderData)
-
 			this.$emit('update:nodeStates', newStates)
 		},
 

@@ -124,7 +124,6 @@ export default {
 				return
 			}
 			if (evt.ctrlKey) {
-				console.log('按下Ctrl')
 				this.selected = !this.selected
 			} else {
 				this.selected = true
