@@ -12,7 +12,6 @@
 				:treeData="sessionConfigsTree"
 				:iconFilter="treeIconFilter"
 				:draggable="!isSearch"
-				:nodeStates.sync="sessionConfigsTreeStates"
 				:autoExpanded="true"
 				v-context-menu="getSessionConfigTreeContextMenu"
 				@tree-node-select="handleHostSelected"
@@ -71,7 +70,6 @@ export default {
 			sessionConfigsTree: [],
 			isSearch: false,
 			isEdit: false,
-			sessionConfigsTreeStates: {},
 			sessionConfigsTreeContextMenu: {
 				folder: [
 					{
@@ -171,11 +169,6 @@ export default {
 			}
 		}
 	},
-	watch: {
-		sessionConfigsTreeStates() {
-			Storage.save('HOME-SESSIONTREE-STATE', this.sessionConfigsTreeStates, false)
-		}
-	},
 	computed: {
 		...mapState(['currentSelectedSessionNode']),
 		treeIconFilter() {
@@ -186,7 +179,6 @@ export default {
 		this.updateSessionTree()
 	},
 	async mounted() {
-		this.sessionConfigsTreeStates = await Storage.read("HOME-SESSIONTREE-STATE");
 		// 订阅主机搜索事件
 		EventBus.subscript('nx-menu-search', (keywords) => {
 			this.isSearch = !!keywords
