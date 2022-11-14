@@ -72,7 +72,7 @@ export default {
 			let t_len = this.sessions.length
 			let f_len = Math.floor((t_len + 1) / 2)
 
-			if (this.split_type == 'grid') {
+			if (this.split_type === 'grid') {
 				if (t_len < 3) {
 					height = '100%'
 					width = Math.floor(100 / t_len)
@@ -83,12 +83,12 @@ export default {
 					width = width + '%'
 					min_width = Math.floor(this.width / f_len)
 				}
-			} else if (this.split_type == 'col') {
+			} else if (this.split_type === 'col') {
 				height = '100%'
 				width = Math.floor(100 / t_len)
 				width = width + '%'
 				min_width = Math.floor(this.width / t_len)
-			} else if (this.split_type == 'row') {
+			} else if (this.split_type === 'row') {
 				width = '100%'
 				height = Math.floor(100 / t_len)
 				height = height + '%'
@@ -97,7 +97,7 @@ export default {
 			return {
 				width,
 				height,
-				'min-width': `${ min_width } px`
+				'min-width': `${ min_width }px`
 			}
 		}
 	},
@@ -258,7 +258,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-xterm-session {
 	position: relative;
 
@@ -278,11 +278,11 @@ export default {
 	}
 
 	.xterm-container {
-		//width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
 		height: 100%;
-		//overflow: hidden;
-		//display: flex;
-		//flex-wrap: wrap;
+		overflow: hidden;
 
 		.xterm-wrapper {
 			flex-grow: 1;

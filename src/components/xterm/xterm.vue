@@ -11,35 +11,35 @@
 				/>
 			</div>
 			<div class="search-icons">
-				<n-icon
-					name="direction-up"
-					slot="right"
-					:title="T('components.pt-xterm.search-up')"
-					@click="searchUp"
-				/>
-				<n-icon
-					name="direction-down"
-					slot="right"
-					:title="T('components.pt-xterm.search-down')"
-					@click="searchDown"
-				/>
-				<n-icon
-					name="close"
-					slot="right"
-					:title="T('components.pt-xterm.search-close')"
-					@click="searchClose"
-				/>
+				<n-space size="5">
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('components.pt-xterm.search-up')"
+						placement="top-start">
+						<n-icon name="direction-up" @click="searchUp" />
+					</el-tooltip>
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('components.pt-xterm.search-down')"
+						placement="top-start">
+						<n-icon name="direction-down" @click="searchDown" />
+					</el-tooltip>
+					<el-tooltip
+						class="item"
+						effect="dark"
+						:content="T('components.pt-xterm.search-close')"
+						placement="top-start">
+						<n-icon name="close" @click="searchClose" />
+					</el-tooltip>
+
+				</n-space>
 			</div>
 		</div>
 		<div class="keyboard-input" v-show="sendToAllTerm">
 			<div>{{ T('components.pt-xterm.keyboard-input-note') }}</div>
-
-			<div class="switch-btn" v-if="showOn" @click="keyboardInputAllow(false)">
-				{{ T('components.pt-xterm.keyboard-input-off') }}
-			</div>
-			<div class="switch-btn" v-else @click="keyboardInputAllow(true)">
-				{{ T('components.pt-xterm.keyboard-input-on') }}
-			</div>
+			<el-switch v-model="showOn" @change="keyboardInputAllow" />
 		</div>
 		<div ref="xtermContainer" class="xterm-container"></div>
 		<div
@@ -92,14 +92,6 @@ export default {
 			searchShow: false,
 			zoom: 0,
 			backgroundColor: '#000'
-		}
-	},
-
-	watch: {
-		sendToAllTerm(newVal) {
-			if (!newVal) {
-				this.showOn = false
-			}
 		}
 	},
 
@@ -402,8 +394,7 @@ export default {
 				this.$refs.searchInputRef?.focus()
 			}, 100)
 		},
-		keyboardInputAllow(allow) {
-			this.showOn = !!allow
+		keyboardInputAllow() {
 			this.$emit('sendToAll', this.showOn)
 		},
 		selectAll() {
@@ -429,7 +420,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-xterm {
 	position: relative;
 	width: 100%;
@@ -467,38 +458,44 @@ export default {
 
 	.xterm-search {
 		position: absolute;
-		height: 40px;
-		width: 95%;
-		opacity: 0.9;
-		z-index: 999;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
+		width: calc(100% - 10px);
+		height: 40px;
+		opacity: 0.9;
+		z-index: 999;
+		padding: 0 5px;
+		box-sizing: border-box;
 
 		.search-input {
 			flex-grow: 1;
 		}
 
 		.search-icons {
-			flex-shrink: 0;
 			display: flex;
+			flex-shrink: 0;
 			justify-content: flex-end;
+			align-items: center;
+			color: #FFFFFF;
+			padding-left: 10px;
 		}
 	}
 
 	.keyboard-input {
 		position: absolute;
-		background-color: goldenrod;
-		padding-left: 5px;
-		padding-right: 5px;
-		width: 95%;
-		height: 30px;
-		z-index: 998;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
+		z-index: 998;
+		box-sizing: border-box;
+		padding-left: 5px;
+		padding-right: 5px;
+		background-color: goldenrod;
+		width: calc(100% - 10px);
+		height: 30px;
 
 		.switch-btn {
 			border: 1px solid var(--n-text-color-base);

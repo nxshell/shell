@@ -160,7 +160,7 @@ export default {
 			display: inline-block;
 			flex-grow: 1;
 			text-align: right;
-			color: var(--secondaryTextColor);
+			color: var(--n-text-color-base);
 		}
 
 		.item-submenu-arrow {
@@ -168,7 +168,7 @@ export default {
 			width: 16px;
 			height: 16px;
 			flex-shrink: 0;
-			color: var(--secondaryTextColor);
+			color: var(--n-text-color-base);
 		}
 	}
 }

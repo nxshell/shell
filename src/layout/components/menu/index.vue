@@ -187,8 +187,10 @@ export default {
 		})
 		// 订阅新建文件夹事件
 		EventBus.subscript('create-session-folder', (menuData) => {
-			this.$refs.sessionTree.appendNode({ treeData: menuData })
-			this.updateSessionTree()
+			this.$nextTick(() => {
+				this.$refs.sessionTree.appendNode({ treeData: menuData })
+				this.updateSessionTree()
+			})
 		})
 		// 订阅菜单刷新事件
 		EventBus.subscript('refresh-session-tree', () => {

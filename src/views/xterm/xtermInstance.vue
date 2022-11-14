@@ -234,7 +234,7 @@ export default {
 		},
 		toolbarShow() {
 			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
-			return sessionConfig && sessionConfig.config.protocal === 'ssh';
+			return sessionConfig && sessionConfig.config.protocal === 'ssh'
 		},
 		tunnelTitle() {
 			return this.tunnelMapTitle[this.sessionInstanceId]
@@ -342,10 +342,11 @@ export default {
 			const globalXtermProfile = globalSetting.getProfile('xterm') || {}
 
 			this.options = {
-				...globalXtermProfile, ...sessionCfg.config,
+				...globalXtermProfile,
+				...sessionCfg.config,
 				fontWeight: this.getFontWeight(sessionCfg.config.fontWeight),
-				theme: this.getTheme(sessionCfg.config.xtermTheme || "default"),
-				fontFamily: this.getFontFamily(sessionCfg.config.fontFamily || "default")
+				theme: this.getTheme(sessionCfg.config.xtermTheme || 'default'),
+				fontFamily: this.getFontFamily(sessionCfg.config.fontFamily || 'default')
 			}
 			// 优化会话窗口背景样式
 			if (xtermTheme[this.options?.xtermTheme]) {
@@ -449,7 +450,7 @@ export default {
 			}
 
 			this.iconv_to_uft8.on('data', (d) => {
-				this.$refs.xterm.$emit('data', d)
+				this.$nextTick(() => this.$refs.xterm.$emit('data', d))
 			})
 
 			const write = async (data) => {
@@ -704,6 +705,7 @@ export default {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		overflow: hidden;
 		height: 40px;
 		padding: 5px 0 5px 5px;
 		box-sizing: border-box;
@@ -719,6 +721,14 @@ export default {
 			color: var(--n-text-color-base);
 			background-color: var(--n-bg-color-light);
 			margin-right: 5px;
+		}
+
+		.host-tools {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 143px;
+			min-width: 143px;
 		}
 
 		.btn {
