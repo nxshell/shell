@@ -26,7 +26,11 @@ export function getSystemIcon(system) {
 }
 
 export function treeIconFilter(nodeData) {
-    const icon = getSystemIcon(nodeData.data.config.osType);
+    let config = nodeData.data && nodeData.data.config
+    if (!config) {
+        config = nodeData.config
+    }
+    const icon = getSystemIcon(config.osType);
 
     return {
         type: "img",
@@ -37,7 +41,7 @@ export function treeIconFilter(nodeData) {
 export function getSessionIcon(sessionType) {
     if (sessionType === "welcome") {
         return nxshell;
-    } else if(sessionType === "vnc") {
+    } else if (sessionType === "vnc") {
         return vnc;
     } else {
         return null;

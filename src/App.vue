@@ -1,142 +1,118 @@
 <template>
-    <div id="app" class="main-window mycolor">
-        <!--  -->
-        <pt-window
-            :title="T('app.powertools-shell')"
-            :isMainWindow="true"
-            :leftPanel="left_pannel"
-            :topPanel="top_pannel">
-            <div slot="left-panel" class="control-panel">
-                <pt-shell-app-nav-bar/>
-            </div>
-            <keep-alive slot="main-panel">
-                <router-view/>
-            </keep-alive>
-        </pt-window>
-    </div>
+	<div id="app" class="main-window mycolor">
+		<nx-layout
+			:title="T('app.powertools-shell')"
+			:isMainWindow="true"
+			:leftPanel="left_panel"
+			:topPanel="top_panel">
+			<template slot="main-panel">
+				<keep-alive :exclude="['GlobalSetting']">
+					<router-view />
+				</keep-alive>
+			</template>
+		</nx-layout>
+	</div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState } from 'vuex'
+import NxLayout from '@/layout/NxLayout'
 
-import PtShellAppNavBar from "./views/Navbar";
-import Lang from "../lang";
+import Lang from '../lang'
 
-import * as globalSetting from "./services/globalSetting";
-import * as EventBus from "./services/eventbus";
+import * as globalSetting from './services/globalSetting'
+import * as EventBus from './services/eventbus'
 
-let localeName = navigator.language;
-// let localeName = "en-US";
-const defaultLocalName = "en-US";
+let localeName = navigator.language
+const defaultLocalName = 'en-US'
 
 async function loadLang(locale) {
-    const esModule = await Lang[locale]();
-    return esModule.default;
+	const esModule = await Lang[locale]()
+	return esModule.default
 }
 
 function getUserConfigLanguage() {
-    let ret = globalSetting.getProfile("xterm");
-    if (ret && ret.language) {
-        return ret.language;
-    } else {
-        return null;
-    }
-}
-
-function getUserConfigTheme() {
-    let ret = globalSetting.getProfile("xterm");
-    if (ret && ret.theme) {
-        return ret.theme;
-    } else {
-        return "dark";
-    }
+	return globalSetting.getProfile('xterm')?.language ?? null
 }
 
 export default {
-    name: "App",
-    components: {
-        PtShellAppNavBar
-    },
-    data() {
-        return {
-            left_pannel: true,
-            top_pannel: true,
-        }
-    },
-    computed: {
-        ...mapState(["configPannel"]),
-    },
+	name: 'App',
+	components: {
+		NxLayout
+	},
+	data() {
+		return {
+			left_panel: true,
+			top_panel: true
+		}
+	},
+	computed: {
+		...mapState(['configPanel'])
+	},
+	async created() {
+		window.document.documentElement.setAttribute('nx-theme', this.$store.getters.theme)
 
-    async created() {
-        let _theme = getUserConfigTheme();
-        if(_theme === "light") {
-            window.document.documentElement.setAttribute("nx-theme", "light");
-        } else {
-            window.document.documentElement.setAttribute("nx-theme", "dark");
-        }
-        this.setTheme(_theme);
-        let _name =  getUserConfigLanguage();
-        if(_name) {
-            localeName = _name;
-        }
-        let lang = await loadLang(localeName);
-        if (!lang) {
-            localeName = defaultLocalName;
-            lang = await loadLang(localeName);
-        }
-        this.locale(localeName, lang);
-        this.setLocale(localeName);
-        if (process.env.NODE_ENV != "development") {
-            this.$router.push({
-                name: "Home"
-            });
-        }
-        console.log(process.env.NODE_ENV);
+		let _name = getUserConfigLanguage()
+		if (_name) {
+			localeName = _name
+		}
+		let lang = await loadLang(localeName)
+		if (!lang) {
+			localeName = defaultLocalName
+			lang = await loadLang(localeName)
+		}
+		this.locale(localeName, lang)
+		this.setLocale(localeName)
+		if (process.env.NODE_ENV !== 'development') {
+			await this.$router.push({
+				name: 'Home'
+			})
+		}
 
-        EventBus.subscript("enter-fullscreen", async (action)=> {
-            try {
-                this.left_pannel = false;
-                this.top_pannel = false;
-                EventBus.publish("session-config-pannel", "close")
-                await document.body.requestFullscreen();
-            }catch(e) {
-                // pass
-            }
-        })
+		EventBus.subscript('enter-fullscreen', async (action) => {
+			try {
+				this.left_panel = false
+				this.top_panel = false
+				EventBus.publish('session-config-panel', 'close')
+				await document.body.requestFullscreen()
+			} catch (e) {
+				// pass
+			}
+		})
 
-        document.addEventListener("fullscreenchange", ()=> {
-            let isfullscreen = !!document.fullscreenElement;
-            if(! isfullscreen) {
-                if(this.configPannel) {
-                    EventBus.publish("session-config-pannel", "open")
-                }
-                this.left_pannel = true;
-                this.top_pannel = true;
-            }
-        })
-    },
-
-    methods: {
-        ...mapMutations(['setTheme']),
-    }
-
+		document.addEventListener('fullscreenchange', () => {
+			const isFullscreen = !!document.fullscreenElement
+			if (!isFullscreen) {
+				if (this.configPanel) {
+					EventBus.publish('session-config-panel', 'open')
+				}
+				this.left_panel = true
+				this.top_panel = true
+			}
+		})
+	}
 }
 </script>
 
 <style lang="scss">
 #app {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
+	background-color: var(--n-bg-color-light);
+	//background-image: url("https://i.pinimg.com/originals/8f/22/23/8f2223ad1d71fee35d1bcfa4ea2d570b.jpg");
+	//background-repeat: no-repeat;
+	//background-size: 100% 100%;
 
-    .control-panel {
-        width: 100%;
-        height: 100%;
-    }
+	.control-panel {
+		width: 100%;
+		height: 100%;
 
-    .main-window {
-        .control-panel {
-            background-color: var(--primaryColor);
-        }
-    }
+	}
+
+	.main-window {
+		.control-panel {
+			background-color: var(--n-bg-color-light);
+		}
+	}
 }
 </style>

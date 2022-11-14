@@ -6,11 +6,11 @@ import store from "./store";
 import "@fontsource/dejavu-mono";
 import "./assets/scss/default.scss";
 
-
 import PtComponents from "@/components";
 import PtSessionManger from "@/services";
 
 import Element from './element'
+import '@/icons'
 
 Vue.use(PtComponents);
 Vue.use(PtSessionManger);
@@ -21,14 +21,12 @@ Vue.config.productionTip = false;
 !async function () {
     await PtSessionManger.initService();
 
-
     new Vue({
         router,
         store,
         render: h => h(App)
     }).$mount("#app");
 }();
-
 
 window.addEventListener("keydown", (evt) => {
     if (evt.ctrlKey && evt.key === "r") {

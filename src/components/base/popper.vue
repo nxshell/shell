@@ -126,9 +126,8 @@ const PopperContainer = Vue.extend({
         },
 
         "right-top"() {
-            const selfRect = this.selfRect;
             return {
-                left: this.parentRect.right,
+                left: this.parentRect.right + 10,
                 top: this.parentRect.top
             };
         },
@@ -146,7 +145,7 @@ const PopperContainer = Vue.extend({
             let expectPos = this[this.position];
             // 实际可以显示的位置
             let actPos = {...expectPos};
-            
+
             const right = expectPos.left + this.selfRect.width;
             const bottom = expectPos.top + this.selfRect.height;
             if (actPos.left < 0) {
@@ -260,7 +259,7 @@ export default {
 
         zIndex: {
             type: Number,
-            default: 0
+            default: 4
         }
     },
 
@@ -329,5 +328,6 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+	border-radius: 4px;
 }
 </style>

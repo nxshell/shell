@@ -20,7 +20,7 @@
             "search-placeholder": "Input to find",
             "keyboard-input-off": "OFF",
             "keyboard-input-on": "ON",
-            "keyboard-input-note": "Keyborad would send to same session which turn on"
+            "keyboard-input-note": "Keyboard would send to same session which turn on"
         },
         "auth": {
             "title": "Auth",
@@ -37,7 +37,7 @@
                 "title": "Priavte Key"
             },
             "keyboard": {
-                "title": "Keyboard Interactive"
+                "title": "keyboard Interactive"
             },
             "passphrase": {
                 "title": "Private key password"
@@ -254,17 +254,33 @@
                 "charset": {
                     "title": "Charsets",
                     "description": "Charset of the terminal"
+                },
+                "lineHeight": {
+                    "title": "Line Height",
+                    "description": "Line Height"
+                },
+                "letterSpacing": {
+                    "title": "Letter Spacing",
+                    "description": "Letter Spacing"
+                },
+                "cursorBlink": {
+                    "title": "Cursor Blink",
+                    "description": "Cursor Blink"
+                },
+                "cursorStyle": {
+                    "title": "Cursor Style",
+                    "description": "Cursor Style"
                 }
             },
             "auth": {
                 "title": "Login authorization",
                 "auth-type": {
                     "title": "Authorization mode",
-                    "description": "The mode for login authrization, password/ssh-key/keyborad-interactive is now supported.",
+                    "description": "The mode for login authrization, password/ssh-key/keyboard-interactive is now supported.",
                     "options": {
                         "password": "Password",
                         "publickey": "Private key",
-                        "keyboard-interactive": "Keyboard Interactive"
+                        "keyboard-interactive": "keyboard Interactive"
                     }
                 },
                 "proxy-type": {
@@ -404,7 +420,7 @@
                 "split-column": "Split Column",
                 "split-grid": "Split Group",
                 "split-normal": "Single",
-                "send-all": "Send Keyboard to",
+                "send-all": "Send keyboard to",
                 "send-many": "All SSH Terminal",
                 "send-one": "Current SSH Terminal",
                 "lock": "Lock Sessions",
@@ -472,14 +488,14 @@
                 "block-dev": "Block Dev",
                 "char-dev": "Char Dev",
                 "fifo": "FIFO",
-                "location": "Location:",
-                "perms": "Permissions:",
-                "size": "Size:",
-                "modify-time": "Modify time:",
+                "location": "Location",
+                "perms": "Permissions",
+                "size": "Size",
+                "modify-time": "Modify time",
                 "modify-time-format": "$0",
-                "user": "User:",
-                "group": "Group:",
-                "type": "Type:"
+                "user": "User",
+                "group": "Group",
+                "type": "Type"
             },
             "rename-dialog": {
                 "title": "Rename",

@@ -1,6 +1,6 @@
 /**
  * 会话管理器
- * 
+ *
  * 包括：会话配置管理和会话实例管理
  */
 import { EventEmitter } from "events";
@@ -9,7 +9,7 @@ import { IdGenerator } from "../../common/utils/idGenerator";
 import WaitObject from "../../common/utils/waitObject";
 import { getSessionFactory, SessionInterface, SESSION_TYPES } from "./session";
 
-import {getNodeSessionInstanceByUUID} from "./nxsys/nodes";
+import { getNodeSessionInstanceByUUID } from "./nxsys/nodes";
 
 import Storage from "./storage";
 import _ from "lodash";
@@ -43,7 +43,7 @@ export class SessionConfig extends EventEmitter {
      * @type {SessionConfig}
      */
     _parent = null
-    
+
     /** 会话持久化UUID */
     uuid = ""
     /**
@@ -55,6 +55,7 @@ export class SessionConfig extends EventEmitter {
     description = ""
     type = "node"
     subSessions = []
+
     /**
      * @constructor {SessionConfig}
      * @param {String}  name 会话名称
@@ -76,7 +77,7 @@ export class SessionConfig extends EventEmitter {
 
     /**
      * 添加会话配置到子会话列表中
-     * 
+     *
      * @param {SessionConfig} sessionNode 会话节点
      * @param {Number} [index] 会话节点插入的位置：小于等于0，插入到子会话头部，如果没有指定或者大于子会话的个数，则插入到子会话的尾部
      */
@@ -89,7 +90,7 @@ export class SessionConfig extends EventEmitter {
         }
         this.subSessions = insert(this.subSessions, sessionNode, index);
         sessionNode._parent = this;
-        
+
         // this.emit("add-session", sessionNode);
         EventBus.publish("session-added", sessionNode);
     }
@@ -103,7 +104,7 @@ export class SessionConfig extends EventEmitter {
         if (typeof description === "string") {
             this.description = description
         }
-        
+
         getNodeSessionInstanceByUUID(this.uuid).then((instance) => {
             instance.updateConfig({
                 name: this.name,
@@ -143,9 +144,9 @@ export class SessionConfig extends EventEmitter {
 
     /**
      * 移除一个会话配置
-     * 
+     *
      * 移除会话配置时，如果该会话配置下面存在子会话配置，则会被一同移除掉
-     * 
+     *
      * @param {SessionConfig|Number} session 会话对象或者会话在子节点列表中的位置
      * @param {Boolean} [move] 是否为移动节点操作，默认是删除操作
      */
@@ -209,7 +210,7 @@ export class SessionConfig extends EventEmitter {
 
     /**
      * 转换节点为JSON对象（PlainObject）
-     * 
+     *
      * @param {Boolean} [recursion] 是否递归，如果递归则遍历所有子会话节点
      * @param {Boolean} [id] 是否包含Id字段
      */
@@ -268,7 +269,6 @@ class SessionManager extends EventEmitter {
     /** @type {{[propName: number]: number}} */
     sessionInstAssociated = Object.create(null);
 
-
     /**
      * @type {SessionInterface} 登录会话实例
      */
@@ -281,7 +281,7 @@ class SessionManager extends EventEmitter {
 
     constructor() {
         super();
-        
+
         this.sessionRecent = new SessionRecent();
         // TODO: add code here
         EventBus.subscript("session-update", (sessionConfig) => {
@@ -326,10 +326,10 @@ class SessionManager extends EventEmitter {
         let sessCfgObjects = null;
         try {
             sessCfgObjects = await Storage.read("SESSIONS");
-        }catch(e) {
+        } catch (e) {
             //skip;
         }
-        
+
         if (!sessCfgObjects) {
             return;
         }
@@ -391,7 +391,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 添加配置到父节点
-     * 
+     *
      * @param {SessionConfig|Object} parent 父节点，当父节点无效时，添加到根节点下，需要注意的是Vue会把一些对象赋值直接改变成了响应式数据
      *                                      这就导致了传过来的节点已经不是原来的SessionConfig对象了
      * @param {SessionConfig} sessCfg 新增配置节点
@@ -416,7 +416,7 @@ class SessionManager extends EventEmitter {
         };
 
         walkAndMap(sessCfg)
-        
+
         await this.saveSessionConfigs();
     }
 
@@ -434,7 +434,7 @@ class SessionManager extends EventEmitter {
     }
 
     createShellSessionConfig(name) {
-        const sessConfig = new SessionConfig(name , SESSION_CONFIG_TYPE.NODE, {
+        const sessConfig = new SessionConfig(name, SESSION_CONFIG_TYPE.NODE, {
             sessType: "shell"
         }, "");
         // sessConfig.on("remove", (sessCfgObj) => {
@@ -459,10 +459,10 @@ class SessionManager extends EventEmitter {
     }
 
     async importConfig(path) {
-        try{
+        try {
             await Storage.import(path, "SESSIONS");
             await this.loadSessionConfigs();
-        } catch(e) {
+        } catch (e) {
             // skip
         }
         await this.saveSessionConfigs();
@@ -470,7 +470,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 根据会话配置ID获取配置
-     * 
+     *
      * @param {Number} sessCfgId 会话配置Id
      * @return {SessionConfig}
      */
@@ -498,7 +498,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 添加配置和实例的关联
-     * 
+     *
      * @param {Number} cfgId 配置ID
      * @param {Number} instId 实例ID
      */
@@ -518,7 +518,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 移除实例ID和配置的关联
-     * 
+     *
      * @param {Number} instId 会话实例ID
      */
     _removeInstAssociation(instId) {
@@ -555,7 +555,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 添加一个会话创建的Job
-     * 
+     *
      * @param {Number} sessCfgId 会话配置ID
      * @return {WaitObject} 等待对象
      */
@@ -567,7 +567,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 获取一个会话实例创建的Job（WaitObject对象）
-     * 
+     *
      * @param {Number} sessCfgId 会话配置ID
      */
     getSessionInstanceCreateJob(sessCfgId) {
@@ -576,7 +576,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 会话实例创建完毕，删除此Job
-     * 
+     *
      * @param {Number} sessCfgId 会话配置ID
      */
     sessionInstanceCreateJobFinish(sessCfgId) {
@@ -585,11 +585,11 @@ class SessionManager extends EventEmitter {
 
     /**
      * 创建会话实例
-     * 
+     *
      * @param {SessionConfig} sessionConfig 会话配置
      * @param {Boolean} [background=false]  是否为后台会话，默认为false
      */
-    async createSessionInstance(sessionConfig, background=false) {
+    async createSessionInstance(sessionConfig, background = false) {
         // 首先获取此会话配置有没有正在创建会话的Job
         let createJob = this.getSessionInstanceCreateJob(sessionConfig._id);
         if (createJob) {
@@ -627,7 +627,7 @@ class SessionManager extends EventEmitter {
             // 非配置型会话，内置页面会话时没有ID的
             if ("_id" in sessionConfig) {
                 this._addInstAssociation(sessionConfig._id, instance.id)
-            };
+            }
 
             // this.emit("instance-create", instance);
             EventBus.publish("instance-created", instance);
@@ -647,51 +647,59 @@ class SessionManager extends EventEmitter {
      * 创建欢迎会话实例
      */
     createWelcomeSessionInstance() {
-        return this.createSessionInstance(new SessionConfig("Welcome", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.WELCOME}));
+        return this.createSessionInstance(new SessionConfig("Welcome", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.WELCOME }));
     }
 
     createSFTPSessionInstance(sessionConfig) {
         const sftpSession = {
             ...sessionConfig.config
         };
-        
+
         sftpSession.sessType = SESSION_TYPES.SFTP;
         let sftp_name = sftpSession.hostName === "" ? sftpSession.hostAddress : sftpSession.hostName;
-        if(sftpSession.connId >= 0) {
+        if (sftpSession.connId >= 0) {
             // reuse session uuid
             return this.createSessionInstance(new SessionConfig(sftp_name, SESSION_CONFIG_TYPE.NODE, sftpSession, "", sessionConfig.uuid));
         } else {
             return this.createSessionInstance(new SessionConfig(sftp_name, SESSION_CONFIG_TYPE.NODE, sftpSession));
         }
-        
+
     }
 
     createSfpEditorSessionInstance(cfg) {
-        cfg.sessType =  SESSION_TYPES.EDITOR;
-        return this.createSessionInstance(new SessionConfig(cfg.name, SESSION_CONFIG_TYPE.NODE,  { sessType: SESSION_TYPES.EDITOR, config: cfg}));
+        cfg.sessType = SESSION_TYPES.EDITOR;
+        return this.createSessionInstance(new SessionConfig(cfg.name, SESSION_CONFIG_TYPE.NODE, {
+            sessType: SESSION_TYPES.EDITOR,
+            config: cfg
+        }));
     }
 
     /**
      * 创建登录会话实例
      */
     createLoginSessionInstance() {
-        return this.createSessionInstance(new SessionConfig("Login", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.LOGIN}));
+        return this.createSessionInstance(new SessionConfig("Login", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.LOGIN }));
     }
+
     /**
      * 创建Shell配置会话实例
-     * 
+     *
      * @param {Object|Null} setting 配置
      */
     createShellSettingSessionInstance(setting) {
-        return this.createSessionInstance(new SessionConfig("ShellSetting", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.SETTING, config: setting}));
+        return this.createSessionInstance(new SessionConfig("ShellSetting", SESSION_CONFIG_TYPE.NODE, {
+            sessType: SESSION_TYPES.SETTING,
+            config: setting
+        }));
     }
 
     createGlobalSettingSessionInstance() {
-        return this.createSessionInstance(new SessionConfig("GlobalSetting", SESSION_CONFIG_TYPE.NODE, {sessType: SESSION_TYPES.GLOBALSETTING}));
+        return this.createSessionInstance(new SessionConfig("GlobalSetting", SESSION_CONFIG_TYPE.NODE, { sessType: SESSION_TYPES.GLOBALSETTING }));
     }
+
     /**
      * 移除一个实例
-     * 
+     *
      * @param {Number} instId 移除实例的ID
      */
     _removeInstance(instId) {
@@ -713,7 +721,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 复制一个会话实例
-     * 
+     *
      * @param {SessionInterface} fromSessionInstance 来源会话，复制该会话
      * @param {Boolean} [useSessionConfig]  使用会话的配置，如果使用配置则只使用来源会话的配置
      *                                      否则，直接复用来源的实例
@@ -729,19 +737,19 @@ class SessionManager extends EventEmitter {
         let connId = -1;
         try {
             connId = await fromSessionInstance.getTermConnId();
-        } catch(e) {
+        } catch (e) {
             console.log('duplicate ssh instance error ', e);
             return;
         }
 
         let instId = fromSessionInstance.getId();
         let sessionCfg = this.getSessionConfigByInstanceId(instId);
-        return this.createSessionInstance({connId , ...sessionCfg});
+        return this.createSessionInstance({ connId, ...sessionCfg });
     }
 
     /**
      * 获取会话实例
-     * 
+     *
      * @param {SessionInterface | Number} instance 会话实例
      */
     getSessionInstance(instance) {
@@ -754,7 +762,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 获取会话配置
-     * 
+     *
      * @return {SessionConfig[]}
      */
     getSessionConfigs() {
@@ -770,7 +778,7 @@ class SessionManager extends EventEmitter {
 
     /**
      * 根据会话实例获取对应的会话配置
-     * 
+     *
      * @param {Number} instId 会话实例
      * @return {SessionConfig}
      */
@@ -789,7 +797,7 @@ class SessionManager extends EventEmitter {
      */
     matchSessionInstanceByConfig(sessCfg) {
         let instSets = this.sessionConfigAssociated[sessCfg._id];
-        if (!instSets || instSets.size == 0) {
+        if (!instSets || instSets.size === 0) {
             return null;
         }
 

@@ -2,10 +2,8 @@ import Vue from "vue";
 
 import "./contextmenu.scss";
 
-let mountPoint;
-
 const PtContextMenu = Vue.extend({
-    data () {
+    data() {
         return {
             menuData: [],
             sourceEvent: null,
@@ -45,23 +43,19 @@ const PtContextMenu = Vue.extend({
     },
 
     beforeDestroy() {
-        mountPoint.removeChild(this.$el);
+        this.$el.remove()
     },
 
     methods: {
         getRect() {
             if (!this.$el) {
-                return {left: 0, top: 0, right: 0, height: 0};
+                return { left: 0, top: 0, right: 0, height: 0 };
             }
             const rect = this.$el.getBoundingClientRect();
             this.selfRect = {
-                left: rect.left,
-                top: rect.top,
-                width: rect.width,
-                height: rect.height
+                left: rect.left, top: rect.top, width: rect.width, height: rect.height
             };
-        },
-        handlePopStack () {
+        }, handlePopStack() {
             this.$destroy();
         }
     },
@@ -69,45 +63,39 @@ const PtContextMenu = Vue.extend({
     render(h) {
         const menu = h("pt-menu", {
             props: {
-                menu: this.menuData
-            },
-            on: {
+                menu: this.menuData,
+                translate: true
+            }, on: {
                 "pop-stack": this.handlePopStack
             }
         });
-
         return h("div", {
             'class': {
                 'context-menu': true
-            },
-            style: {
-                left: this.left + 'px',
-                top: this.top + 'px',
+            }, style: {
+                left: this.left + 'px', top: this.top + 'px',
             }
         }, [menu])
     }
 });
 
-function InitCtxMenuMountPoint() {
-    mountPoint = document.createElement("div");
-    document.body.appendChild(mountPoint);
-}
-
 export function showContextMenu(menu, evt) {
-    let node = document.createElement("div");
-    mountPoint.appendChild(node);
+    // 没有内容禁止打开
+    if (!menu || menu.length === 0) {
+        return
+    }
+    const contextMenuNode = document.createElement("div");
+    document.body.appendChild(contextMenuNode)
     new PtContextMenu({
         data: {
             menuData: menu,
             sourceEvent: evt
         }
-    }).$mount(node);
+    }).$mount(contextMenuNode);
 }
 
 export default {
     install() {
-        InitCtxMenuMountPoint();
-
         Object.defineProperty(Vue.prototype, "$showContextMenu", {
             get() {
                 return showContextMenu;

@@ -1,173 +1,114 @@
 <template>
-    <div class="pt-tab-item" :class="{
-            'pt-tab-item--selected': selected
-        }"
-        @click="onClickHandler"
-        @contextmenu.prevent="handleContextMenu"
-    >
-        <span v-if="icon" class="pt-tab-item-icon">
-            <pt-icon size="custom" :customSize="24" :iconName="iconProp.iconName" :type="iconProp.type"/>
-        </span>
-        <span class="pt-tab-item-title" :class="{
-            'has-icon': !!iconProp,
-            'no-icon': !iconProp
-        }">{{ title }}</span>
-        <span v-if="!hideClose" class="pt-tab-item-close" @click="onCloseHandler">
-            <pt-icon iconName="close" className="pt-tab-item-close-icon"/>
-        </span>
-        <span class="pt-tab-item-split" v-if="showSplit" />
-    </div>
+	<div class="pt-tab-item" @contextmenu.prevent="handleContextMenu">
+		<el-tag
+			v-bind="$attrs"
+			:class="{ 'pt-tab-item--selected': selected }"
+			@click="onClickHandler"
+			@close="onCloseHandler">
+			<n-icon size="18" :name="iconProp.iconName" :type="iconProp.type" />
+			{{ title }}
+		</el-tag>
+	</div>
 </template>
 
 <script>
 export default {
-    name: "PtTabItem",
-    props: {
-        icon: {
-            type: [String, Object]
-        },
+	name: 'PtTabItem',
+	props: {
+		icon: {
+			type: [String, Object]
+		},
 
-        title: {
-            type: String
-        },
+		title: {
+			type: String
+		},
 
-        selected: {
-            type: Boolean
-        },
-        showSplit: {
-            type: Boolean
-        },
-        hideClose: {
-            type: Boolean
-        }
-    },
+		selected: {
+			type: Boolean
+		},
+		showSplit: {
+			type: Boolean
+		},
+		hideClose: {
+			type: Boolean
+		}
+	},
 
-    computed: {
-        iconProp() {
-            if (!this.icon) {
-                return null;
-            }
+	computed: {
+		iconProp() {
+			if (!this.icon) {
+				return null
+			}
 
-            if (typeof this.icon === "string") {
-                return {
-                    iconName: this.icon,
-                    type: "svg"
-                }
-            }
-            if (typeof this.icon === "object") {
-                const iconProp = {...this.icon};
-                if (iconProp.type !== "img") {
-                    iconProp.type = "svg";
-                }
-                return iconProp;
-            }
-        }
-    },
+			if (typeof this.icon === 'string') {
+				return {
+					iconName: this.icon,
+					type: 'svg'
+				}
+			}
+			if (typeof this.icon === 'object') {
+				const iconProp = { ...this.icon }
+				if (iconProp.type !== 'img') {
+					iconProp.type = 'svg'
+				}
+				return iconProp
+			}
+		}
+	},
 
-    methods: {
-        onClickHandler() {
-            this.$emit("click");
-        },
+	methods: {
+		onClickHandler() {
+			this.$emit('click')
+		},
 
-        onCloseHandler() {
-            this.$emit("close")
-        },
-        handleContextMenu() {
-            this.$emit("contextmenu");
-        }
-    }
+		onCloseHandler() {
+			this.$emit('close')
+		},
+		handleContextMenu() {
+			this.$emit('contextmenu')
+		}
+	}
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-tab-item {
-    position: relative;
-    display: inline-block;
-    cursor: default;
-    user-select: none;
-    
-    max-width: 170px;
-    height: 33px;
-    line-height: 33px;
+	display: inline-block;
+	height: 30px;
+	user-select: none;
+	transition: all 0.2s;
 
-    padding: {
-        left: 10px;
-        right: 10px;
-    }
+	::v-deep .el-tag {
+		width: 100%;
+		height: 100%;
+		line-height: 30px;
+		border: none;
+		border-radius: 0;
+		color: var(--n-text-color-base);
+		background-color: var(--n-tabs-item-bg-color);
 
-    overflow: hidden;
+		&.pt-tab-item--selected {
+			background-color: var(--n-tabs-item-active);
+			border-color: var(--n-tabs-item-active);
+			color: var(--n-text-color-base);
+			transition: all 0.2s;
+		}
 
-    background-color: var(--lightBackgroundColor);
-    border: {
-        top: none;
-        left: none;
-        right: none;
-        bottom: solid 2px var(--primaryColor);
-    }
-    color: var(--deactiveTextColor);
-    transition: all .2s;
-    &:hover {
-        color: var(--primaryTextColor);
-        transition: all .2s;
-    }
+		i {
+			color: var(--n-text-color-base);
 
-    &.pt-tab-item--selected {
-        background-color: var(--primaryColor);
-        border-color: var(--primaryColor);
-        color: white;
+			&:hover {
+				color: var(--n-button-primary-text);
+				background-color: transparent;
+			}
+		}
 
-        transition: all .2s;
-    }
-
-    .pt-tab-item-close {
-        // transition: all .2s;
-
-        &:hover {
-            color: red;
-            // transition: all .2s;
-        }    
-    }
-
-    @mixin pt-tab-item-ele {
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
-    }
-
-    .pt-tab-item-icon {
-        @include pt-tab-item-ele();
-
-        margin-right: 5px;
-    }
-    .pt-tab-item-title {
-        @include pt-tab-item-ele();
-        margin-right: 5px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &.has-icon {
-            width: calc(100% - 50px);
-        }
-        &.no-icon {
-            width: calc(100% - 21px);
-        }
-    }
-    .pt-tab-item-close {
-        @include pt-tab-item-ele();
-    }
-
-    .pt-tab-item-split {
-        display: inline-block;
-        position: absolute;
-        box-sizing: border-box;
-
-        right: -1px;
-        top: 8px;
-
-        height: 17px;
-        width: 1px;
-        border-left: solid 2px var(--darkBorderColor);
-    }
+		&:hover {
+			cursor: pointer;
+			color: var(--n-text-color-base);
+			background-color: var(--n-tabs-item-hover-bg-color);
+			transition: all 0.2s;
+		}
+	}
 }
 </style>

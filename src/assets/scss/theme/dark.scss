@@ -1,0 +1,43 @@
+[nx-theme="dark"]:root {
+  --n-disabled-color: #B8B8B8;
+
+  --n-bg-color-base: #18181c;
+  --n-bg-color-light: #101014;
+  --n-text-color: #fff;
+  --n-text-color-base: rgb(219, 223, 234);
+  --n-text-color-light: rgb(217, 219, 233);
+  --n-text-color-active: #FFF;
+  --n-hover-bg-color: #42424a;
+
+  --n-button-primary: rgb(22 93 255);
+  --n-button-primary-text: #ffff;
+  --n-button-primary-hover: #4080ff;
+  --n-button-default: #F2F3F5;
+  --n-button-default-text: #000;
+  --n-button-default-hover: #E5E6EB;
+  --n-button-danger: #FF1744;
+  --n-button-danger-hover: #EF5350;
+  --n-button-warning: #FF3D00;
+  --n-button-warning-hover: #FF7043;
+
+  --n-input-bg-color: rgba(255, 255, 255, 0.1);
+  --n-border-color: rgba(255, 255, 255, 0.1);
+
+  --n-color-bg-dialog: rgb(44, 44, 50);
+  --n-color-modal: rgb(44, 44, 50);
+
+  --n-progress-bar-color: #1976D2;
+
+  /* Tabs */
+  --n-tabs-bg-color: var(--n-bg-color-light);
+  --n-tabs-item-bg-color: rgba(255, 255, 255, 0.08);
+  --n-tabs-item-active: rgb(22 93 255);
+  --n-tabs-item-hover-bg-color: #4080ff;
+
+
+  --n-select-bg-color: #424248;
+  --n-select-hover-bg-color: #4C4C55;
+
+  --n-switch-active: rgb(22 93 255);
+  --n-jump-box-shadow: rgb(255 255 255 / 20%);
+}

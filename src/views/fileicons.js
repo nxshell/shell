@@ -75,8 +75,6 @@ const iconMapper = {
     
     ".ppt": ppt,
     ".pptx": ppt,
-    ".ppt": ppt,
-
     ".wav": audio,
     ".flac": audio,
     ".mp3": audio,
@@ -199,7 +197,7 @@ const iconMapper = {
  */
 export function getFileIcon(fileName) {
     const extName = path.extname(fileName);
-    if (extName == '') {
+    if (extName === '') {
         return iconMapper[fileName.toLowerCase()] || iconMapper.unknown;
     }
 
