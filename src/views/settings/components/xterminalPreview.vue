@@ -6,9 +6,7 @@
 
 <script>
 import xtermTheme from 'xterm-theme'
-import {settingFormReset} from '../constants/default.js'
-
-let default_font_family = null
+import { settingFormReset } from '../constants/default.js'
 
 const MODES = {
 	DEFAULT: 0,
@@ -67,25 +65,37 @@ export default {
 			this.setTheme(this.getTheme())
 		},
 		'context.fontWeight'() {
-			this.setOption('fontWeight', this.context?.fontWeight)
+			if (this.context.fontWeight) {
+				this.setOption('fontWeight', this.context.fontWeight)
+			}
 		},
 		'context.fontSize'() {
-			this.setOption('fontSize', this.context?.fontSize)
+			if (this.context.fontSize) {
+				this.setOption('fontSize', this.context.fontSize)
+			}
 		},
 		'context.lineHeight'() {
-			this.setOption('lineHeight', this.context?.lineHeight)
+			if (this.context.lineHeight) {
+				this.setOption('lineHeight', this.context.lineHeight)
+			}
 		},
 		'context.letterSpacing'() {
-			this.setOption('letterSpacing', this.context?.letterSpacing)
+			if (this.context.letterSpacing) {
+				this.setOption('letterSpacing', this.context.letterSpacing)
+			}
 		},
 		'context.cursorBlink'() {
-			this.setOption('cursorBlink', this.context?.cursorBlink)
+			if (this.context.cursorBlink) {
+				this.setOption('cursorBlink', this.context.cursorBlink)
+			}
 		},
 		'context.cursorStyle'() {
-			this.setOption('cursorStyle', this.context?.cursorStyle)
+			if (this.context.cursorStyle) {
+				this.setOption('cursorStyle', this.context.cursorStyle)
+			}
 		},
 		'context.fontFamily'() {
-			this.setOption('fontFamily', this.getfontFamily())
+			this.setOption('fontFamily', this.getFontFamily())
 		}
 	},
 
@@ -93,46 +103,41 @@ export default {
 		this.$nextTick(() => {
 			this.writePreviewData()
 			// initialize theme info
-			if (!this.context) {
-				this.context = settingFormReset
-			}
-			this.setTheme(this.getTheme())
-			for (const key in this.context) {
+			const config = { ...this.settingFormReset, ...this.context }
+			for (const key in config) {
 				if (key !== 'theme') {
 					this.setOption(key, this.context[key])
 				}
 			}
+			this.setTheme(this.getTheme())
 		})
 	},
 
 	methods: {
 		getTheme() {
 			let theme = {}
-			if (this.context?.xtermTheme !== 'default') {
-				theme = xtermTheme[this.context?.xtermTheme]
-				this.backgroundColor = theme.background
+			if (this.context.xtermTheme && this.context.xtermTheme !== 'default') {
+				theme = xtermTheme[this.context.xtermTheme]
+				if (theme.background) this.backgroundColor = theme.background
 			}
 			return theme
 		},
-		getfontFamily() {
-			if (!default_font_family) {
-				default_font_family = this.getOption('fontFamily')
-			}
-
-			let fontFamily = this.context?.fontFamily
-			if (this.context?.fontFamily === 'default') {
-				fontFamily = default_font_family
+		getFontFamily() {
+			const defaultFontFamily = this.getOption('fontFamily')
+			const fontFamily = this.context.fontFamily
+			if (fontFamily && fontFamily === 'default') {
+				return defaultFontFamily
 			}
 			return fontFamily
 		},
 		writePreviewData() {
 			this.$refs.xterm?.write('NxShell Theme Preview\r\n\r\n')
 			const w = (str, mode, fc, bc, crlf = false) => {
-				const wrSeq = `\x1b[${mode};${fc}${bc ? ';' + bc : ''}m${str}\x1b[0m${crlf ? '\r\n' : ''}`
+				const wrSeq = `\x1b[${ mode };${ fc }${ bc ? ';' + bc : '' }m${ str }\x1b[0m${ crlf ? '\r\n' : '' }`
 				this.$refs.xterm?.write(wrSeq)
 			}
 			const wr = (str, keywords, mode, fc, bc, crlf = false) => {
-				const wrSeq = `${str}\x1b[${mode};${fc}${bc ? ';' + bc : ''}m${keywords}\x1b[0m${crlf ? '\r\n' : ''}`
+				const wrSeq = `${ str }\x1b[${ mode };${ fc }${ bc ? ';' + bc : '' }m${ keywords }\x1b[0m${ crlf ? '\r\n' : '' }`
 				this.$refs.xterm?.write(wrSeq)
 			}
 			this.$refs.xterm?.write('[root@nxshell ~]# \x1B[1;3;31mls\x1B[0m \r\n')

@@ -88,13 +88,14 @@ $nx-content-tabs: 40px;
 			width: 32px;
 			position: absolute;
 			top: calc(50% - 36px);
-			left: -16px;
+			left: -10px;
 			z-index: 100;
 
 			&__top,
 			&__bottom {
 				position: absolute;
 				width: 4px;
+
 				border-radius: 2px;
 				height: 38px;
 				left: 14px;

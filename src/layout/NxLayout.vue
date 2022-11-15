@@ -3,7 +3,7 @@
 		<div class="left-panel" v-if="leftPanel" :style="{ width: leftPanelWidth + 'px' }">
 			<nx-navbar />
 		</div>
-		<div class="main-panel">
+		<div class="main-panel" :style="{width: leftPanel? `calc(100% - 50px)` : '100%'}">
 			<div class="title-bar" :class="{ drag: isMainWindow, deactive: !active }">
 				<!-- 顶部工具栏 -->
 				<nx-toolbar />
@@ -141,14 +141,9 @@ export default {
 	height: 100%;
 	min-width: 1000px;
 
-	&.not-macos {
-		// border: 1px solid var(--windowBorderColor);
-	}
-
 	.left-panel {
 		height: 100%;
 		background-color: var(--n-bg-color-base);
-		//border-right: 1px solid var(--lightBackgroundColor);
 	}
 
 	.main-panel {
