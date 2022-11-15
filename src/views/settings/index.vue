@@ -181,12 +181,14 @@ import {
 	termTheme,
 	language
 } from "./constants";
+import { settingFormReset } from './constants/default.js'
 
 export default {
 	name: 'NxSettings',
 	components: { NxTerminalPreview },
 	data() {
 		return {
+			settingFormReset,
 			settingsForm: {},
 			fontList: [],
 			settingsDefinition: [],
@@ -216,7 +218,7 @@ export default {
 			const storeSetting = globalSetting.getProfile('xterm')
 			// 获取系统字体列表
 			this.getSystemFonts()
-			this.settingsForm = storeSetting
+			this.settingsForm = {...this.settingFormReset,...storeSetting}
 		},
 		async handlerSettingChange() {
 			const defaultSettings = globalSetting.getProfile('xterm') ?? {}

@@ -1,5 +1,5 @@
 <template>
-	<div class="n-xterm-preview" :style="{'background-color': backgroundColor}">
+	<div class="n-xterm-preview" :style="{ 'background-color': backgroundColor }">
 		<pt-xterm ref="xterm" :options="options" />
 	</div>
 </template>
@@ -103,10 +103,10 @@ export default {
 		this.$nextTick(() => {
 			this.writePreviewData()
 			// initialize theme info
-			const config = { ...this.settingFormReset, ...this.context }
-			for (const key in config) {
+			const configMerge = { ...this.settingFormReset, ...this.content }
+			for (const key in configMarge) {
 				if (key !== 'theme') {
-					this.setOption(key, this.context[key])
+					this.setOption(key, configMerge[key])
 				}
 			}
 			this.setTheme(this.getTheme())
@@ -133,11 +133,11 @@ export default {
 		writePreviewData() {
 			this.$refs.xterm?.write('NxShell Theme Preview\r\n\r\n')
 			const w = (str, mode, fc, bc, crlf = false) => {
-				const wrSeq = `\x1b[${ mode };${ fc }${ bc ? ';' + bc : '' }m${ str }\x1b[0m${ crlf ? '\r\n' : '' }`
+				const wrSeq = `\x1b[${mode};${fc}${bc ? ';' + bc : ''}m${str}\x1b[0m${crlf ? '\r\n' : ''}`
 				this.$refs.xterm?.write(wrSeq)
 			}
 			const wr = (str, keywords, mode, fc, bc, crlf = false) => {
-				const wrSeq = `${ str }\x1b[${ mode };${ fc }${ bc ? ';' + bc : '' }m${ keywords }\x1b[0m${ crlf ? '\r\n' : '' }`
+				const wrSeq = `${str}\x1b[${mode};${fc}${bc ? ';' + bc : ''}m${keywords}\x1b[0m${crlf ? '\r\n' : ''}`
 				this.$refs.xterm?.write(wrSeq)
 			}
 			this.$refs.xterm?.write('[root@nxshell ~]# \x1B[1;3;31mls\x1B[0m \r\n')
