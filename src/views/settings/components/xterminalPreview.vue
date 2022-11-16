@@ -104,7 +104,7 @@ export default {
 			this.writePreviewData()
 			// initialize theme info
 			const configMerge = { ...this.settingFormReset, ...this.content }
-			for (const key in configMarge) {
+			for (const key in configMerge) {
 				if (key !== 'theme') {
 					this.setOption(key, configMerge[key])
 				}
