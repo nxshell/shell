@@ -8,12 +8,12 @@
 			suffix-icon="el-icon-search"
 		/>
 		<n-space :size="5">
-			<el-tooltip class="item" effect="dark" content="新建分组" placement="top-start">
+			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-folder')" placement="top-start">
 				<span class="host-tree-btn" @click="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
-			<el-tooltip class="item" effect="dark" content="新建会话" placement="top-start">
+			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-session')" placement="top-start">
 				<span class="host-tree-btn" @click="gotoCreateShellSession">
 					<i class="el-icon-circle-plus-outline" />
 				</span>

@@ -78,7 +78,9 @@ export default {
 				this.T(`home.session-instance.${ isEditor ? 'save-dialog.title' : 'delete-dialog.message' }`),
 				{
 					type: 'warning',
-					closeOnClickModal: false
+					closeOnClickModal: false,
+					cancelButtonText: this.T('components.Cancel'),
+					confirmButtonText: this.T('components.OK')
 				}
 			)
 				.then(() => {

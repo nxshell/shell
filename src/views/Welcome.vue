@@ -15,7 +15,7 @@
 					</el-link>
 					<el-link :underline="false" @click="toIssues">
 						<n-icon name="bug" />
-						报告问题
+						{{ T('home.welcome.reportProblem') }}
 					</el-link>
 				</n-space>
 			</div>

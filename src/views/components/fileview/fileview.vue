@@ -129,8 +129,8 @@
 				</el-scrollbar>
 			</div>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseFilePropDialog">取 消</el-button>
-				<el-button type="primary" @click="handleCloseFilePropDialog">确 定</el-button>
+				<el-button @click="handleCloseFilePropDialog">{{ T('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleCloseFilePropDialog">{{ T('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 创建文件夹弹窗 -->
@@ -154,8 +154,8 @@
 				/>
 			</n-space>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCreateDirCancel">取 消</el-button>
-				<el-button type="primary" @click="handleCreateDirConfirm">确 定</el-button>
+				<el-button @click="handleCreateDirCancel">{{ T('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleCreateDirConfirm">{{ T('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 重命名弹窗 -->
@@ -180,8 +180,8 @@
 			</n-space>
 
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleRenameCancel">取 消</el-button>
-				<el-button type="primary" @click="handleRenameConfirm">确 定</el-button>
+				<el-button @click="handleRenameCancel">{{ T('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleRenameConfirm">{{ T('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 文件权限修改弹窗 -->
@@ -206,8 +206,8 @@
 			</n-space>
 
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseChmodDialog">取 消</el-button>
-				<el-button type="primary" @click="handleChmodConfirm">确 定</el-button>
+				<el-button @click="handleCloseChmodDialog">{{ T('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleChmodConfirm">{{ T('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 文件移动弹窗 -->
@@ -223,8 +223,8 @@
 				</el-select>
 			</div>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseMoveDialog">取 消</el-button>
-				<el-button type="primary" @click="handleMoveConfirm">确 定</el-button>
+				<el-button @click="handleCloseMoveDialog">{{ T('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleMoveConfirm">{{ T('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog :title="askDialog.title" :visible.sync="askDialog.show" :close-on-click-modal="false">

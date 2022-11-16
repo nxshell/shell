@@ -40,8 +40,8 @@
 			<el-input ref="prompt" type="text" v-model="promptValue" />
 		</div>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="handleCancel">取 消</el-button>
-			<el-button type="primary" @click="doOK">确 定</el-button>
+			<el-button @click="handleCancel">{{ T('components.Cancel') }}</el-button>
+			<el-button type="primary" @click="doOK">{{ T('components.OK') }}</el-button>
 		</div>
 	</el-dialog>
 </template>

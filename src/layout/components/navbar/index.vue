@@ -19,20 +19,20 @@
 					<el-button type="text" :icon="themeIcon" />
 					<el-dropdown-menu class="theme-btn" slot="dropdown">
 						<el-dropdown-item :disabled="theme === 'light'" command="light" icon="el-icon-sunny">
-							亮色
+							{{ T('app.theme.light') }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'dark'" command="dark" icon="el-icon-moon">
-							暗色
+							{{ T('app.theme.dark') }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'pink'" command="pink" icon="el-icon-grape">
-							粉色
+							{{ T('app.theme.pink') }}
 						</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 				<!-- 设置按钮 -->
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting"></el-button>
 				<!-- 版本信息 -->
-				<el-tooltip v-if="needUpdate" effect="dark" content="有新版本，点击进行升级" placement="bottom">
+				<el-tooltip v-if="needUpdate" effect="dark" :content="T('app.need-update')" placement="bottom">
 					<el-button
 						type="text"
 						:class="{'version-btn': needUpdate}"
@@ -40,7 +40,7 @@
 						@click="handlerVersionUpdate"
 					/>
 				</el-tooltip>
-				<el-tooltip v-else effect="dark" :content="`当前版本 ${version}`">
+				<el-tooltip v-else effect="dark" :content="`${T('app.current-version')} ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
 				</el-tooltip>
 			</n-space>
@@ -113,7 +113,7 @@ export default {
 			try {
 				const {
 					data: {version = ''}
-				} = await axios.get(versionUrl, {timeout: 6 * 1000})
+				} = await axios.get(versionUrl, {timeout: 60 * 1000})
 				if (version) {
 					this.needUpdate = !!semver.compare(this.version, version)
 				}

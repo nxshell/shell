@@ -20,7 +20,7 @@
 				@contextmenu="handleSessionTreeContextMenu"
 			>
 				<template v-slot:additional="scope">
-					<el-tooltip class="item" effect="dark" content="点击打开SFTP" placement="top-start">
+					<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.sftp')" placement="top-start">
 						<span class="session-extend" @click.stop="handleOpenSFTP(scope.data)">
 							<i class="el-icon-folder-opened" />
 						</span>

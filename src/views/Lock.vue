@@ -16,7 +16,7 @@
 					<el-input
 						v-model="password"
 						:type="`${showPassword ? 'text' : 'password'}`"
-						placeholder="请输入锁屏密码"
+						:placeholder="T('lock.placeholder')"
 					>
 						<n-icon
 							slot="suffix"
@@ -30,7 +30,7 @@
 					<el-input
 						v-model="password_verify"
 						:type="`${showPasswordVerify ? 'text' : 'password'}`"
-						placeholder="请再次输入锁屏密码"
+						:placeholder="T('lock.placeholder-verify')"
 					>
 						<n-icon
 							slot="suffix"
@@ -44,7 +44,7 @@
 					<el-input
 						v-model="password_input"
 						:type="`${showUnlockPassword ? 'text' : 'password'}`"
-						placeholder="请再次输入锁屏密码"
+						:placeholder="T('lock.placeholder')"
 					>
 						<n-icon
 							slot="suffix"

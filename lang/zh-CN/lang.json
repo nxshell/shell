@@ -1,13 +1,15 @@
 {
     "Welcome": "欢迎使用",
     "Login": "我的NxShell",
-    "GlobalSetting": "全局设置",
     "lock": {
         "lock_desc": "锁定设置",
         "password_desc": "锁定密码",
         "password_verify": "重复密码",
         "unlock_desc": "解锁",
-        "unlock_password_desc": "解锁密码"
+        "unlock_password_desc": "解锁密码",
+        "placeholder": "请输入锁屏密码",
+        "placeholder-verify": "请再次输入锁屏密码"
+
     },
     "components": {
         "OK": "确定",
@@ -45,7 +47,14 @@
         }
     },
     "app": {
-        "powertools-shell": "NxShell"
+        "powertools-shell": "NxShell",
+        "theme": {
+            "dark": "暗黑",
+            "light": "亮色",
+            "pink": "粉色"
+        },
+        "need-update": "有新版本，点击进行升级",
+        "current-version": "当前版本"
     },
     "home": {
         "editor": {
@@ -110,6 +119,7 @@
             "rename": "重命名"
         },
         "profile": {
+            "global-setting": "全局设置",
             "default-session-name": "未命名主机",
             "base": {
                 "title": "基础配置",
@@ -154,8 +164,9 @@
                     "title": "主题设置",
                     "description": "主题选择，设置后重启生效",
                     "options": {
-                        "dark": "Dark模式",
-                        "light": "Light模式"
+                        "dark": "亮色",
+                        "light": "暗黑",
+                        "pink": "粉色"
                     }
                 },
                 "nxconfig": {
@@ -446,7 +457,8 @@
             "support-nxshell": "支持NxShell",
             "goto-feedback-github": "反馈",
             "software-version": "软件版本",
-            "donate": "捐赠"
+            "donate": "捐赠",
+            "reportProblem": "报告问题"
         },
         "user-center": {
             "login": "登录",

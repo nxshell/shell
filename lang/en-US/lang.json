@@ -1,7 +1,6 @@
 {
     "Welcome": "Welcome",
     "Login": "My NxShell",
-    "GlobalSetting": "Global Setting",
     "lock": {
         "lock_desc": "Lock Setting",
         "password_desc": "Password Code",
@@ -45,7 +44,14 @@
         }
     },
     "app": {
-        "powertools-shell": "NxShell"
+        "powertools-shell": "NxShell",
+        "theme": {
+            "dark": "Light",
+            "light": "Dark",
+            "pink": "Pink"
+        },
+        "need-update": "There is a new version, click to upgrade",
+        "current-version": "Current Version"
     },
     "home": {
         "editor": {
@@ -110,6 +116,7 @@
             "rename": "Rename"
         },
         "profile": {
+            "global-setting": "Global Settings",
             "default-session-name": "Unnamed host",
             "base": {
                 "title": "Basic config",
@@ -155,7 +162,8 @@
                     "description": "Themes config, Restart to take effect",
                     "options": {
                         "dark": "Dark",
-                        "light": "Light"
+                        "light": "Light",
+                        "pink": "Pink"
                     }
                 },
                 "nxconfig": {
@@ -447,7 +455,8 @@
             "support-nxshell": "Support NxShell",
             "goto-feedback-github": "Feedback",
             "software-version": "Software Version",
-            "donate": "Donate"
+            "donate": "Donate",
+            "reportProblem": "Report a problem"
         },
         "user-center": {
             "login": "Login",

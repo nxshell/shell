@@ -1,7 +1,7 @@
 <template>
 	<div class="n-setting-wrapper">
 		<div class="n-setting-header">
-			<span class="n-setting-header__left">全局设置</span>
+			<span class="n-setting-header__left">{{ T('home.profile.global-setting') }}</span>
 		</div>
 		<div class="n-setting-content">
 			<el-scrollbar>
