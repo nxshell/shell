@@ -1,7 +1,7 @@
 <template>
 	<div class="n-session-setting">
 		<div class="n-session-setting-left">
-			<el-tabs v-model="currentState.profileCurSection" tab-position="left" style="height: 100%;">
+			<el-tabs v-model="currentState.profileCurSection" tab-position="left" style="height: 100%">
 				<el-tab-pane v-for="item in navList" :key="item.name" :name="item.name" :label="T(item.text)" />
 			</el-tabs>
 		</div>
@@ -13,10 +13,14 @@
 				</div>
 			</div>
 			<div class="n-session-setting-right__content">
-				<div v-show="currentSessionInstId === parseInt(idx)" v-for="(item,idx) in sessionsStates" :key="idx"
-				     style="height: 100%;">
+				<div
+					v-show="currentSessionInstId === parseInt(idx)"
+					v-for="(item, idx) in sessionsStates"
+					:key="idx"
+					style="height: 100%"
+				>
 					<pt-profile-view
-						v-model="item.profileData || {}"
+						v-model="item.profileData"
 						:curSection="item.profileCurSection || ''"
 						:simple="simple"
 						:sections="profiles"
@@ -39,6 +43,7 @@
 import PtProfileView from '../components/profile/profileview'
 import XTermTheme from './xtermTheme'
 import * as globalSetting from '../../services/globalSetting'
+import * as EventBus from '@/services/eventbus'
 
 export default {
 	name: 'PtShellProfile',
@@ -804,6 +809,8 @@ export default {
 				name = this.currentState.profileData.hostAddress
 			}
 			sessConfig.update(name, Object.assign(sessConfig.config, this.currentState.profileData), '')
+			// 刷新菜单
+			EventBus.publish('refresh-session-tree', {})
 		},
 
 		navToSectionByName(name) {
@@ -903,8 +910,6 @@ export default {
 				background-color: var(--n-tabs-item-active);
 			}
 		}
-
-
 	}
 
 	&-right {
