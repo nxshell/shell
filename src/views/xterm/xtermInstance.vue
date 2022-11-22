@@ -442,6 +442,40 @@ export default {
 			this.$nextTick(() => {
 				this.$refs.xterm.focus()
 			})
+
+			let newConfig = null
+			if (data.type == "password") {
+				newConfig = {
+					authType: "password",
+					username: data.username, 
+					password: data.password
+				}
+			} else if (data.type == "publickey") {
+				newConfig = {
+					authType: "cert",
+					username: data.username,
+					passphrase: data.passphrase,
+					cert: data.publickey
+				}
+			}
+
+			if (newConfig) {
+				this._updateConfig(newConfig)
+			}
+		},
+		_updateConfig(newConfig) {
+			function merge(dest, src) {
+				Object.keys(src).forEach((key) => {
+					dest[key] = src[key]
+				})
+				return dest
+			}
+			// update config data
+			let sessionCfg = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
+			if (sessionCfg) {
+				let oldConfig = merge(sessionCfg.config, newConfig)
+				sessionCfg.update(oldConfig.hostName, oldConfig, "")
+			}
 		},
 		loadXzmode() {
 			const sendTo = async (data) => {
