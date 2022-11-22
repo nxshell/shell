@@ -3,8 +3,12 @@
  */
 
 const options = {
-    year: 'numeric', month: 'numeric', day: 'numeric',
-    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
     hour12: false
 };
 
@@ -13,6 +17,7 @@ class Pti18n {
     lang = {}
     timeFormat = t => t
     numberFormat = n => n
+
     constructor(locale = "en-US", lang = {}) {
         this.locale = locale;
         this.lang = lang;
@@ -21,6 +26,12 @@ class Pti18n {
     }
 
     _T(key, ...args) {
+        try {
+            key.trim()
+        } catch (error) {
+            console.error('无效的国际化Key', key)
+            return ""
+        }
         const keyPaths = key.trim().split(".");
         let value = this.lang;
         for (let nodeKey of keyPaths) {
@@ -32,11 +43,14 @@ class Pti18n {
         if (value === undefined) {
             return key;
         }
-
-        if (typeof value != "string") {
-            value = value.toLocalString(this.locale);
+        if (typeof value !== "string") {
+            try {
+                value = value.toLocalString(this.locale);
+            } catch (error) {
+                console.error(`content： ${ value } translate failed`, error)
+                return ""
+            }
         }
-
         return value.replace(/\$(\d{1,2})/g, (m, i) => {
             let param = args[i]
             if (typeof param == "string") {

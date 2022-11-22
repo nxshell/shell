@@ -1,79 +1,75 @@
 <template>
-    <div
-        class="pt-file"
-    >
-        <input type="text"
-            style="display: none"
-            >
-        <slot>
-            <pt-inputbox v-model="fileNames" />
-            <pt-button type="primary" size="small" plain @click="openFolder">{{T("Select")}}</pt-button>
-        </slot>
-    </div>
+	<div class="pt-file">
+		<input type="text" style="display: none" />
+		<slot>
+			<el-input v-model="fileNames" v-bind="$attrs" readonly class="n-input-file">
+				<template #suffix>
+					<el-button type="primary" icon="el-icon-folder-opened" class="n-file-button" @click="openFolder" />
+				</template>
+			</el-input>
+		</slot>
+	</div>
 </template>
 
 <script>
 export default {
-    name: "PtFolder",
-    props:{
-        value: {
-            type: String,
-            default: ""
-        },
-    },
-    
-    data() {
-        return {
-            fileNames: this.value
-        }
-    },
+	name: 'PtFolder',
+	props: {
+		value: {
+			type: String,
+			default: ''
+		}
+	},
 
-    watch: {
-        value(newVal) {
-            if (newVal === this.fileNames) {
-                return;
-            }
-            this.fileNames = newVal;
-        },
-        fileNames(newVal) {
-            this.$emit("input", newVal)
-        }
-    },
+	data() {
+		return {
+			fileNames: this.value
+		}
+	},
 
-    methods: {
-        async openFolder() {
-            const coreService = powertools.getService("powertools-core");
-            const selectedFiles = await coreService.showOpenDialog({
-                title: this.T("home.fileview.file-dialog.save-folder"),
-                properties: ['openDirectory']
-            });
-            if (selectedFiles.canceled) {
-                return;
-            }
-            console.log("open folder ", selectedFiles.filePaths[0]);
-            this.fileNames = selectedFiles.filePaths[0];
-            this.$emit("input", this.fileNames);
-        },
-    }
+	watch: {
+		value(newVal) {
+			if (newVal === this.fileNames) {
+				return
+			}
+			this.fileNames = newVal
+		},
+		fileNames(newVal) {
+			this.$emit('input', newVal)
+		}
+	},
+
+	methods: {
+		async openFolder() {
+			const coreService = powertools.getService('powertools-core')
+			const selectedFiles = await coreService.showOpenDialog({
+				title: this.T('home.fileview.file-dialog.save-folder'),
+				properties: ['openDirectory']
+			})
+			if (selectedFiles.canceled) {
+				return
+			}
+			this.fileNames = selectedFiles.filePaths[0]
+			this.$emit('input', this.fileNames)
+			this.$emit('change')
+		}
+	}
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-file {
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+	position: relative;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 
-    .pt-inputbox {
-        flex-grow: 1;
-    }
+	.n-input-file {
+		width: auto !important;
 
-    .pt-button {
-        flex-shrink: 1;
-        width: 60px;
-        min-width: 60px;
-        height: 26px;
-    }
+		::v-deep .el-input__suffix {
+			right: 0 !important;
+		}
+	}
 }
 </style>

@@ -1,4 +1,4 @@
-import { EventBus } from "../../common/nxsys/eventbus";
+import {EventBus} from "../../common/nxsys/eventbus";
 
 let globalEventBus: EventBus;
 
@@ -10,8 +10,10 @@ export function getGlobalEventBus(): EventBus {
     return globalEventBus;
 }
 
-export declare type EventType = "instance-created" | "instance-updated" | "instance-destroyed"| "instance-close" |
-                                "session-created"  | "session-update"   | "session-destroyed" | "session-added"  | "session-removed" | "create-session" | "create-session-folder";
+export declare type EventType = "instance-created" | "instance-updated" | "instance-destroyed" | "instance-close" |
+    "session-created" | "session-update" | "session-destroyed" | "session-added" |
+    "session-removed" | "create-session" | "create-session-folder" | "session-config-panel"
+    | "enter-fullscreen" | "nx-menu-search" | "refresh-session-tree";
 
 export function subscript(evtType: EventType, handler: Function): void {
     globalEventBus.subscript(evtType, handler);

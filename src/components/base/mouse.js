@@ -60,7 +60,7 @@ function traceback(evt, cb) {
 }
 
 document.addEventListener("mousedown", (evt) => {
-    if (evt.button != 0 ) {
+    if (evt.button !== 0 ) {
         return;
     }
     if (currentElement == null) {

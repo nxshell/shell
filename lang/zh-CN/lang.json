@@ -1,13 +1,15 @@
 {
     "Welcome": "欢迎使用",
     "Login": "我的NxShell",
-    "GlobalSetting": "全局设置",
     "lock": {
         "lock_desc": "锁定设置",
         "password_desc": "锁定密码",
         "password_verify": "重复密码",
         "unlock_desc": "解锁",
-        "unlock_password_desc": "解锁密码"
+        "unlock_password_desc": "解锁密码",
+        "placeholder": "请输入锁屏密码",
+        "placeholder-verify": "请再次输入锁屏密码"
+
     },
     "components": {
         "OK": "确定",
@@ -45,7 +47,14 @@
         }
     },
     "app": {
-        "powertools-shell": "NxShell"
+        "powertools-shell": "NxShell",
+        "theme": {
+            "dark": "暗黑",
+            "light": "亮色",
+            "pink": "粉色"
+        },
+        "need-update": "有新版本，点击进行升级",
+        "current-version": "当前版本"
     },
     "home": {
         "editor": {
@@ -92,9 +101,9 @@
         "sessions-context-menu": {
             "duplicate": "复制会话",
             "close": "关闭会话",
-            "close-left": "关闭左侧会话",
-            "close-right": "关闭右侧会话",
-            "close-other": "关闭其它会话",
+            "close-left": "关闭左侧",
+            "close-right": "关闭右侧",
+            "close-other": "关闭其它",
             "prop": "会话属性...",
             "connect": "连接",
             "sftp": "打开SFTP",
@@ -110,6 +119,7 @@
             "rename": "重命名"
         },
         "profile": {
+            "global-setting": "全局设置",
             "default-session-name": "未命名主机",
             "base": {
                 "title": "基础配置",
@@ -118,7 +128,7 @@
                     "description": "主机名称可以使用字符或者数字，此处为必填项。"
                 },
                 "os": {
-                    "title":"操作系统",
+                    "title": "操作系统",
                     "description": "主机所安装的操作系统或者Linux发行版，比如Ubuntu，Redhat，CentOS等，也可以设置为自动检测。",
                     "options": {
                         "auto": "自动检测"
@@ -154,8 +164,9 @@
                     "title": "主题设置",
                     "description": "主题选择，设置后重启生效",
                     "options": {
-                        "dark": "Dark模式",
-                        "light": "Light模式"
+                        "dark": "亮色",
+                        "light": "暗黑",
+                        "pink": "粉色"
                     }
                 },
                 "nxconfig": {
@@ -254,6 +265,22 @@
                 "charset": {
                     "title": "字符编码",
                     "description": "终端字符编码设置(默认UTF-8编码)"
+                },
+                "lineHeight": {
+                    "title": "字体行高",
+                    "description": "字体行高"
+                },
+                "letterSpacing": {
+                    "title": "字符间距",
+                    "description": "字符间距"
+                },
+                "cursorBlink": {
+                    "title": "光标是否闪烁",
+                    "description": "光标是否闪烁"
+                },
+                "cursorStyle": {
+                    "title": "光标样式",
+                    "description": "光标样式"
                 }
             },
             "auth": {
@@ -430,7 +457,8 @@
             "support-nxshell": "支持NxShell",
             "goto-feedback-github": "反馈",
             "software-version": "软件版本",
-            "donate": "捐赠"
+            "donate": "捐赠",
+            "reportProblem": "报告问题"
         },
         "user-center": {
             "login": "登录",
@@ -471,24 +499,24 @@
                 "block-dev": "块设备",
                 "char-dev": "字符设备",
                 "fifo": "FIFO",
-                "location": "位置:",
-                "perms": "权限:",
-                "size": "大小:",
-                "modify-time": "修改时间:",
+                "location": "位置",
+                "perms": "权限",
+                "size": "大小",
+                "modify-time": "修改时间",
                 "modify-time-format": "$0",
-                "user": "用户:",
-                "group": "组:",
-                "type": "类型:"
+                "user": "用户",
+                "group": "组",
+                "type": "类型"
             },
             "rename-dialog": {
                 "title": "重命名",
                 "placeholder": "请输入新的名称",
-                "invalid-name":"文件夹或文件名称不能包含如下字符：\\ / : * ? \" < > | "
+                "invalid-name": "文件夹或文件名称不能包含如下字符：\\ / : * ? \" < > | "
             },
             "chmod-dialog": {
                 "title": "修改文件权限",
                 "placeholder": "请输入新的文件权限",
-                "invalid-permissions":"文件权限格式错误"
+                "invalid-permissions": "文件权限格式错误"
             },
             "move-dialog": {
                 "title": "移动文件"
@@ -506,7 +534,7 @@
                 },
                 "delete-dir": {
                     "title": "删除目录",
-                    "message":"你确定要删除文件夹：$0 吗？在删除该文件夹的同时，文件夹下的子文件夹和文件也将一并被删除！"
+                    "message": "你确定要删除文件夹：$0 吗？在删除该文件夹的同时，文件夹下的子文件夹和文件也将一并被删除！"
                 },
                 "delete-many": {
                     "title": "删除多个项目",
@@ -557,7 +585,7 @@
             },
             "mainview": {
                 "total-file-count": "共 $0 个项目",
-                "total-selected-count": "共 $0 个项目，选择了 $1 个项目",
+                "total-selected-count": "共 $0 个项目  选中 $1 个项目",
                 "search-tab": "请输入要搜索的文件名称",
                 "go-back": "后退",
                 "go-forward": "前进",

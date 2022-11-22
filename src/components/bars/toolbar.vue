@@ -59,7 +59,7 @@ export default {
         right: 10px;
     }
 
-    background-color: var(--lightBackgroundColor);
+    background-color: var(--n-bg-color-base);
 
     .left {
         flex-shrink: 0;

@@ -1,6 +1,6 @@
 <template>
     <div class="pt-list">
-        <ul>           
+        <ul>
             <pt-list-item v-for="(item,idx) in items" :key="idx"
                 :itemRender="itemRender"
                 :item="item"
@@ -135,7 +135,7 @@ export default {
 
     ul {
         box-sizing: content-box;
-        border: solid 1px var(--borderColor);
+        border: solid 1px var(--n-bg-color-base);
     }
 
     .pt-list-item {
@@ -156,7 +156,7 @@ export default {
         }
 
         &.selected {
-            background-color: var(--highlightItemColor);
+            background-color: var(--n-hover-bg-color);
         }
     }
 }

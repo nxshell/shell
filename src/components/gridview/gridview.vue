@@ -12,7 +12,7 @@
         @mouseup="handleViewMouseup"
         @mousemove="handleViewMousemove"
     > -->
-        <div v-if="selection.isShow" 
+        <div v-if="selection.isShow"
             class="select-rect"
             :style="{
                 left: (selectionRect.left) + 'px',
@@ -21,10 +21,7 @@
                 height: (selectionRect.bottom - selectionRect.top) + 'px',
             }"
         ></div>
-        <div v-if="mode == 'detail'" 
-            class="grid-view-header"
-            @contextmenu.stop
-        >
+	    <div v-if="mode === 'detail'" class="grid-view-header" @contextmenu.stop>
             <ul class="columns">
                 <div v-for="(column, idx) in columns" :key="column.dataKey + idx">
                     <li class="column"
@@ -35,7 +32,6 @@
                         @click="handleSort(column.dataKey)"
                     >
                         {{ T(column.label) }}
-                        
                     </li>
                     <span class="resize" v-mouse-drag="getColumnResizeHandler(idx)"></span>
                 </div>
@@ -44,11 +40,7 @@
         <scroll-container type="vertical" :size="10" @scroll="handleViewScroll" ref="scrollContainter"
             @scrollTop="handleScrollTop" @scrollBottom="handleScrollBottom"
         >
-            <div class="item-container"
-                :class="{
-                    detail: mode === 'detail'
-                }"
-            >
+	        <div class="item-container" :class="{detail: mode === 'detail'}">
                 <div class="item-placeholder" v-if="selection.isShow"
                     :style="{
                         height: viewVisual.topPlaceholderSize + 'px'
@@ -66,7 +58,7 @@
                     @select="handleSelectItem($event, idx)"
                     @open="handleOpenItem(idx)"
                     @contextmenu="handleContextMenu(idx)"
-                ></pt-grid-view-item>
+                />
                 <div class="item-placeholder" v-if="selection.isShow"
                     :style="{
                         height: viewVisual.bottomPlaceholderSize + 'px'
@@ -265,7 +257,7 @@ export default {
             }
         },
         mouseYDelta() {
-            return this.mode == "detail" ? 40 : 10;
+            return this.mode === "detail" ? 40 : 10;
         }
     },
 
@@ -299,7 +291,7 @@ export default {
                 this.getViewSize();
             } catch(e) {
             }
-            
+
             let render_total = 500;
             this.view.renderStart = 0;
             this.view.renderEnd = render_total > this._items.length ? this._items.length : render_total;
@@ -350,13 +342,7 @@ export default {
             for (let i = 0; i < this.items.length; i++) {
                 let col = i % this.view.cols;
                 let row = Math.floor(i / this.view.cols);
-                if (col >= startCol && col <= endCol &&
-                    row >= startRow && row <= endRow
-                ) {
-                    this.items[i].selected = true;    
-                } else {
-                    this.items[i].selected = false;
-                }
+                this.items[i].selected = col >= startCol && col <= endCol && row >= startRow && row <= endRow;
             }
         },
 
@@ -388,7 +374,7 @@ export default {
                 stepCount = stepCount > realLen ? realLen : stepCount;
                 this.view.renderStart += stepCount;
                 this.view.renderEnd += stepCount;
-                
+
                 this.items = this._items.slice(this.view.renderStart, this.view.renderEnd);
                 this.$refs.scrollContainter.scrollTo(0, this.view.scrollY - 10);
             }
@@ -592,7 +578,7 @@ export default {
             } else if (evt.key === "ArrowRight" && this.mode !== "detail") {
                 moveCursor = 1;
             } else if (evt.code === "Space") {
-                evt.ctrlKey ? 
+                evt.ctrlKey ?
                     this.selectMultiItem(this.selection.lastSelectItemIndex) :
                     this.selectOneItem(this.selection.lastSelectItemIndex)
             }
@@ -610,7 +596,7 @@ export default {
 
         handleFileDrop(evt) {
             evt.preventDefault();
-            if (evt.dataTransfer.items.length == 0) {
+            if (evt.dataTransfer.items.length === 0) {
                 return;
             }
 
@@ -656,7 +642,7 @@ export default {
         box-sizing: border-box;
         z-index: 1;
 
-        border: 1px solid  var(--borderColor);
+        border: 1px solid  var(--n-bg-color-base);
         background-color: rgba(0, 0, 0, .2);
     }
 
@@ -664,15 +650,15 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
-        
+
         height: 30px;
-        // border-bottom: 1px solid var(--borderColor);
+        // border-bottom: 1px solid var(--n-bg-color-base);
         box-sizing: border-box;
         z-index: 2;
 
-        color: var(--primaryTextColor);
+        color: var(--n-text-color-base);
 
-        background-color: var(--backgroundColor);
+        background-color: var(--n-bg-color-base);
 
         .columns {
             display: flex;
@@ -697,7 +683,7 @@ export default {
                 width: 2px;
                 height: 30px;
                 line-height: 30px;
-                border-right: 2px solid var(--borderColor);
+                border-right: 2px solid #E5E6EB;
                 cursor: col-resize;
             }
         }

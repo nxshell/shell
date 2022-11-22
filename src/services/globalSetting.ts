@@ -1,12 +1,12 @@
 import Storage from "./storage";
 
-type GlobalCatagoryType = "xterm" | "storage";
+type GlobalCategoryType = "xterm" | "storage";
 
 interface IProfile {
-    [propName: string]: number | string | object | any[] 
+    [propName: string]: number | string | object | any[]
 }
 
-let globalCatagory: {
+let globalCategory: {
     xterm?: IProfile,
     storage?: IProfile
 } = {};
@@ -20,38 +20,38 @@ export async function loadGlobalProfile(): Promise<void> {
         if (softConfig) {
             profile["xterm"]["nxconfig"] = softConfig.xterm.nxconfig;
         }
-        globalCatagory = profile || {};
+        globalCategory = profile || {};
     } catch (e) {
         console.warn("read global setting failed", e);
     }
-    
+
 }
 
 async function storeGlobalProfile(): Promise<void> {
-    await Storage.saveSoftConfig(globalCatagory);
-    await Storage.save(GLOBAL_RPFILE, globalCatagory, false);
+    await Storage.saveSoftConfig(globalCategory);
+    await Storage.save(GLOBAL_RPFILE, globalCategory, false);
 }
 
-export function getProfile(catagoryName: GlobalCatagoryType): IProfile | null {
-    return globalCatagory[catagoryName] || null;
+export function getProfile(categoryName: GlobalCategoryType): IProfile | null {
+    return globalCategory[categoryName] || null;
 }
 
-export async function setProfile(catagoryName: GlobalCatagoryType, profile: IProfile): Promise<void> {
-    globalCatagory[catagoryName] = profile;
+export async function setProfile(categoryName: GlobalCategoryType, profile: IProfile): Promise<void> {
+    globalCategory[categoryName] = profile;
     // save profile
     await storeGlobalProfile();
 
     // Notify applications
 }
 
-export async function updateProfile(catagoryName: GlobalCatagoryType, profile: IProfile): Promise<void> {
-    let old = globalCatagory[catagoryName] || {};
+export async function updateProfile(catagoryName: GlobalCategoryType, profile: IProfile): Promise<void> {
+    let old = globalCategory[catagoryName] || {};
     for (const _k in profile) {
         if (profile.hasOwnProperty(_k)) {
             old[_k] = profile[_k]
         }
     }
-    globalCatagory[catagoryName] = old;
+    globalCategory[catagoryName] = old;
     // save profile
     await storeGlobalProfile();
 }

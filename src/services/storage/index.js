@@ -4,6 +4,7 @@ import LocalFileStorage from "./localFileSystem";
 class Storage {
     _localStorageProvider = null;
     storageProviders = {};
+
     constructor() {
         this._localStorageProvider = new LocalFileStorage();
         this.storageProviders[this._localStorageProvider.name] = this._localStorageProvider;
@@ -43,7 +44,7 @@ class Storage {
         return await this.localStorage.setConfigPath(path);
     }
 
-    async save(name, object, sync=false) {
+    async save(name, object, sync = false) {
         const ls = this.localStorage;
         await ls.save(name, object)
         if (sync) {
@@ -55,7 +56,7 @@ class Storage {
         return await this.localStorage.read(name)
     }
 
-    async saveSoftConfig(object, sync=false) {
+    async saveSoftConfig(object, sync = false) {
         const ls = this.localStorage;
         await ls.saveSoftConfig(object)
     }
