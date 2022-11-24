@@ -20,7 +20,7 @@
 					@keydown.enter.native="searchDown" />
 			</template>
 		</pt-toolbar>
-		<div ref="editor" class="screen" :style="{ 'font-size': fontSize + 'px','height': 'calc(100vh - 100px)' }"></div>
+		<div ref="editor" class="screen" :style="{ 'font-size': fontSize + 'px' }"></div>
 	</div>
 </template>
 
@@ -96,7 +96,6 @@ export default {
 			let sessionInstance = this.$sessionManager.getSessionInstanceById(this.sessionId);
 			this.currentPath = sessionInstance?.remote_path ?? '';
 			sessionInstance.on('close', () => {
-				// destroy vnc instance
 				try {
 					this.$destroy();
 					this.$el.parentNode.removeChild(this.$el);
@@ -135,10 +134,9 @@ export default {
 				highlightSelectionMatches(),
 				this.getSupportLangMode(sessionInstance.ext_name)
 			];
-			// if (this.theme === "dark") {
-			// 	extensions.push(oneDarkTheme)
-			// }
-			extensions.push(oneDarkTheme)
+			if (this.theme === "dark") {
+				extensions.push(oneDarkTheme)
+			}
 
 			this.editor_view = new EditorView({
 				doc: this.editorValue,
