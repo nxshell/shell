@@ -28,7 +28,7 @@ const PtContextMenu = Vue.extend({
 
 		top() {
 			// 需要减去的高度（当在终端中，需要减去标题栏 40 tab栏 40 工具栏 40 美化效果 10）
-			const subHeight = this.$el.getAttribute('class') === '' ? 130 : 40
+			const subHeight = this.sourceEvent.target.getAttribute('class') === 'xterm-cursor-layer' ? 130 : 40
 			// 实际内容高度
 			const realHeight = window.innerHeight - subHeight
 
