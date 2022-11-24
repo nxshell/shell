@@ -20,7 +20,7 @@
 				@contextmenu="handleSessionTreeContextMenu"
 			>
 				<template v-slot:additional="scope">
-					<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.sftp')" placement="top-start">
+					<el-tooltip v-if="scope.data.type == 'node' && scope.data.config.protocal == 'ssh'" class="item" effect="dark" :content="T('home.sessions-context-menu.sftp')" placement="top-start">
 						<span class="session-extend" @click.stop="handleOpenSFTP(scope.data)">
 							<i class="el-icon-folder-opened" />
 						</span>
@@ -113,11 +113,6 @@ export default {
 						label: 'home.sessions-context-menu.connect',
 						type: 'normal',
 						handler: this.handleSessionTreeContextMenu_Connect
-					},
-					{
-						label: 'home.sessions-context-menu.sftp',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_SFTP
 					},
 					{
 						label: 'home.sessions-context-menu.cut',
@@ -217,7 +212,15 @@ export default {
 
 			if (this.currentSelectedSessionNodeConfigType === SESSION_CONFIG_TYPE.NODE) {
 				// TODO: 获取SessionConfig的状态，过滤掉一些无用状态
-				return this.sessionConfigsTreeContextMenu.node
+				let contextMenu =  [ ...this.sessionConfigsTreeContextMenu.node ]
+				if (this.currentSelectedSessionProtocal === "ssh") {
+					contextMenu.unshift({
+						label: 'home.sessions-context-menu.sftp',
+						type: 'normal',
+						handler: this.handleSessionTreeContextMenu_SFTP
+					})
+				}
+				return contextMenu
 			}
 		},
 		/**
@@ -294,6 +297,7 @@ export default {
 			const { data } = node
 			const sessCfg = data.data
 			this.currentSelectedSessionNodeConfigType = sessCfg.type
+			this.currentSelectedSessionProtocal = sessCfg.config.protocal
 		},
 		// 删除会话或者会话目录
 		handleSessionTreeContextMenu_Delete() {
