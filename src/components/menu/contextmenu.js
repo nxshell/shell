@@ -1,112 +1,124 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
-import {showContextMenu} from "./contextmenu";
+import './contextmenu.scss'
 
-const menuStack = [];
+const PtContextMenu = Vue.extend({
+	data() {
+		return {
+			menuData: [],
+			sourceEvent: null,
+			selfRect: {
+				left: 0,
+				top: 0,
+				right: 0,
+				height: 0
+			},
+			visibility: false
+		}
+	},
 
-let lastMenuId = 0;
-const contextMenuHandlers = {};
+	computed: {
+		left() {
+			let left = this.sourceEvent.x
+			if (left + this.selfRect.width > window.innerWidth) {
+				left -= this.selfRect.width
+			}
+			return left
+		},
 
-export function getLastMenuId() {
-    return lastMenuId++;
-}
+		top() {
+			// 需要减去的高度（当在终端中，需要减去标题栏 40 tab栏 40 工具栏 40 美化效果 10）
+			const subHeight = this.$el.getAttribute('class') === '' ? 130 : 40
+			// 实际内容高度
+			const realHeight = window.innerHeight - subHeight
 
-function addContextMenuHandler(ctxMenuId, handler) {
-    contextMenuHandlers[ctxMenuId] = handler;
-    return handler;
-}
+			let top = this.sourceEvent.y
+			if (top + this.selfRect.height > window.innerHeight) {
+				// 当真实高度 - 当前鼠标Y坐标 小于等于真实高度 1/3时，使用当前鼠标位置-菜单栏自身高度计算菜单栏top 否则使用subHeight
+                // 如果计算后的高度小于subHeight 则使用苏北Height
+				const calcTop = top - this.selfRect.height
+				top = realHeight - top <= realHeight / 3 ? (calcTop < subHeight ? subHeight : calcTop) : subHeight
+			}
+			return top
+		}
+	},
 
-function removeContextMenuHandler(ctxMenuId) {
-    if (contextMenuHandlers[ctxMenuId]) {
-        delete contextMenuHandlers[ctxMenuId];
-    }
-}
+	mounted() {
+		this.$nextTick(() => {
+			this.getRect()
+			this.visibility = true
+		})
+	},
 
-const contextMenuDirective = {
-    bind (el, binding, vnode) {
-        const ctxMenuId = getLastMenuId();
-        const handler = addContextMenuHandler(ctxMenuId, async function(evt) {
-            evt.preventDefault();
-            evt.stopPropagation();
-            // 不管三七二十一，只要触发右键菜单，之前所有的菜单全部关闭掉
-            // 对！！就这么豪横~
-            closeAllMenu();
+	beforeDestroy() {
+		this.$el.remove()
+	},
 
-            /**
-             * 允许绑定
-             */
-            let menu;
-            if (typeof binding.value === "function") {
-                menu = binding.value();
-            } else {
-                menu = binding.value;
-            }
+	methods: {
+		getRect() {
+			if (!this.$el) {
+				return { left: 0, top: 0, right: 0, height: 0 }
+			}
+			const rect = this.$el.getBoundingClientRect()
+			this.selfRect = {
+				left: rect.left,
+				top: rect.top,
+				width: rect.width,
+				height: rect.height
+			}
+		},
+		handlePopStack() {
+			this.$destroy()
+		}
+	},
 
-            if (menu && typeof menu.then === "function") {
-                menu = await menu;
-            }
+	render(h) {
+		const menu = h('pt-menu', {
+			props: {
+				menu: this.menuData,
+				translate: true
+			},
+			on: {
+				'pop-stack': this.handlePopStack
+			}
+		})
+		return h(
+			'div',
+			{
+				class: {
+					'context-menu': true
+				},
+				style: {
+					left: this.left + 'px',
+					top: this.top + 'px'
+				}
+			},
+			[menu]
+		)
+	}
+})
 
-            showContextMenu(menu, evt);
-        });
-        el.addEventListener("contextmenu", handler);
-        el.dataset.contextMenuId = ctxMenuId;
-    },
-    unbind(el, binding, vnode) {
-        const ctxMenuId = el.dataset.contextMenuId;
-        el.removeEventListener('contextmenu', contextMenuHandlers[ctxMenuId], true);
-        removeContextMenuHandler(ctxMenuId);
-    }
-};
-
-function closeAllMenu() {
-    if (menuStack.length) {
-        menuStack[0].$emit("pop-stack");
-        menuStack.splice(0);
-    }
-}
-
-function initDefaultMenuHandler() {
-    document.addEventListener("mousedown", (evt) => {
-        if (menuStack.length > 0) {
-            closeAllMenu();
-        }
-        // setTimeout(() => {
-
-        // }, 100);
-    }, true);
-
-    // window.addEventListener("contextmenu", (evt) => {
-    //     closeAllMenu();
-    // })
-
-    window.addEventListener("blur", (evt) => {
-        closeAllMenu();
-    });
-}
-
-export function pushMenu(menuInst) {
-    let stackTop = menuStack[menuStack.length - 1];
-    if (menuInst === stackTop) {
-        return;
-    }
-    menuStack.push(menuInst);
-}
-
-export function popMenu(initiator) {
-    let stackTop = menuStack[menuStack.length - 1];
-    if (stackTop === initiator) {
-        return;
-    }
-    menuStack.pop()
-    if (stackTop) {
-        stackTop.$emit("pop-stack")
-    }
+export function showContextMenu(menu, evt) {
+	// 没有内容禁止打开
+	if (!menu || menu.length === 0) {
+		return
+	}
+	const contextMenuNode = document.createElement('div')
+	document.body.appendChild(contextMenuNode)
+	new PtContextMenu({
+		data: {
+			menuData: menu,
+			sourceEvent: evt
+		}
+	}).$mount(contextMenuNode)
 }
 
 export default {
-    install() {
-        initDefaultMenuHandler();
-
-        Vue.directive('contextMenu', contextMenuDirective);
-    }
+	install() {
+		Object.defineProperty(Vue.prototype, '$showContextMenu', {
+			get() {
+				return showContextMenu
+			}
+		})
+	}
 }
