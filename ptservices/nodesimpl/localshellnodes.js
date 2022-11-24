@@ -126,7 +126,7 @@ class LocalShellNodes extends NxNodeServer {
         const ptyProcess = pty.spawn(shell, [], {
             cols: 150,
             rows: 50,
-            cwd: '/',
+            cwd: os.homedir(),
             env: process.env
           });
         return ptyProcess;
