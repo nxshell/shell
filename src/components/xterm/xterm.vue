@@ -271,7 +271,7 @@ export default {
 				return
 			}
 			this.fitAddon.fit()
-			// this.terminal.refresh();
+			this.terminal.refresh();
 		},
 
 		onFocus() {
