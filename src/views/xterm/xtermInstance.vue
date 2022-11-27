@@ -35,6 +35,7 @@
 			class="xterm-pt"
 			ref="xterm"
 			:sendToAllTerm="keyboardToAll"
+			@xterm-focus="xtermFocus"
 			@sendToAll="openSendAll"
 			@line-data="handleLog"
 			@file-drop="handleFileDrop"
@@ -256,6 +257,9 @@ export default {
 
 	methods: {
 		...mapMutations(['setKeyboardToAll']),
+		xtermFocus() {
+			EventBus.publish("updateTabBySessionId", this.sessionInstanceId)
+		},
 		genrateUrlBySessionCfg(config) {
 			let url = ''
 			if (config.protocal === 'ssh') {

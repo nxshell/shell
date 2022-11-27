@@ -1,5 +1,5 @@
 <template>
-	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop">
+	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop" >
 		<div class="xterm-search" v-if="searchShow">
 			<div class="search-input">
 				<el-input
@@ -41,7 +41,7 @@
 			<div>{{ T('components.pt-xterm.keyboard-input-note') }}</div>
 			<el-switch v-model="showOn" @change="keyboardInputAllow" />
 		</div>
-		<div ref="xtermContainer" class="xterm-container"></div>
+		<div ref="xtermContainer" class="xterm-container" @click="onXtermFocus"></div>
 		<div
 			v-if="urlTip"
 			class="xterm-link-tip"
@@ -219,7 +219,9 @@ export default {
 	},
 
 	methods: {
-		// TODO:
+		onXtermFocus() {
+			this.$emit("xterm-focus")
+		},
 		write(text) {
 			if (!this.terminal) {
 				return

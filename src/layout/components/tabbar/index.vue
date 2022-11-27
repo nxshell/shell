@@ -51,6 +51,17 @@ export default {
 				this.handleSessionInstActive(this.activeTabIndex || 0)
 			}
 		})
+		EventBus.subscript('updateTabBySessionId', (session_id) => {
+			const activeSessionIndex = this.$store.getters.sessionInstTabs.findIndex((inst) => {
+				return inst.data.id === session_id
+			})
+
+			if ((activeSessionIndex < 0) || (activeSessionIndex == this.activeTabIndex)) {
+				return
+			}
+
+			this.handleSessionInstActive(activeSessionIndex || 0)
+		})
 		// 绑定快捷键
 		this.setupBarShortCut()
 	},
