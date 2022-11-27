@@ -96,6 +96,10 @@ export class SessionInterface extends EventEmitter {
         }
     }
 
+    active() {
+        this.emit("active")
+    }
+
     updateName(newName) {
         this.name = newName;
     }

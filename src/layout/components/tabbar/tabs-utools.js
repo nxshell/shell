@@ -18,6 +18,7 @@ export async function activeSession(sessInst) {
 		return inst.data.id === sessInst.id
 	})
 	await this.$store.dispatch('updateActiveTabIndex', activeSessionIndex)
+	sessInst.active()
 }
 
 /**

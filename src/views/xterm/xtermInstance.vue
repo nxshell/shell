@@ -394,6 +394,11 @@ export default {
 				this.$el.parentNode.removeChild(this.$el)
 			})
 
+			this.sessionInstance.on('active', () => {
+				// session actived
+				this.$refs.xterm.$emit('focus')
+			})
+
 			this.$nextTick(() => {
 				this.$refs.xterm.$emit('data', 'Hello \x1B[1;3;31mNxShell\x1B[0m !\r\n')
 				this.$refs.xterm.$emit('focus')
