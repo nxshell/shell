@@ -28,7 +28,7 @@
 import { mapState } from "vuex";
 
 import { EditorView, keymap, lineNumbers, highlightActiveLine } from "@codemirror/view"
-import { EditorSelection, SelectionRange } from "@codemirror/state"
+import { EditorSelection, SelectionRange, Compartment } from "@codemirror/state"
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
 import { highlightSelectionMatches, SearchCursor } from "@codemirror/search"
 import { syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language"
@@ -112,6 +112,7 @@ export default {
 			})
 
 			this.sessionInstance = sessionInstance;
+			const lineWrapping = new Compartment();
 			const ctrl_s_key = [{
 				key: "Ctrl-s",
 				run: this.save
@@ -132,6 +133,7 @@ export default {
 				history(),
 				highlightActiveLine(),
 				highlightSelectionMatches(),
+				lineWrapping.of(EditorView.lineWrapping),
 				this.getSupportLangMode(sessionInstance.ext_name)
 			];
 			if (this.theme === "dark") {
@@ -263,5 +265,7 @@ export default {
 		overflow: hidden;
 		max-width: 60%;
 	}
+
+	
 }
 </style>
