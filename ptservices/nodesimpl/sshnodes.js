@@ -12,6 +12,30 @@ const os = require('os');
 
 const { SFTPFileSystem } = require("../fs/sftp");
 
+const basePort = 10080;
+let usedPorts = [];
+
+function _remove_used_port(port) {
+    let index = port - basePort;
+    const _index = usedPorts.indexOf(index);
+    if (_index !== -1) {
+        usedPorts.splice(_index, 1);
+    }
+}
+
+function _get_unused_port() {
+    let index = 0;
+    while(true) {
+        if (! usedPorts.includes(index)) {
+            usedPorts.push(index);
+            break;
+        }
+        index += 1;
+    }
+
+    return index + basePort;
+}
+
 class SSH2Terminal extends NxTerminal {
     /**
      * @type {NxNodeServer}
@@ -23,6 +47,7 @@ class SSH2Terminal extends NxTerminal {
 
     //socksv5
     server = null;
+    socks5_port = -1;
 
     constructor(parent, connId) {
         super();
@@ -147,19 +172,22 @@ class SSH2Terminal extends NxTerminal {
             })
         }
 
+        this.socks5_port = _get_unused_port();
         return new Promise((resolve, reject) => {
-            this.server = server.createServer(accept_fn).listen(10080, 'localhost', () => {
-                console.log('SOCKSv5 proxy server started on port 10080');
-                resolve(10080)
+            this.server = server.createServer(accept_fn).listen(this.socks5_port, 'localhost', () => {
+                console.log('SOCKSv5 proxy server started on port ' + this.socks5_port);
+                resolve(this.socks5_port)
             }).useAuth(auth.none());
 
             this.server.on('error', (error)=> {
+                _remove_used_port(this.socks5_port);
                 console.log('this server error ', error);
                 this.server = null;
                 reject(0)
             })
             this.server.on('close', () => {
                 console.log('this server close ');
+                _remove_used_port(this.socks5_port);
                 this.server = null;
                 reject(0)
             })
@@ -170,6 +198,7 @@ class SSH2Terminal extends NxTerminal {
         this.server.close();
         this.parent.closeConnection(this.connId);
         this.server = null;
+        _remove_used_port(this.socks5_port);
     }
 
     async close() {
