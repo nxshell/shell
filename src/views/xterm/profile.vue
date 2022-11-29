@@ -779,25 +779,8 @@ export default {
 
 			let name = this.currentState.profileData.hostName
 			const protocal = this.currentState.profileData.protocal
-			if (protocal === 'ftp') {
-				this.currentState.profileData.sessType = 'ftp'
-			}
-			if (protocal === 'webdav') {
-				this.currentState.profileData.sessType = 'webdav'
-			}
-			if (protocal === 'serialport') {
-				this.currentState.profileData.sessType = 'serialport'
-			}
-			if (protocal === 'telnet') {
-				this.currentState.profileData.sessType = 'telnet'
-			}
-			if (protocal === 'localshell') {
-				this.currentState.profileData.sessType = 'localshell'
-			}
 
-			if (protocal === 'vnc') {
-				this.currentState.profileData.sessType = 'vnc'
-			}
+			this.currentState.profileData.sessType = protocal
 
 			if (this.currentState.profileData.cert instanceof Array) {
 				this.currentState.profileData.cert = this.currentState.profileData.cert[0].data

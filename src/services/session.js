@@ -7,6 +7,7 @@ export const SESSION_TYPES = {
     WELCOME: "welcome",
     SETTING: "setting",
     SHELL: "shell",
+    SSH: "ssh",
     SERIALPORT: "serialport",
     SFTP: "sftp",
     FTP: "ftp",

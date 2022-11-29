@@ -164,7 +164,7 @@ async function createShellSession(params) {
 }
 
 registerSessionFactory(SESSION_TYPES.SHELL, createShellSession);
-
+registerSessionFactory(SESSION_TYPES.SSH, createShellSession);
 
 class ShellSettingSession extends SessionInterface {
     constructor(sessionConfig) {
