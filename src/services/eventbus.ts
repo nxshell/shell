@@ -12,7 +12,7 @@ export function getGlobalEventBus(): EventBus {
 
 export declare type EventType = "instance-created" | "instance-updated" | "instance-destroyed" | "instance-close" |
     "session-created" | "session-update" | "session-destroyed" | "session-added" |
-    "session-removed" | "create-session" | "create-session-folder" | "session-config-panel"
+    "session-removed" | "create-session" | 'create-session-toolbar' | "create-session-folder" | "session-config-panel"
     | "enter-fullscreen" | "nx-menu-search" | "refresh-session-tree";
 
 export function subscript(evtType: EventType, handler: Function): void {
