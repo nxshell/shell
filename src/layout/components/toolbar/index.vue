@@ -19,30 +19,18 @@
 				</span>
 			</el-tooltip>
 		</n-space>
-		<!--新建文件夹弹窗-->
-		<nx-folder-dialog ref="createFolderRef" @ok="handleOk" />
 	</div>
 </template>
 
 <script>
 import * as EventBus from '@/services/eventbus'
-import {SESSION_CONFIG_TYPE, SessionConfig} from '@/services/sessionMgr'
-import {mapState} from 'vuex'
-import NxFolderDialog from '../../../views/components/folderDialog'
 
 export default {
 	name: 'NxToolbar',
-	components: {NxFolderDialog},
 	data() {
 		return {
 			searchKeywords: '',
-			createFolderRules: {
-				folderName: [{validator: this.validateFolderName, trigger: 'change'}]
-			}
 		}
-	},
-	computed: {
-		...mapState(['currentSelectedSessionNode'])
 	},
 	watch: {
 		searchKeywords() {
@@ -55,89 +43,12 @@ export default {
 		})
 	},
 	methods: {
-		validateFolderName(rule, value, callback) {
-			if (!value) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.placeholder')))
-			} else if (/[\/:*?."'<>|]/.test(value)) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.invalid-dir-name')))
-			} else {
-				callback()
-			}
-		},
-		/**
-		 * 处理会话配置树
-		 */
-		processSessionConfigTree(sessionConfigs, searchKeywords) {
-			const sessionConfigTree = sessionConfigs
-			let matchFunc = (name) => true
-			if (searchKeywords) {
-				let reg = new RegExp(searchKeywords, 'i')
-				matchFunc = (name) => reg.test(name)
-			}
-
-			const walkAndProcess = (parent, cfgNodes) => {
-				for (const cfgNode of cfgNodes) {
-					let treeNode = {
-						text: cfgNode.name,
-						data: cfgNode.toJSONObject(false)
-					}
-					let children = []
-					if (cfgNode.type === SESSION_CONFIG_TYPE.FOLDER) {
-						walkAndProcess(children, cfgNode.subSessions)
-						treeNode.children = children
-					}
-					if (matchFunc(cfgNode.name) || children.length > 0) {
-						parent.push(treeNode)
-					}
-				}
-			}
-			let treeRoot = []
-			walkAndProcess(treeRoot, sessionConfigTree)
-			return treeRoot
-		},
-		/**
-		 * 添加配置
-		 * @param {SessionConfig} sessionConfig 会话配置
-		 */
-		addSessionConfig(sessionConfig) {
-			const treeData = this.processSessionConfigTree([sessionConfig])[0]
-			if (!this.currentSelectedSessionNode) {
-				this.$sessionManager.addSessionConfig(null, sessionConfig)
-				EventBus.publish('create-session-folder', treeData)
-				return
-			}
-			let {data, node} = this.currentSelectedSessionNode
-			if (node.isFolder) {
-				node.appendChild(treeData)
-				this.$sessionManager.addSessionConfig(data.data, sessionConfig)
-				EventBus.publish('refresh-session-tree', {})
-				return
-			}
-			// 需要判断节点是不是根目录下的节点
-			node = node.getParentNode()
-			if (!node) {
-				EventBus.publish('create-session-folder', treeData)
-				this.$sessionManager.addSessionConfig(null, sessionConfig)
-			} else {
-				const {data} = node.nodeData
-				node.appendSibling(treeData)
-				this.$sessionManager.addSessionConfig(data.data, sessionConfig)
-			}
-			EventBus.publish('refresh-session-tree', {})
-		},
 		async gotoCreateShellSession() {
-			const sessionConfig = this.$sessionManager.createShellSessionConfig(
-				this.T('home.profile.default-session-name')
-			)
-			this.addSessionConfig(sessionConfig)
-			await this.$sessionManager.createShellSettingSessionInstance(sessionConfig)
+			EventBus.publish('create-session-toolbar', {})
 		},
 		handleCreateFolder() {
-			this.$refs.createFolderRef?.show('')
+			EventBus.publish('create-session-folder', {})
 		},
-		handleOk(emitData) {
-			this.addSessionConfig(emitData)
-		}
 	}
 }
 </script>
