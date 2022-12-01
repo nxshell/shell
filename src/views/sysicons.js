@@ -30,7 +30,8 @@ export function treeIconFilter(nodeData) {
     if (!config) {
         config = nodeData.config
     }
-    const icon = getSystemIcon(config.osType);
+    const osType = config?.osType || 'linux'
+    const icon = getSystemIcon(osType);
 
     return {
         type: "img",
