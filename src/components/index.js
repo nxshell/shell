@@ -20,8 +20,6 @@ import PtMenuItem from "./menu/menuitem.vue";
 import PtTab from "./tab/tab.vue";
 import PtTabItem from "./tab/tabitem.vue";
 import PtToolbar from "./bars/toolbar.vue";
-import PtTree from "./tree/tree.vue";
-import PtTreeItem from "./tree/treeitem";
 import Pti18n from "./i18n/mixins";
 import PtXterm from "./xterm/xterm";
 import PtMenuManager from "./menu/menuManager";
@@ -41,8 +39,6 @@ const components = [
     PtTab,
     PtTabItem,
     PtToolbar,
-    PtTree,
-    PtTreeItem,
     PtXterm
 ];
 
