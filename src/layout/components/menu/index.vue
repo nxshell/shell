@@ -6,7 +6,7 @@
 		@click="handleSessionTreeContainerClick"
 	>
 		<!-- 提示创建会话配置 -->
-		<el-scrollbar style="height: 100%">
+		<el-scrollbar style="height: calc(100% - 32px)">
 			<el-tree
 				ref="sessionTree"
 				node-key="id"
@@ -19,6 +19,7 @@
 				@node-contextmenu="nodeContextmenu"
 				@node-drop="handleNodeDrop"
 				@node-expand="handleNodeExpand"
+				@node-collapse="handleNodeCollapse"
 				@node-click="handleNodeSelected"
 			>
 				<template v-slot="{ node, data: { data, children } }">
@@ -186,9 +187,6 @@ export default {
 	computed: {
 		...mapState(['currentSelectedSessionNode'])
 	},
-	created() {
-		this.updateSessionTree()
-	},
 	filters: {
 		formatIconName: function (value) {
 			if (!value) return 'linux'
@@ -216,6 +214,7 @@ export default {
 			this.gotoCreateShellSession()
 		})
 		this.$nextTick(() => {
+			this.updateSessionTree()
 			this.updateCurrentSelectedSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
 		})
 	},
@@ -248,6 +247,9 @@ export default {
 		},
 		handleNodeExpand(data, node) {
 			this.expandedKeys = [node.key]
+		},
+		handleNodeCollapse(data, node, vnode, element) {
+			this.expandedKeys.splice(this.expandedKeys.findIndex(item => item === node.key), 1)
 		},
 		handleNodeSelected(data, node, vnode, element) {
 			// 修复由于当前文件夹下子元素为0 导致tree无法触发原有打开关闭事件
