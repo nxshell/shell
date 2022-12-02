@@ -21,6 +21,22 @@ class FTPNodes extends NxNodeServer {
         super(uuid, connProtocol, sessionConfig);
     }
 
+    updateConfig(cfg) {
+        let secure = cfg.secure;
+        try{
+            secure = JSON.parse(cfg.secure);
+        }catch(e){
+        }
+        this.config = {
+            host: cfg.hostAddress,
+            port: cfg.hostFtpPort,
+            protocal: 'ftp',
+            username: cfg.username,
+            password: cfg.password,
+            secure: secure
+        };
+    }
+
     async _createConnection() {
         const sessConfig = this.config;
         const authConfig = {

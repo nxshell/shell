@@ -185,28 +185,30 @@ class NxDataTransferServer extends NxDataTransfer {
         let totalWrite = 0;
         let srcFileHandle;
         let destFileHandle;
-        let inter_id = -1;
         let has_write_len = totalWrite;
 
         try {
             srcFileHandle = await sourceFS.open(sourcePath, "r");
             destFileHandle = await destFS.open(destPath, "w");
-            let rwOffset = 0;  
+            let rwOffset = 0;
+            let that = this;
 
-            if (emitProgress) {
-                inter_id = setInterval(()=> {
-                    let speed =this._speedHuman((totalWrite - has_write_len), 2);
-                    this._emit({
-                        event: "transferring",
-                        args: {
-                            progress: Math.round(totalWrite / sourceSize * 100),
-                            speed: speed
-                        }
-                    });
-                    has_write_len = totalWrite;
-                }, 1000)
+            function send_speed() {
+                if (! emitProgress) {
+                    return;
+                }
+                let speed = that._speedHuman((totalWrite - has_write_len), 2);
+                that._emit({
+                    event: "transferring",
+                    args: {
+                        progress: Math.round(totalWrite / sourceSize * 100),
+                        speed: speed
+                    }
+                });
+                has_write_len = totalWrite;
             }
 
+            let loop = 0;
             while (true) {
                 let {bytesRead} = await sourceFS.read(srcFileHandle, rwBuffer, 0, BUFF_SIZE, rwOffset);
                 if (bytesRead) {
@@ -219,6 +221,12 @@ class NxDataTransferServer extends NxDataTransfer {
                 }
 
                 totalWrite += bytesRead;
+
+                if(loop > 10) {
+                    send_speed();
+                    loop = 0;
+                }
+                loop += 1;
             }
 
         } catch (err) {
@@ -229,9 +237,6 @@ class NxDataTransferServer extends NxDataTransfer {
             }
             if (destFileHandle) {
                 await destFS.close(destFileHandle);
-            }
-            if (process) {
-                clearInterval(inter_id);
             }
         }
     }

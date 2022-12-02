@@ -117,6 +117,22 @@ export class FTPFileSystem extends PtSFTPFileSystemClient {
         return await this.service.callObject(this.handle, "unlink", path);
     }
 
+    async readFileContent(local_file) {
+        return await this.service.callObject(this.handle, "syncGetLocalFileContent", local_file);
+    }
+
+    async writeFileContent(local_file, v) {
+        return await this.service.callObject(this.handle, "syncWriteLocalFileContent", local_file, v);
+    }
+
+    async syncLocalToRemote(remote, local) {
+        return await this.service.callObject(this.handle, "syncLocalToRemote", remote, local);
+    }
+
+    async syncRemoteToLocal(remote, local) {
+        return await this.service.callObject(this.handle, "syncRemoteToLocal", remote, local);
+    } 
+
     async dispose() {
         this.service.closeObject(this.handle);
     }

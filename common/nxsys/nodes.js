@@ -26,7 +26,6 @@ class NxNode extends EventEmitter {
     }
 
     updateConfig(newConfig) {
-        //console.log("UPDATECONFIG:", newConfig);
         this.config = newConfig;
     }
 

@@ -1,4 +1,7 @@
+const os = require('os');
 const path = require('path');
+const fs = require('fs');
+const { EventEmitter } = require("events");
 const { PtFileSystem } = require("../../common/filesystem/filesystem");
 const { IdGenerator } = require("../../common/utils/idGenerator");
 
@@ -20,23 +23,24 @@ class Dirent {
     }
 }
 
-class ftpFileObject {
+class ftpFileObject extends EventEmitter {
     constructor(total){
+        super();
         this.total = total;
         this.size = 0;
-        this.buffer = [];
+        this.buffer = Buffer.alloc(0);
     }
     
     appendBuffer(buffer) {
-        this.buffer.push(buffer);
+        this.buffer = Buffer.concat([this.buffer, buffer]);
         this.size += buffer.length;
+        this.emit("datain");
     }
 
-    getBuffer() {
-        return {
-            bytesRead: this.size,
-            buffer: Buffer.concat(this.buffer)
-        }
+    copyBuffer(destBuffer, destStart, length, position) {
+        let copySize = ((position + length) > this.size) ? (this.size - position) : length;
+        this.buffer.copy(destBuffer, destStart, position, position + copySize);
+        return copySize;
     }
 
     isfull() {
@@ -189,19 +193,24 @@ class FTPFileSystem extends PtFileSystem {
             if(! this.openedFiles[handle]) {
                 reject(new Error('handle no exits'));
             }
-            if(position) {
-                resolve({
-                    bytesRead: 0,
-                });
-            }
+            // TODO need recompute position
             let readStreams = this.openedFiles[handle];
             let fileObject = this.openedFileBuffers[handle];
-            if(fileObject.isfull()) {
-                resolve(fileObject.getBuffer())
+            if(fileObject.isfull() || ((length + position) <= fileObject.size )) {
+                resolve({bytesRead: fileObject.copyBuffer(buffer, offset, length, position)})
             } else {
-                readStreams.on('end', ()=> {
-                    resolve(fileObject.getBuffer());
-                })
+                function listenOnce() {
+                    fileObject.once('datain', ()=> {
+                        if ((length + position) <= fileObject.size ) {
+                            resolve({bytesRead: fileObject.copyBuffer(buffer, offset, length, position)});
+                        } else {
+                            listenOnce();
+                        }
+                    })
+                }
+
+                listenOnce();
+                
                 readStreams.on('error', (e)=> {
                     console.log('ftp stream read error ', e);
                     reject(e)
@@ -221,7 +230,7 @@ class FTPFileSystem extends PtFileSystem {
 
             if(!position) {
                 //write first contents
-                this.ftp_client.put(buffer.slice(0, length), filename, (error)=> {
+                this.ftp_client.put(buffer.slice(offset, offset + length), filename, (error)=> {
                     if(error) {
                         reject(error);
                     } else {
@@ -229,7 +238,7 @@ class FTPFileSystem extends PtFileSystem {
                     }
                 })
             } else {
-                this.ftp_client.append(buffer.slice(0, length), filename, (error)=> {
+                this.ftp_client.append(buffer.slice(offset, offset + length), filename, (error)=> {
                     if(error) {
                         reject(error);
                     } else {
@@ -274,6 +283,49 @@ class FTPFileSystem extends PtFileSystem {
 
         }
         return false;
+    }
+
+    async syncRemoteToLocal(remote_path, local_file) {
+        const local_path = path.join(os.tmpdir(), local_file)
+        return new Promise((resolve, reject)=> {
+            this.ftp_client.get(remote_path, (err, stream) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    stream.once('close', ()=> {
+                        resolve();
+                    });
+                    stream.once('error', (error)=> {
+                        reject(error);
+                    })
+                    stream.pipe(fs.createWriteStream(local_path));
+                }
+                
+            })
+        })
+    }
+
+    async syncLocalToRemote(remote_path, local_file) {
+        const local_path = path.join(os.tmpdir(), local_file)
+        return new Promise((resolve, reject)=> {
+            this.ftp_client.put(local_path, remote_path, (error)=> {
+                if(error) {
+                    reject()
+                } else {
+                    resolve()
+                }
+            })
+        })
+    }
+
+    async syncGetLocalFileContent(local_file) {
+        const local_path = path.join(os.tmpdir(), local_file)
+        return fs.readFileSync(local_path);
+    }
+
+    async syncWriteLocalFileContent(local_file, v) {
+        const local_path = path.join(os.tmpdir(), local_file)
+        return fs.writeFileSync(local_path, v);
     }
 
     dispose() {

@@ -71,7 +71,6 @@ function createNodeClient(handler, sessionUUID, protocal, sessionConfig) {
  */
 export async function createNodeSessionInstance(sessionUUID, sessionConfig) {
     const service = powertools.getService();
-    
     const handler = await service.createNodeSessionInstance(sessionUUID, sessionConfig);
 
     return createNodeClient(handler, sessionUUID, sessionConfig.protocal, sessionConfig);
