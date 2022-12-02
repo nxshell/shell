@@ -5,42 +5,35 @@
 		@mouseenter="handleMouseEnter"
 		@mousedown="handleClick"
 	>
-		<pt-popper
+		<el-popover
 			v-if="item.type === 'submenu'"
-			position="right-top"
-			class="nx-content-submenu"
-			:show="showSubmenu"
-			:zIndex="10000"
+			placement="right"
+			trigger="hover"
+			:visible-arrow="true"
+			popper-class="nx-content-submenu"
 		>
 			<pt-menu :menu="item.submenu" :translate="true" @pop-stack="showSubmenu = false" ref="submenu" />
-			<template slot="reference">
-				<div class="pt-menu-item-container">
-					<span class="item-icon"><!--占位--></span>
-					<span class="item-label">{{ translate ? T(label) : label }}</span>
-					<span class="item-accelerator">{{ accelerator }}</span>
-					<n-icon name="arrow-right" size="18" className="item-submenu-arrow" />
-				</div>
-			</template>
-		</pt-popper>
+			<div class="pt-menu-item-container" slot="reference">
+				<span class="item-icon"><!--占位--></span>
+				<span class="item-label">{{ translate ? T(label) : label }}</span>
+				<span class="item-accelerator">{{ accelerator }}</span>
+				<n-icon name="arrow-right" size="18" className="item-submenu-arrow" />
+			</div>
+		</el-popover>
 		<div v-else-if="item.type === 'normal'" class="pt-menu-item-container">
 			<span class="item-icon"><!--占位--></span>
 			<span class="item-label">{{ translate ? T(label) : label }}</span>
 			<span class="item-accelerator">{{ accelerator }}</span>
 			<span class="item-submenu-arrow"><!--占位--></span>
 		</div>
-		<hr v-else class="pt-menu-item-container" />
 	</div>
 </template>
 
 <script>
-import PtPopper from "../base/popper";
 import { popMenu, pushMenu } from "./menuManager";
 
 export default {
 	name: "PtMenuItem",
-	components: {
-		PtPopper
-	},
 	props: {
 		/**
 		 * item
@@ -108,18 +101,19 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/scss/_const.scss";
 
 .nx-content-submenu {
 	left: 100px;
+	padding: 0 !important;
 }
 
 .pt-menu-item {
 	position: relative;
 	height: $menuItemHeight;
 	line-height: $menuItemHeight;
-	padding: 0 5px 5px;
+	padding: 5px 5px 0 5px;
 
 	&.pt-menu-separator {
 		height: 1px !important;

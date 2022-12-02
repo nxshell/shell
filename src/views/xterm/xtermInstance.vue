@@ -395,8 +395,7 @@ export default {
 			})
 
 			this.sessionInstance.on('active', () => {
-				// session actived
-				this.$refs.xterm.$emit('focus')
+				this.$refs?.xterm.$emit('focus')
 			})
 
 			this.$nextTick(() => {
@@ -456,7 +455,7 @@ export default {
 			if (data.type == "password") {
 				newConfig = {
 					authType: "password",
-					username: data.username, 
+					username: data.username,
 					password: data.password
 				}
 			} else if (data.type == "publickey") {
@@ -479,6 +478,7 @@ export default {
 				})
 				return dest
 			}
+
 			// update config data
 			let sessionCfg = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
 			if (sessionCfg) {
@@ -534,7 +534,7 @@ export default {
 			}
 		},
 		onXtermResize(cols, rows) {
-			this.sessionInstance.emit('resize', cols, rows)
+			this.sessionInstance && this.sessionInstance.emit('resize', cols, rows)
 		},
 		onTitleChange(title) {
 			title = title.split(':')
@@ -615,7 +615,7 @@ export default {
 				//pass
 				console.log('handle full screen error ', e)
 			}
-			this.$refs.xterm.focus()
+			this.$refs?.xterm.focus()
 		},
 		openLink(uri) {
 			powertools.openExterUrl(uri)

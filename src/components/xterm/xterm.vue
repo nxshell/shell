@@ -107,7 +107,7 @@ export default {
 	mounted() {
 		const resizeHandler = debounce(() => {
 			this.onResizeHandler()
-		}, 0)
+		}, 100)
 		this.nativeResizeHandler = () => {
 			resizeHandler()
 		}

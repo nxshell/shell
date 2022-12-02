@@ -440,7 +440,6 @@ export default {
 					dataKey: 'size',
 					label: 'home.fileview.mainview.columns.size',
 					width: 60,
-					align: 'right'
 				},
 				{
 					dataKey: 'type',
@@ -460,7 +459,7 @@ export default {
 				{
 					dataKey: 'lastModify',
 					label: 'home.fileview.mainview.columns.lastModify',
-					width: 150
+					width: 200
 				},
 				{
 					dataKey: 'perms',

@@ -14,12 +14,10 @@
 							minWidth: columns[0].minWidth + 'px'
 						}"
 					>
-						<n-space>
-							<n-icon :name="value.icon" :size="iconSize" :type="value.iconType || 'svg'" />
-							<span class="name" :class="{normal: !selected, selected}" :title="value.name">
-								{{ value.name }}
-							</span>
-						</n-space>
+						<n-icon :name="value.icon" :size="iconSize" :type="value.iconType || 'svg'" />
+						<span class="name" :class="{normal: !selected, selected}" :title="value.name">
+							{{ value.name }}
+						</span>
 					</div>
 					<span
 						v-for="(field, idx) in extFields"
@@ -171,12 +169,19 @@ export default {
 			display: flex;
 			align-items: center;
 			padding: 0 5px;
+
+			& > :not(:last-child) {
+				margin-right: 5px;
+			}
 		}
 
 		.ext-fields {
 			display: inline-block;
 			padding: 0 5px;
 			color: var(--n-text-color-base);
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 
 		.tile-fields {

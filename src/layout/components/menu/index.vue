@@ -536,17 +536,5 @@ export default {
 			}
 		}
 	}
-
-	//.is-expanded {
-	//	.el-tree-node__content {
-	//		.el-tree-node__expand-icon:before {
-	//			content: "\e784" !important;
-	//		}
-	//
-	//		.el-tree-node__expand-icon.expanded {
-	//			transform: rotate(0deg) !important;
-	//		}
-	//	}
-	//}
 }
 </style>

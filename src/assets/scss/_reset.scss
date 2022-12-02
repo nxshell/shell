@@ -325,3 +325,28 @@ a {
     }
   }
 }
+
+.el-popover {
+  background-color: var(--n-color-modal) !important;
+  min-width: 102px !important;
+  box-sizing: border-box;
+  border: 0 !important;
+  padding: 0 !important;
+
+  &[x-placement^=right] .popper__arrow {
+    border-right-color: var(--n-color-modal) !important;
+
+    &::after {
+      border-right-color: var(--n-color-modal) !important;
+    }
+  }
+
+  &[x-placement^=bottom] .popper__arrow {
+    border-bottom-color: var(--n-color-modal) !important;
+
+    &::after {
+      border-bottom-color: var(--n-color-modal) !important;
+    }
+  }
+
+}
