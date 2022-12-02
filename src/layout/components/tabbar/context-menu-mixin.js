@@ -40,6 +40,12 @@ export const contextMenuMixin = {
                     }
                 ],
                 welcome: [
+                    {
+                        label: 'home.sessions-context-menu.close-other',
+                        type: 'normal',
+                        icon: '',
+                        handler: this.handleCloseOther
+                    },
                     // {
                     //     label: 'home.sessions-context-menu.close',
                     //     type: 'normal',

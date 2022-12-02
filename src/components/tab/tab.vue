@@ -60,7 +60,12 @@ export default {
 			if (this.currentTab >= this.tabs.length) {
 				this.currentTab = this.tabs.length - 1
 			}
-			this.scrollBar?.refresh()
+			setTimeout(() => {
+				this.scrollBar.refresh()
+				// 获取当前选中的元素，之后将滚动到该位置
+				const activeElement = document.getElementsByClassName(' pt-tab-item--selected')[0]
+				this.scrollBar.scrollToElement(activeElement, 500, true, false)
+			}, 200)
 		},
 		activeIndex(newVal) {
 			if (newVal !== this.currentTab) {
@@ -105,14 +110,14 @@ export default {
 	box-sizing: border-box;
 	overflow: hidden;
 	padding: 0 5px;
+	white-space: nowrap;
 	background-color: var(--n-tabs-bg-color);
 
 	.content {
 		display: inline-block;
-		white-space: nowrap;
 
-		.pt-tab-item:not(:last-child) {
-			margin-right: 8px;
+		.pt-tab-item {
+			padding-right: 5px;
 		}
 	}
 }

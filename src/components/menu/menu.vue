@@ -40,11 +40,8 @@ export default {
 	position: relative;
 	z-index: $menuZIndex;
 	min-width: 180px;
-	padding: {
-		top: 5px;
-		bottom: 5px;
-	}
 	border-radius: 4px;
+	padding-bottom: 5px;
 	background-color: var(--n-color-modal);
 	box-shadow: 2px 2px 30px 1px rgba(0, 0, 0, .2);
 }

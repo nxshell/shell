@@ -130,18 +130,5 @@ export default {
 	height: 100%;
 }
 
-.el-popover {
-	background-color: var(--n-color-modal) !important;
-	min-width: 102px !important;
-	box-sizing: border-box;
-	border: 0 !important;
 
-	.popper__arrow {
-		border-bottom-color: var(--n-color-modal) !important;
-
-		&::after {
-			border-bottom-color: var(--n-color-modal) !important;
-		}
-	}
-}
 </style>

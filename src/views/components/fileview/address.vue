@@ -4,15 +4,18 @@
 			<i class="el-icon-caret-left" />
 		</span>
 		<div class="container" ref="container" @mousewheel="handleMouseWheel" @click="handleEnableEditPath">
-			<ul class="address-list" ref="address" @click.stop>
-				<li class="address-list-item host" @click="handleEnableEditPath">
+			<div ref="address" class="address-list" @click.stop>
+				<div class="address-list-item host" @click="handleEnableEditPath">
 					<n-icon size="16" type="img" :name="IconHost" />
-					<span style="margin-left: 5px">{{ hostInfo.username }}@{{ hostInfo.host }}</span>
-				</li>
+					<span>{{ hostInfo.username }}@{{ hostInfo.host }}</span>
+				</div>
 				<template v-if="!isEditable">
-					<li v-for="(entry, idx) in parsedPath" :key="entry.entry + '/' + idx" class="address-list-item">
+					<div v-for="(entry, idx) in parsedPath" :key="entry.entry + '/' + idx" class="address-list-item">
 						<span @click="handleChangePath(idx)">{{ entry.entry }}</span>
-						<pt-popper position="bottom-left" :show="entry.showMenu">
+						<el-popover
+							v-model="entry.showMenu"
+							placement="bottom"
+						>
 							<div class="jump-box">
 								<el-scrollbar style="height: 100%">
 									<pt-menu
@@ -25,25 +28,16 @@
 								</el-scrollbar>
 							</div>
 							<n-icon
-								v-if="!entry.showMenu"
+								slot="reference"
+								:style="{'transform':`rotateZ(${entry.showMenu?90:0}deg)`,'transition': 'all 0.3s ease-in-out 0s'}"
 								size="12"
 								name="arrow-right"
-								className="pop-menu"
 								@click.stop="showFolderList(entry, idx)"
-								slot="reference"
 							/>
-							<n-icon
-								v-else
-								size="12"
-								name="arrow-down"
-								className="pop-menu"
-								@click.stop="showFolderList(entry, idx)"
-								slot="reference"
-							/>
-						</pt-popper>
-					</li>
+						</el-popover>
+					</div>
 				</template>
-			</ul>
+			</div>
 			<input
 				v-if="isEditable"
 				ref="pathEditor"
@@ -64,14 +58,10 @@
 
 <script>
 import path from 'path'
-import PtPopper from '../../../components/base/popper'
 import IconHost from '../../../assets/sysicons/host.png'
 
 export default {
 	name: 'PtFileViewAddress',
-	components: {
-		PtPopper
-	},
 	props: {
 		hostInfo: {
 			type: Object
@@ -88,20 +78,15 @@ export default {
 	data() {
 		return {
 			IconHost,
-
 			isEditable: false,
-
 			btnScroll: {
 				show: false,
 				containerWidth: 0,
 				contentWidth: 0,
 				scrollLeft: 0
 			},
-
 			showMenu: false,
-
 			detectSizeHandler: null,
-
 			curPath: '',
 			parsedPath: []
 		}
@@ -168,7 +153,7 @@ export default {
 				})
 				.join('/')
 
-			dirPath = path.resolve(`/${dirPath}`, '..')
+			dirPath = path.resolve(`/${ dirPath }`, '..')
 			const folderList = await this.getFolderList(dirPath)
 			entry.subFolderList = folderList.map((folder) => {
 				return {
@@ -179,7 +164,7 @@ export default {
 					}
 				}
 			})
-			entry.showMenu = true
+			entry.showMenu = !!entry.showMenu
 		},
 		detectAddressListWidth() {
 			this.btnScroll.contentWidth = this.$refs.address.getBoundingClientRect().width
@@ -214,7 +199,7 @@ export default {
 				})
 				.join('/')
 
-			this.$emit('change', `/${path}`)
+			this.$emit('change', `/${ path }`)
 		},
 
 		handleEnableEditPath() {
@@ -255,14 +240,11 @@ export default {
 	justify-content: flex-start;
 	align-items: center;
 	box-sizing: border-box;
-	height: 30px;
 	width: 100%;
-	border-radius: 3px;
-
-	border: 1px solid var(--n-bg-color-base);
-	background-color: var(--n-bg-color-light);
-
+	height: 32px;
+	border-radius: 4px;
 	color: var(--n-text-color-base);
+	background-color: var(--n-bg-color-light);
 	overflow: hidden;
 
 	.container {
@@ -271,8 +253,8 @@ export default {
 		justify-content: flex-start;
 		align-items: center;
 		box-sizing: border-box;
-		height: 30px;
 		width: 100%;
+		height: 32px;
 		overflow: hidden;
 	}
 
@@ -314,23 +296,15 @@ export default {
 		display: inline-flex;
 		justify-content: flex-start;
 		align-items: center;
-		margin: 0;
-		list-style: none;
-		height: 28px;
+		height: 32px;
 
 		.address-list-item {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			list-style: none;
-			padding: {
-				left: 5px;
-			}
+			padding: 0 5px;
 			box-sizing: border-box;
-			border: 1px solid transparent;
-
-			height: 30px;
-			line-height: 30px;
+			height: 28px;
 			max-width: 120px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -345,10 +319,8 @@ export default {
 				max-width: 200px;
 			}
 
-			.pop-menu {
-				&:hover {
-					color: var(--n-text-color-base);
-				}
+			& > :not(:last-child) {
+				margin-right: 5px;
 			}
 		}
 	}
@@ -365,6 +337,7 @@ export default {
 		flex-grow: 0;
 	}
 }
+
 .jump-box {
 	height: 300px;
 	box-shadow: inset 0px 0px 10px var(--n-jump-box-shadow);

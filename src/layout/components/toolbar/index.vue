@@ -9,12 +9,12 @@
 		/>
 		<n-space :size="5">
 			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-folder')" placement="top-start">
-				<span class="host-tree-btn" @click="handleCreateFolder">
+				<span class="host-tree-btn" @click.prevent="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
 			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-session')" placement="top-start">
-				<span class="host-tree-btn" @click="gotoCreateShellSession">
+				<span class="host-tree-btn" @click.prevent="gotoCreateShellSession">
 					<i class="el-icon-circle-plus-outline" />
 				</span>
 			</el-tooltip>
@@ -34,13 +34,10 @@ export default {
 	},
 	watch: {
 		searchKeywords() {
-			EventBus.publish('nx-menu-search', this.searchKeywords)
+			setTimeout(() => {
+				EventBus.publish('nx-menu-search', this.searchKeywords)
+			}, 200)
 		}
-	},
-	created() {
-		EventBus.subscript('create-session', () => {
-			this.gotoCreateShellSession()
-		})
 	},
 	methods: {
 		async gotoCreateShellSession() {
