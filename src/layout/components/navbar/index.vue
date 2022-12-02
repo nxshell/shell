@@ -115,7 +115,7 @@ export default {
 					data: {version = ''}
 				} = await axios.get(versionUrl, {timeout: 60 * 1000})
 				if (version) {
-					this.needUpdate = !!semver.compare(this.version, version)
+					this.needUpdate = semver.gt(version, this.version)
 				}
 			} catch (e) {
 				console.error('App版本检测异常', e)
