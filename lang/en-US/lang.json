@@ -46,8 +46,8 @@
     "app": {
         "powertools-shell": "NxShell",
         "theme": {
-            "dark": "Light",
-            "light": "Dark",
+            "dark": "Dark",
+            "light": "Light",
             "pink": "Pink"
         },
         "need-update": "There is a new version, click to upgrade",

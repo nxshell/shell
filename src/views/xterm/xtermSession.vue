@@ -19,6 +19,7 @@
 
 <script>
 import XtermInstance from './xtermInstance'
+import * as EventBus from '@/services/eventbus'
 
 export default {
 	name: 'PtXtermSession',
@@ -108,6 +109,9 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			this.getxtermwitdh()
+		})
+		EventBus.subscript('change-layout', (type) => {
+			this.split_type = type
 		})
 	},
 
