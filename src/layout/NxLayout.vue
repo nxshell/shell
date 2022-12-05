@@ -9,7 +9,29 @@
 				<nx-toolbar />
 				<!-- 右侧开关 -->
 				<div class="window-controls-container" v-if="!IS_MAC_OS">
-					<n-space :size="20">
+					<div v-if="showLayout" class="n-layout-wrapper">
+						<el-tooltip class="item" effect="dark" :content="T('home.session-instance.context-menu.split-normal')" placement="top-start">
+							<span class="n-layout-button" :class="{'is-active':currentLayout === 'normal'}" data-layout="normal" @click="changeLayout">
+								<n-icon name="layout-alone" size="16" />
+							</span>
+						</el-tooltip>
+						<el-tooltip class="item" effect="dark" :content="T('home.session-instance.context-menu.split-row')" placement="top-start">
+							<span class="n-layout-button" :class="{'is-active':currentLayout === 'row'}" data-layout="row" @click="changeLayout">
+								<n-icon name="layout-row" size="16" />
+							</span>
+						</el-tooltip>
+						<el-tooltip class="item" effect="dark" :content="T('home.session-instance.context-menu.split-column')" placement="top-start">
+							<span class="n-layout-button" :class="{'is-active':currentLayout === 'col'}" data-layout="col" @click="changeLayout">
+								<n-icon name="layout-col" size="16" />
+							</span>
+						</el-tooltip>
+						<el-tooltip class="item" effect="dark" :content="T('home.session-instance.context-menu.split-grid')" placement="top-start">
+							<span class="n-layout-button" :class="{'is-active':currentLayout === 'grid'}" data-layout="grid" @click="changeLayout">
+								<n-icon name="layout-lattice" size="16" />
+							</span>
+						</el-tooltip>
+					</div>
+					<n-space :size="14">
 						<span class="control-btn" @click="doMinimize">
 							<i class="el-icon-minus" />
 						</span>
@@ -31,6 +53,7 @@
 
 <script>
 import { NxNavbar, NxToolbar } from "@/layout/components";
+import * as EventBus from '@/services/eventbus'
 
 const IS_MAC_OS = /macintosh/i.test(navigator.userAgent)
 export default {
@@ -64,7 +87,9 @@ export default {
 			IS_MAC_OS,
 			state: 'normal',
 			active: true,
-			window: null
+			window: null,
+			showLayout: false,
+			currentLayout: 'normal'
 		}
 	},
 	computed: {
@@ -72,12 +97,20 @@ export default {
 			return this.topPanel ? {} : { height: '100%' }
 		}
 	},
-
 	created() {
 		this.setWindowHandlers()
+		EventBus.subscript('instance-created', () => {
+			const sessions = this.$sessionManager.getSessionIntances()
+			this.showLayout = sessions.some(x => x.type === 'shell')
+		})
+		EventBus.subscript('instance-close', () => {
+			const sessions = this.$sessionManager.getSessionIntances()
+			this.showLayout = sessions.some(x => x.type === 'shell')
+		})
 	},
 
 	methods: {
+
 		setWindowHandlers() {
 			const currentWindow = powertools.getCurrentWindow()
 			this.window = currentWindow
@@ -124,6 +157,14 @@ export default {
 
 		doClose() {
 			this.window.close()
+		},
+		changeLayout(event) {
+			const element = event.currentTarget
+			const layout = element.getAttribute('data-layout')
+			if (this.currentLayout !== layout) {
+				this.currentLayout = layout
+				EventBus.publish('change-layout', layout)
+			}
 		}
 	}
 }
@@ -175,6 +216,34 @@ export default {
 				padding: 0 10px;
 				-webkit-app-region: no-drag;
 
+				.n-layout-wrapper {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+
+					.n-layout-button {
+						display: inline-flex;
+						justify-content: center;
+						align-items: center;
+						color: var(--n-text-color-base);
+						padding: 5px;
+						border-radius: 4px;
+
+						&:hover {
+							background-color: var(--n-hover-bg-color);
+						}
+
+						&:not(:last-child) {
+							margin-right: 4px;
+						}
+					}
+
+					.is-active {
+						background-color: var(--n-hover-bg-color);
+						color: var(--n-text-color-active);
+					}
+				}
+
 				.control-btn {
 					display: inline-block;
 					width: 32px;
@@ -185,7 +254,7 @@ export default {
 
 					&:hover {
 						cursor: pointer;
-						color: #ffffff;
+						color: var(--n-text-color-light);
 						background-color: var(--n-hover-bg-color);
 					}
 				}
