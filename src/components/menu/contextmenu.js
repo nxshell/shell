@@ -68,7 +68,7 @@ const PtContextMenu = Vue.extend({
 			}
 		},
 		handlePopStack() {
-			this.$destroy()
+			setTimeout(() => this.$destroy(), 100)
 		}
 	},
 
