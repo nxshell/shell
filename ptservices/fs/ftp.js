@@ -9,14 +9,18 @@ class Dirent {
     constructor(stats) {
         this.type = stats.type;
         this.name = stats.name;
-        this.target = stats.target;
+        this.target = stats.target || 'unknow';
         this.sticky = stats.sticky;
-        this.rights = stats.rights;
+        this.rights = stats.rights || {
+            user: '-',
+            group: '-',
+            other: '-'
+        };
         this.acl = stats.acl;
-        this.owner = stats.owner;
-        this.group = stats.group;
+        this.owner = stats.owner || '0';
+        this.group = stats.group || '0';
         this.size = stats.size;
-        this.date = stats.date;
+        this.date = stats.date || '1990-01-01';
     }
     isDirectory() {
         return this.type === 'd';
