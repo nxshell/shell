@@ -14,6 +14,10 @@ export default {
 			type: [Number, String],
 			default: 8
 		},
+		wrap: {
+			type: Boolean,
+			default: false
+		},
 		itemStyle: {
 			type: [Object, Array],
 			default: () => {
@@ -22,46 +26,32 @@ export default {
 		}
 	},
 	render(createElement) {
-		const vnodeList = this.$slots.default.map((x) => {
-			return createElement(
-				'div',
-				{
-					style: {
-						display: 'inline-block',
-						[this.vertical ? 'margin-bottom' : 'margin-right']: `${ this.size }px`,
-						...this.itemStyle
-					}
-				},
-				[x]
-			)
-		})
-
 		return createElement(
 			'div',
 			{
 				class: {
-					space: true
+					'n-space': true
 				},
 				style: {
+					display: 'inline-flex',
 					flexDirection: this.vertical ? 'column' : 'row',
 					alignItems: this.vertical ? this.align : 'center',
-					justifyContent: this.vertical ? 'space-between' : this.align
+					justifyContent: this.vertical ? 'space-between' : this.align,
+					'row-gap': `${this.size}px`,
+					'column-gap': `${this.size}px`,
+					'flex-wrap': this.wrap ? 'wrap' : 'nowrap'
 				}
 			},
-			vnodeList
+			this.$slots.default
 		)
 	}
 }
 </script>
-<style lang="scss" scoped>
-.space {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: nowrap;
 
-	& :last-child {
-		margin-right: 0 !important;
+<style lang="scss" scoped>
+.n-space {
+	& > * {
+		margin: 0 !important;
 	}
 }
 </style>
