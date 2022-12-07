@@ -1,5 +1,5 @@
 <template>
-	<div class="pt-shell-app-nav-bar" :style="{padding: IS_MACOS ? '38px 10px 10px' : '0 10px'}">
+	<div class="pt-shell-app-nav-bar" :style="{padding: IS_MACOS ? '38px 10px 10px' : '0 10px 10x'}">
 		<!-- Logo -->
 		<div class="pt-logo">
 			<el-avatar shape="square" fit="fill" size="small" :src="require('@/assets/logo.png')" />
