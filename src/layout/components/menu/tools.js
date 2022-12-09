@@ -37,7 +37,7 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
  * 右键打开链接
  */
 export function handleSessionTreeContextMenu_Connect() {
-    this.handleHostOpen(this.currentSelectedSessionNode)
+    this.handleHostOpen(this.currentSelectedSessionNode.data.data)
 }
 
 /**
