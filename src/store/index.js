@@ -94,7 +94,6 @@ export default new Vuex.Store({
             commit('COMMIT_SESSION_TABS', sessionTabs)
         },
         updateGlobalSettings({ commit, state }, setting) {
-            console.log('setting', setting)
             if (setting) {
                 commit('UPDATE_GLOBAL_SETTINGS', setting)
             }

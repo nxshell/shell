@@ -161,7 +161,6 @@ export default {
 			this.oldValue = this.editor_view.state.doc.toString()
 		},
 		async save() {
-			console.log('我保存了')
 			this.editorValue = this.editor_view.state.doc.toString()
 			if (this.editorValue !== this.oldValue) {
 				await this.sessionInstance.writeFileContent(this.editorValue)
