@@ -23,7 +23,7 @@ export function unsubscript(evtType: EventType, handler: Function): void {
     globalEventBus.unsubscript(evtType, handler);
 }
 
-export function publish(evtType: EventType, payload: any): void {
+export function publish(evtType: EventType, payload?: any): void {
     globalEventBus.publish(evtType, payload);
 }
 

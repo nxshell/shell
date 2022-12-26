@@ -93,12 +93,12 @@ export const contextMenuMixin = {
     },
     methods: {
         async handleCopy() {
-            let sessTabItem = this.sessionInstTabs[this.sessionContextMenuTabIndex]
+            let sessTabItem = this.sessionInstTabs[this.activeTabIndex]
             let session = sessTabItem.data
             await this.$sessionManager.duplicateSessionInstance(session)
         },
         async handleCloseLeft() {
-            let index = this.sessionContextMenuTabIndex - 1
+            let index = this.activeTabIndex - 1
             if (index < 0) {
                 return
             }
@@ -114,7 +114,7 @@ export const contextMenuMixin = {
         },
         async handleCloseRight() {
             let len = this.sessionInstTabs.length
-            let index = this.sessionContextMenuTabIndex + 1
+            let index = this.activeTabIndex + 1
             if (index > len - 1) {
                 return
             }
@@ -133,7 +133,7 @@ export const contextMenuMixin = {
             let len = this.sessionInstTabs.length
             let session_close = []
             for (let i = 0; i < len; ++i) {
-                if (i !== this.sessionContextMenuTabIndex) {
+                if (i !== this.activeTabIndex) {
                     session_close.push(this.sessionInstTabs[i])
                 }
             }
@@ -144,7 +144,7 @@ export const contextMenuMixin = {
             })
         },
         async handleProp() {
-            const sessTabItem = this.sessionInstTabs[this.sessionContextMenuTabIndex]
+            const sessTabItem = this.sessionInstTabs[this.activeTabIndex]
             const sessionInstance = sessTabItem.data
             const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(sessionInstance.getId())
             await this.$sessionManager.createShellSettingSessionInstance(sessionConfig)

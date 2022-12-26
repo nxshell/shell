@@ -52,7 +52,7 @@ import path from "path";
 
 const iconMapper = {
     ".apk": apk,
-    
+
     ".c": c,
     "cmakelist.txt": cmake,
     ".cpp": cpp,
@@ -70,9 +70,9 @@ const iconMapper = {
 
     ".img": iso,
     ".iso": iso,
-    
+
     ".log": log,
-    
+
     ".ppt": ppt,
     ".pptx": ppt,
     ".wav": audio,
@@ -108,7 +108,7 @@ const iconMapper = {
     ".jar": java,
     ".war": java,
     ".class": java,
-    
+
     ".md": markdown,
 
     ".py": py,
@@ -139,7 +139,7 @@ const iconMapper = {
     ".pdf": pdf,
     ".sh": sh,
     ".tch": sh,
-    
+
     ".xls": xls,
     ".xlsx": xls,
     ".xlsm": xls,
@@ -155,8 +155,7 @@ const iconMapper = {
     ".yml": yaml,
     ".yaml": yaml,
     ".exe": exe,
-    ".gitignore": ignore,
-    // "": ignore,
+    ".gitignore": ignore, // "": ignore,
     ".jsx": jsx,
     ".php": php,
     ".txt": txt,
@@ -178,7 +177,7 @@ const iconMapper = {
     ".go": golang,
 
     ".key": key,
-    
+
     ".rpm": pkg,
     ".deb": pkg,
     ".msi": pkg,
@@ -191,7 +190,7 @@ const iconMapper = {
 
 /**
  * 获取文件对应的图标
- * 
+ *
  * @param {String} fileName 文件名
  * @return {String}
  */
@@ -204,6 +203,15 @@ export function getFileIcon(fileName) {
     return iconMapper[extName.toLowerCase()] || iconMapper.unknown;
 }
 
+/**
+ * 根据文件后缀获取文件图标
+ * @param suffix
+ * @return {*}
+ */
+export function getFileIconBySuffix(suffix) {
+    return iconMapper[suffix.toLowerCase()] || iconMapper.unknown;
+}
+
 export function getFileExtName(fileName) {
     return path.extname(fileName);
 }
@@ -211,7 +219,7 @@ export function getFileExtName(fileName) {
 /**
  * 获取文件夹显示图标
  * 对于特殊目录/etc或者/dev显示特殊文件夹图标
- * 
+ *
  * @param {String} folderPath 文件夹路径
  * @return {String}
  */

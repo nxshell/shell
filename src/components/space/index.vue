@@ -23,6 +23,10 @@ export default {
 			default: () => {
 				return {}
 			}
+		},
+		fill: {
+			type: Boolean,
+			default: false
 		}
 	},
 	render(createElement) {
@@ -37,6 +41,7 @@ export default {
 					flexDirection: this.vertical ? 'column' : 'row',
 					alignItems: this.vertical ? this.align : 'center',
 					justifyContent: this.vertical ? 'space-between' : this.align,
+					width: this.fill ? '100%' : 'auto',
 					'row-gap': `${this.size}px`,
 					'column-gap': `${this.size}px`,
 					'flex-wrap': this.wrap ? 'wrap' : 'nowrap'
