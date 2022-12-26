@@ -73,7 +73,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['theme'])
+		...mapState(['theme', 'editorChange'])
 	},
 	watch: {
 		searchKeyWords(newVal) {
@@ -86,6 +86,9 @@ export default {
 		theme(n, o) {
 			const theme = n === 'dark' ? 1 : n === 'light' ? 0 : 6
 			this.themeChange(theme)
+		},
+		'editor_view.state.doc'(n, o) {
+			this.$store.dispatch('updateEditorStatus', n.toString() !== this.oldValue)
 		}
 	},
 
@@ -244,26 +247,32 @@ export default {
 	height: 100%;
 	width: 100%;
 	background-color: var(--n-bg-color-base);
+
 	.n-editor-toolbar {
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 		height: 40px;
 		padding: 0 5px;
+
 		&__nav {
 			flex: 1 0 0;
+
 			.nav-wrapper {
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
+
 				& > *:not(:last-child) {
 					margin-right: 5px;
 				}
+
 				.nx-edit-file-open {
 					font-size: 18px;
 					color: var(--n-text-color-base);
 					transition: color 0.2s;
 				}
+
 				.editor_url {
 					color: var(--n-text-color-base);
 					text-overflow: ellipsis;
@@ -273,11 +282,13 @@ export default {
 				}
 			}
 		}
+
 		&__actions {
 			flex: 1 0 0;
 			display: flex;
 			justify-content: flex-end;
 			align-items: center;
+
 			& > *:not(:first-child) {
 				margin-left: 5px;
 			}

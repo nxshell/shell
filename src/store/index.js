@@ -32,7 +32,9 @@ export default new Vuex.Store({
         showTabs: true,
         currentSelectedSessionNode: null,
         activeTabIndex: 0,
-        sessionInstTabs: []
+        sessionInstTabs: [],
+        globalSettings: {},
+        editorChange: false
     },
     mutations: {
         setUserInfo(state, newUserInfo) {
@@ -53,6 +55,13 @@ export default new Vuex.Store({
                 state.theme = theme;
             })
         },
+        UPDATE_GLOBAL_SETTINGS(state, setting) {
+            const defaultSettings = globalSetting.getProfile("xterm")
+            const mergeSetting = { ...defaultSettings, ...setting }
+            globalSetting.updateProfile("xterm", mergeSetting).then(() => {
+                state.globalSettings = mergeSetting;
+            })
+        },
         setShowTabs(state, status) {
             state.showTabs = !!status
         },
@@ -67,6 +76,9 @@ export default new Vuex.Store({
         },
         removeSessionInstTabs(state, sessionTab) {
 
+        },
+        UPDATE_EDITOR_STATE(state, status) {
+            state.editorChange = status
         }
     },
     actions: {
@@ -81,6 +93,14 @@ export default new Vuex.Store({
         updateSessionInstanceTabs({ commit }, sessionTabs) {
             commit('COMMIT_SESSION_TABS', sessionTabs)
         },
+        updateGlobalSettings({ commit, state }, setting) {
+            if (setting) {
+                commit('UPDATE_GLOBAL_SETTINGS', setting)
+            }
+        },
+        updateEditorStatus({ commit, state }, status) {
+            commit('UPDATE_EDITOR_STATE', status)
+        }
     },
     getters: {
         userInfo(state) {
@@ -109,6 +129,9 @@ export default new Vuex.Store({
         },
         sessionInstTabs(state) {
             return state.sessionInstTabs
+        },
+        getAllGlobalSettings(state) {
+            return state.globalSettings
         }
     },
     plugins: [userInfoPlugin()]
