@@ -13,9 +13,7 @@
 				<div class="nx-layout-toggle-bar__top"></div>
 				<div class="nx-layout-toggle-bar__bottom"></div>
 			</div>
-			<div v-if="showTabs" class="nx-content-tabs">
-				<nx-tab-menu />
-			</div>
+			<nx-tab-menu v-if="showTabs" />
 			<div class="nx-content" :style="{height: `calc(100% - ${showTabs ? '40px':'0px' })`}">
 				<keep-alive>
 					<router-view :key="$route.name" />
@@ -130,11 +128,6 @@ $nx-content-tabs: 40px;
 					transform: rotate(-12deg) scale(1.15) translateY(2px);
 				}
 			}
-		}
-
-		.nx-content-tabs {
-			height: $nx-content-tabs;
-			box-sizing: border-box;
 		}
 
 		.nx-content {

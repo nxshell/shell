@@ -33,7 +33,7 @@ export default new Vuex.Store({
         currentSelectedSessionNode: null,
         activeTabIndex: 0,
         sessionInstTabs: [],
-        globalSettings: {},
+        noCloseConfirm: false,
         editorChange: false
     },
     mutations: {
@@ -130,8 +130,11 @@ export default new Vuex.Store({
         sessionInstTabs(state) {
             return state.sessionInstTabs
         },
-        getAllGlobalSettings(state) {
-            return state.globalSettings
+        noCloseConfirm(state) {
+            return globalSetting.getProfile("xterm")?.noCloseConfirm ?? state.globalSettings
+        },
+        editorChange(state) {
+            return state.editorChange
         }
     },
     plugins: [userInfoPlugin()]

@@ -177,9 +177,9 @@ export default {
 			this.setTheme(theme)
 		},
 		async handlerVersionUpdate() {
-			// TODO 外链打开github地址
+			// 外链打开github地址
 			const update = 'https://github.com/nxshell/nxshell/releases'
-			powertools.openExterUrl(update)
+			await powertools.openExterUrl(update)
 		}
 	}
 }
