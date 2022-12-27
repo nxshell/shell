@@ -55,11 +55,10 @@ export default new Vuex.Store({
                 state.theme = theme;
             })
         },
-        UPDATE_GLOBAL_SETTINGS(state, setting) {
+        UPDATE_NO_CLOSE_CONFIRM(state, data) {
             const defaultSettings = globalSetting.getProfile("xterm")
-            const mergeSetting = { ...defaultSettings, ...setting }
-            globalSetting.updateProfile("xterm", mergeSetting).then(() => {
-                state.globalSettings = mergeSetting;
+            globalSetting.updateProfile("xterm", { ...defaultSettings, noCloseConfirm: data }).then(() => {
+                state.noCloseConfirm = data
             })
         },
         setShowTabs(state, status) {
@@ -93,10 +92,8 @@ export default new Vuex.Store({
         updateSessionInstanceTabs({ commit }, sessionTabs) {
             commit('COMMIT_SESSION_TABS', sessionTabs)
         },
-        updateGlobalSettings({ commit, state }, setting) {
-            if (setting) {
-                commit('UPDATE_GLOBAL_SETTINGS', setting)
-            }
+        updateNoCloseConfirm({ commit, state }, data) {
+            commit('UPDATE_NO_CLOSE_CONFIRM', data ?? 0)
         },
         updateEditorStatus({ commit, state }, status) {
             commit('UPDATE_EDITOR_STATE', status)
@@ -131,7 +128,7 @@ export default new Vuex.Store({
             return state.sessionInstTabs
         },
         noCloseConfirm(state) {
-            return globalSetting.getProfile("xterm")?.noCloseConfirm ?? state.globalSettings
+            return globalSetting.getProfile("xterm")?.noCloseConfirm ?? state.noCloseConfirm
         },
         editorChange(state) {
             return state.editorChange
