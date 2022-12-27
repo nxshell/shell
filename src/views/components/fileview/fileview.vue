@@ -55,6 +55,7 @@
 				<el-input
 					v-model="searchKeyWords"
 					:placeholder="T('home.fileview.mainview.search-tab')"
+					clearable
 					class="nx-search-input"
 					suffix-icon="el-icon-search"
 				/>

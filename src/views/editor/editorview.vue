@@ -14,6 +14,7 @@
 				<el-input
 					v-model="searchKeyWords"
 					:placeholder="T('home.editor.search-tab')"
+					clearable
 					class="nx-search-input"
 					suffix-icon="el-icon-search"
 					@keydown.enter.native="searchDown"
@@ -27,10 +28,10 @@
 <script>
 import { mapState } from 'vuex'
 
-import { EditorView, keymap, lineNumbers, highlightActiveLine } from '@codemirror/view'
-import { EditorSelection, SelectionRange, Compartment } from '@codemirror/state'
+import { EditorView, keymap, lineNumbers } from '@codemirror/view'
+import { Compartment, EditorSelection, SelectionRange } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
-import { highlightSelectionMatches, SearchCursor } from '@codemirror/search'
+import { SearchCursor } from '@codemirror/search'
 
 import { javascript } from '@codemirror/lang-javascript'
 import { css } from '@codemirror/lang-css'
@@ -147,8 +148,6 @@ export default {
 				keymap.of([...defaultKeymap, ...historyKeymap, ...ctrl_s_key]),
 				lineNumbers(),
 				history(),
-				highlightActiveLine(),
-				highlightSelectionMatches(),
 				lineWrapping.of(EditorView.lineWrapping),
 				this.getSupportLangMode(sessionInstance.ext_name),
 				this.themeConfig.of([themes[this.editorTheme]])
