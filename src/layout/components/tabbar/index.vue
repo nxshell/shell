@@ -34,7 +34,7 @@ import {
 	updateSessionInstTabs
 } from '@/layout/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import { contextMenuMixin } from './context-menu-mixin'
 import BScroll from '@better-scroll/core'
 import MouseWheel from '@better-scroll/mouse-wheel'
@@ -94,11 +94,10 @@ export default {
 		})
 	},
 	computed: {
-		...mapGetters(['activeTabIndex', 'sessionInstTabs', 'noCloseConfirm', 'editorChange'])
+		...mapState(['activeTabIndex', 'sessionInstTabs', 'noCloseConfirm', 'editorChange'])
 	},
 	watch: {
 		sessionInstTabs: function (n, o) {
-			console.log(n)
 			if (n.toString() !== o.toString()) {
 				setTimeout(() => {
 					this.scrollBar.refresh()
@@ -149,7 +148,7 @@ export default {
 				return
 			}
 			const noConfirm = this.noCloseConfirm
-			if (noConfirm === 1 && session.type !== "editor") {
+			if (noConfirm && session.type !== "editor") {
 				session.beforeClose()
 				session.close()
 				this.$store.dispatch('updateActiveTabIndex', index)
@@ -179,11 +178,11 @@ export default {
 						h('el-checkbox', {
 							props: {
 								label: '下次不再确认',
-								trueLabel: 1,
-								falseLabel: 0
 							},
+							trueLabel: true,
+							falseLabel: false,
 							on: {
-								change: (value) => this.$store.dispatch('updateGlobalSettings', { noCloseConfirm: value })
+								change: (value) => this.$store.dispatch('updateNoCloseConfirm', value)
 							}
 						}, null)
 					]
