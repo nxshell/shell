@@ -43,7 +43,7 @@ export default {
 		async openFolder() {
 			const coreService = powertools.getService('powertools-core')
 			const selectedFiles = await coreService.showOpenDialog({
-				title: this.T('home.fileview.file-dialog.save-folder'),
+				title: this.$t('home.fileview.file-dialog.save-folder'),
 				properties: ['openDirectory']
 			})
 			if (selectedFiles.canceled) {

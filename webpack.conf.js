@@ -1,6 +1,7 @@
 /**
  * ptservices build
  */
+import path from 'path'
 
 module.exports = {
     mode: "production",

@@ -1,0 +1,620 @@
+{
+    "lock": {
+        "lock_desc": "Lock Setting",
+        "password_desc": "Password Code",
+        "password_verify": "Password Repeat",
+        "unlock_desc": "UnLock",
+        "unlock_password_desc": "Password Code"
+    },
+    "components": {
+        "OK": "OK",
+        "Cancel": "Cancel",
+        "pt-xterm": {
+            "open-url": "Open URL(Ctrl + click)",
+            "search-up": "Search to top",
+            "search-down": "Search to bottom",
+            "search-close": "Close",
+            "search-placeholder": "Input to find",
+            "keyboard-input-off": "OFF",
+            "keyboard-input-on": "ON",
+            "keyboard-input-note": "Keyboard would send to same session which turn on"
+        },
+        "auth": {
+            "title": "Auth",
+            "authType": {
+                "title": "Auth Type"
+            },
+            "username": {
+                "title": "user"
+            },
+            "password": {
+                "title": "Password"
+            },
+            "publickey": {
+                "title": "Priavte Key"
+            },
+            "keyboard": {
+                "title": "keyboard Interactive"
+            },
+            "passphrase": {
+                "title": "Private key password"
+            }
+        }
+    },
+    "app": {
+        "welcome": "Welcome",
+        "login": "My NxShell",
+        "powertools-shell": "NxShell",
+        "theme": {
+            "dark": "Dark",
+            "light": "Light",
+            "pink": "Pink"
+        },
+        "need-update": "There is a new version, click to upgrade",
+        "current-version": "Current Version"
+    },
+    "home": {
+        "editor": {
+            "search-tab": "Please input search content"
+        },
+        "nav": {
+            "user-login": "Click for login page",
+            "user-info": "Click for user information"
+        },
+        "host-manager": {
+            "search": {
+                "placeholder": "Please enter IP or hostname"
+            },
+            "dialog-edit-host": {
+                "add-title": "Create new host profile",
+                "edit-title": "Edit an existing host profile",
+                "host-name": "Host Name:",
+                "host-address": "Host IP:",
+                "host-port": "Port:",
+                "host-username": "Username:",
+                "host-password": "Password:",
+                "host-cert": "Certification:",
+                "host-auth-type": "Authorization mode:",
+                "auth-type": {
+                    "password": "Password mode",
+                    "cert": "Certification mode"
+                }
+            },
+            "dialog-edit-folder": {
+                "add-title": "Create session folder",
+                "edit-title": "Edit session folder",
+                "folder-name": "Session folder:"
+            },
+            "dialog-delete-confirm": {
+                "title": "Delete session",
+                "delete-node": "Are you sure to delete session {0}? The connection of the session will be disconnected and the operation is irreversible.",
+                "delete-folder": "Are you sure to delete session folder {0}? All subfolders and sessions under this folder will be deleted and all relative connections will be disconnected."
+            },
+            "session-tree": {
+                "no-session-data": "No session data",
+                "no-search-result": "No search result"
+            }
+        },
+        "sessions-context-menu": {
+            "duplicate": "Duplicate session",
+            "close": "Close session",
+            "close-left": "Close Left session",
+            "close-right": "Close Right session",
+            "close-other": "Close Others session",
+            "prop": "Session properties",
+            "connect": "Connect",
+            "sftp": "Open SFTP",
+            "cut": "Cut",
+            "copy": "Copy",
+            "paste": "Paste",
+            "delete": "Delete",
+            "create": "Create",
+            "create-folder": "Create session folder",
+            "create-session": "Create session",
+            "save-config": "Export config",
+            "import-config": "Import config",
+            "rename": "Rename"
+        },
+        "profile": {
+            "global-setting": "Global Settings",
+            "default-session-name": "Unnamed host",
+            "base": {
+                "title": "Basic config",
+                "host-name": {
+                    "title": "Host name",
+                    "description": "The host name can use characters or numbers, which is required."
+                },
+                "os": {
+                    "title": "Operating system",
+                    "description": "The operating system type of the host, such as Ubuntu/Redhat/CentOS, and also can be set to auto detection.",
+                    "options": {
+                        "auto": "auto detection"
+                    }
+                },
+                "protocol": {
+                    "title": "Protocal",
+                    "description": "NxShell can only support SSH2/Ftp/Telnet/Serial now."
+                },
+                "host": {
+                    "title": "Host",
+                    "description": "Address of the host, IP(IPv4/IPv6）, domain name, or hostname."
+                },
+                "port": {
+                    "title": "Port",
+                    "description": "Port number,default to 22.",
+                    "ftpdescription": "Port number,default to 21.",
+                    "telnetdescription": "Port number,default to 23.",
+                    "vncdescription": "Port number,default to 5800."
+                }
+            },
+            "system": {
+                "title": "System config",
+                "language": {
+                    "title": "Language setting",
+                    "description": "Languages",
+                    "options": {
+                        "en-US": "English",
+                        "zh-CN": "Chinese"
+                    }
+                },
+                "theme": {
+                    "title": "Theme setting",
+                    "description": "Themes config, Restart to take effect",
+                    "options": {
+                        "dark": "Dark",
+                        "light": "Light",
+                        "pink": "Pink"
+                    }
+                },
+                "nxconfig": {
+                    "title": "Session config store path",
+                    "description": "config store path, Restart to take effect"
+                }
+            },
+            "serial": {
+                "title": "Serial Config",
+                "port": {
+                    "title": "Serial port",
+                    "description": "Select Port"
+                },
+                "baudRate": {
+                    "title": "baudRate",
+                    "description": "Select baudRate"
+                },
+                "dataBits": {
+                    "title": "dataBits",
+                    "description": "Select dataBits"
+                },
+                "stopBits": {
+                    "title": "stopBits",
+                    "description": "Select stopBits"
+                },
+                "parity": {
+                    "title": "parity",
+                    "description": "Select parity"
+                },
+                "flowControl": {
+                    "title": "flowControl",
+                    "description": "Select flowControl"
+                }
+            },
+            "terminal": {
+                "title": "Terminal config",
+                "xterm": {
+                    "title": "Terminal mode",
+                    "description": "Mode types",
+                    "options": {
+                        "linux": "linux",
+                        "vt100": "vt100",
+                        "xterm": "xterm"
+                    }
+                },
+                "font-size": {
+                    "title": "Font size",
+                    "description": "Font size of the terminal",
+                    "options": {
+                        "n12": "12px",
+                        "n14": "14px",
+                        "n16": "16px",
+                        "n18": "18px",
+                        "n20": "20px",
+                        "n22": "22px",
+                        "n24": "24px",
+                        "n26": "26px",
+                        "n28": "28px"
+                    }
+                },
+                "font-weight": {
+                    "title": "Font weight",
+                    "description": "Font wight of the terminal",
+                    "options": {
+                        "normal": "Normal",
+                        "bold": "Bold",
+                        "w100": "100",
+                        "w200": "200",
+                        "w300": "300",
+                        "w400": "400",
+                        "w500": "500",
+                        "w600": "600",
+                        "w700": "700",
+                        "w800": "800",
+                        "w900": "900"
+                    }
+                },
+                "xterm-theme": {
+                    "title": "Terminal theme",
+                    "description": "Set terminal theme",
+                    "options": {
+                        "default": "default theme"
+                    }
+                },
+                "font-family": {
+                    "title": "Font Family",
+                    "description": "Font Family of the terminal",
+                    "options": {
+                        "default": "default",
+                        "times-new-roman": "Times New Roman",
+                        "lucida-console": "Lucida Console",
+                        "consolas": "Consolas",
+                        "fira-code": "Fira Code"
+                    }
+                },
+                "charset": {
+                    "title": "Charsets",
+                    "description": "Charset of the terminal"
+                },
+                "lineHeight": {
+                    "title": "Line Height",
+                    "description": "Line Height"
+                },
+                "letterSpacing": {
+                    "title": "Letter Spacing",
+                    "description": "Letter Spacing"
+                },
+                "cursorBlink": {
+                    "title": "Cursor Blink",
+                    "description": "Cursor Blink"
+                },
+                "cursorStyle": {
+                    "title": "Cursor Style",
+                    "description": "Cursor Style"
+                }
+            },
+            "auth": {
+                "title": "Login authorization",
+                "auth-type": {
+                    "title": "Authorization mode",
+                    "description": "The mode for login authrization, password/ssh-key/keyboard-interactive is now supported.",
+                    "options": {
+                        "password": "Password",
+                        "publickey": "Private key",
+                        "keyboard-interactive": "keyboard Interactive"
+                    }
+                },
+                "proxy-type": {
+                    "title": "Proxy Setting",
+                    "description": "The SSH proxy setting.",
+                    "options": {
+                        "none": "none",
+                        "socksv5": "socksv5"
+                    }
+                },
+                "forward-type": {
+                    "title": "Forward Setting",
+                    "description": "The SSH forward setting.",
+                    "options": {
+                        "none": "none",
+                        "x11": "x11"
+                    }
+                },
+                "forwardin-type": {
+                    "title": "ForwardIn Setting",
+                    "description": "SSH ForwardIn Setting.",
+                    "options": {
+                        "none": "none",
+                        "forwardin": "Forwardin"
+                    }
+                },
+                "forwardin": {
+                    "title": "ForwardIn Setting",
+                    "remotehost": {
+                        "title": "Remote IP",
+                        "description": "Config Remote IP Address"
+                    },
+                    "remoteport": {
+                        "title": "Remote Port",
+                        "description": "Config Remote port for Binding"
+                    },
+                    "localhost": {
+                        "title": "Local IP",
+                        "description": "Config Local IP Address"
+                    },
+                    "localport": {
+                        "title": "Local Port",
+                        "description": "Config Local port for Connect"
+                    }
+                },
+                "socksv5": {
+                    "title": "socksv5 proxy",
+                    "host": {
+                        "title": "Proxy IP",
+                        "description": "Proxy IP information"
+                    },
+                    "port": {
+                        "title": "Proxy Port",
+                        "description": "Proxy Port information"
+                    }
+                },
+                "username": {
+                    "title": "Name",
+                    "description": "The name to login the host."
+                },
+                "password": {
+                    "title": "Password",
+                    "description": "The password associated with the name to login the host."
+                },
+                "publickey": {
+                    "title": "Private key",
+                    "description": "Select or drag the private key here, which is paired with the host."
+                },
+                "passphrase": {
+                    "title": "Passphrase",
+                    "description": "The password associated with the private key."
+                },
+                "secure": {
+                    "title": "SSL",
+                    "description": "Encrypted communication for control and data channels",
+                    "options": {
+                        "true": "Two-way",
+                        "false": "None SSL connections",
+                        "control": "Encryption for control messages"
+                    }
+                },
+                "url": {
+                    "title": "URL of webdav connections",
+                    "description": "The HTTP path for connections to webdav"
+                }
+            },
+            "connect": {
+                "title": "Connection config",
+                "keepalive": {
+                    "title": "Alive keep interval",
+                    "description": "Interval time in seconds that a message will be send to remote host to make connection alive"
+                },
+                "keepalive-count-max": {
+                    "title": "Times of no keepalive",
+                    "description": "Disconnect the remote host after several times(default to 3 times) that no remote keepalive messages are feedback"
+                },
+                "ready-timeout": {
+                    "title": "Timeout of connection",
+                    "description": "Timeout in MS(default to 20000) for a remote connection trying to establish"
+                },
+                "sftp-dirt": {
+                    "title": "Sftp open directory of connection",
+                    "description": "Sftp will open the directory when create connection by left side"
+                }
+            },
+            "operator": {
+                "save": "Save",
+                "save-conn": "Save and connect",
+                "configure-mode": "Simple Mode"
+            }
+        },
+        "session-instance": {
+            "duplicate-session": "Duplicate session",
+            "reconnect": "Reconnect",
+            "SFTP": "SFTP file transfer",
+            "tunnel": "SSH tunnel",
+            "tunnel-success": "Socks5 listen on port {0}",
+            "sftp-notice": "SFTP is comming soon and should be ready in next version",
+            "tunnel-notice": "SSH tunnel is comming soon and should be ready in next version",
+            "ctrldelete": "Ctrl + Delete",
+            "shutdown": "Shutdown",
+            "context-menu": {
+                "copy": "Copy",
+                "paste": "Paste",
+                "select-paste": "Selected Paste",
+                "search": "Search",
+                "property": "Property",
+                "log-manager": "Logging Manager",
+                "open-log": "Start Loging",
+                "close-log": "Close Loging",
+                "log-folder": "Log File Location",
+                "log-editor": "Open Log File",
+                "fullscreen": "FullScreen",
+                "find": "Find",
+                "screen-split": "Screen Layout",
+                "split-row": "Split Row",
+                "split-column": "Split Column",
+                "split-grid": "Split Group",
+                "split-normal": "Single",
+                "send-all": "Send keyboard to",
+                "send-many": "All SSH Terminal",
+                "send-one": "Current SSH Terminal",
+                "lock": "Lock Sessions",
+                "select-all": "Select All"
+            },
+            "delete-dialog": {
+                "title": "Close Session Instance",
+                "message": "Are you sure to close the session?"
+            },
+            "save-dialog": {
+                "title": "Close Sftp Editor",
+                "message": "Are you sure to save the file?"
+            }
+        },
+        "welcome": {
+            "subtitle": "New shell experience",
+            "start": "Start",
+            "create-session": "Create session",
+            "create-session-folder": "Create session folder",
+            "recents": "Recents",
+            "thanks": "Thanks for our contributer",
+            "no-recents": "No recents",
+            "support-nxshell": "Support NxShell",
+            "goto-feedback-github": "Feedback",
+            "software-version": "Software Version",
+            "donate": "Donate",
+            "reportProblem": "Report a problem"
+        },
+        "user-center": {
+            "login": "Login",
+            "logout": "Logout",
+            "auth-type": "Please choose the way to login",
+            "feedback": "Feedback",
+            "thanks": "Thank you for choosing NxShell, the future development of NxShell will be better because of your use.",
+            "look-forward-to-feedback": "We sincerely look forward to your feedback, so that we can continuously improve the quality of NxShell and serve you better!",
+            "goto-feedback-github": "Feedback at GitHub",
+            "goto-feedback-email": "Send email to 82828068@qq.com",
+            "goto-feedback-or": "or"
+        },
+        "fileview": {
+            "context-menu": {
+                "open": "Open",
+                "rename": "Rename",
+                "chmod": "Chmod",
+                "move": "Move",
+                "delete": "Delete",
+                "prop": "Property",
+                "upload-file": "File upload",
+                "upload-folder": "Directory upload",
+                "download-file": "File download",
+                "download-folder": "Directory download",
+                "createdir": "Create directory",
+                "createfile": "Create file",
+                "viewtype": "View type",
+                "viewtype-detail": "Detail information",
+                "viewtype-medium-icon": "Icon"
+            },
+            "prop-dialog": {
+                "file-props": "File property",
+                "dir-props": "Directory property",
+                "directory": "Directory",
+                "file": "File",
+                "socket": "Socket",
+                "symbol-link": "Symbol link",
+                "block-dev": "Block Dev",
+                "char-dev": "Char Dev",
+                "fifo": "FIFO",
+                "location": "Location",
+                "perms": "Permissions",
+                "size": "Size",
+                "modify-time": "Modify time",
+                "modify-time-format": "{0}",
+                "user": "User",
+                "group": "Group",
+                "type": "Type"
+            },
+            "rename-dialog": {
+                "title": "Rename",
+                "placeholder": "Please enter the new name",
+                "invalid-name": "Following charactors are invalid: {0}"
+            },
+            "chmod-dialog": {
+                "title": "Chmod",
+                "placeholder": "Please enter the new permissions",
+                "invalid-permissions": "Following permission invalid"
+            },
+            "move-dialog": {
+                "title": "Move"
+            },
+            "createdir-dialog": {
+                "title": "Create direcotry",
+                "name": "Directory name",
+                "placeholder": "Please enter the name for the directory",
+                "invalid-dir-name": "Following characters are invalid: {0}"
+            },
+            "confirm-dialogs": {
+                "delete-file": {
+                    "title": "Delete file",
+                    "message": "Are you sure to delete the file:{0} ？"
+                },
+                "delete-dir": {
+                    "title": "Delete directory",
+                    "message": "Are you sure to delete directory {0} ？All sub directorys and files under this directory will be deleted recursively!"
+                },
+                "delete-many": {
+                    "title": "Delete multiple items",
+                    "message": "You have selected {0} items，Are you sure to delete them at same time?"
+                },
+                "not-allow-open-file": {
+                    "title": "Open File size Exceed 3M",
+                    "message": "You have selected file which exceed 3M,Current sftp editor not support"
+                },
+                "errors": {
+                    "title": "Error",
+                    "path-not-exist": "Path: {0} does not exist.",
+                    "error-message": "Error message: {0}",
+                    "upload-error": "Update load error: {0}",
+                    "download-error:": "Download error: {0}"
+                }
+            },
+            "ask-dialogs": {
+                "merge": {
+                    "title": "Merge or escape",
+                    "message": "Directory with same name found:{0}",
+                    "keep": "Keep same action for subsequent directories with same name",
+                    "dir-info-name": "Name of directory:{0}",
+                    "dir-info-lastmodify": "Last modify time:{0}"
+                },
+                "overwrite": {
+                    "title": "Replace or escape",
+                    "message": "File with same name found:{0}",
+                    "source": "Source file:{0}",
+                    "dest": "Destination file: {0}",
+                    "keep": "Keep same action for subsequent files with same name",
+                    "file-info-name": "Fine name: {0}",
+                    "file-info-size": "Size: {0} B",
+                    "file-info-lastmodify": "Last modify time: {0}"
+                },
+                "common-buttons": {
+                    "btn-merge": "Merge",
+                    "btn-overwrite": "Replace",
+                    "btn-skip": "Escape",
+                    "btn-cancel": "Cancel"
+                }
+            },
+            "file-dialog": {
+                "open-file": "Select files to upload",
+                "open-folder": "Select directory to upload",
+                "save-file": "Save file",
+                "save-folder": "Save directory"
+            },
+            "mainview": {
+                "total-file-count": "{0} itme(s)",
+                "total-selected-count": "Totally {0} item(s),you have selected {1} item(s)",
+                "search-tab": "Please input search file name",
+                "go-back": "Back",
+                "go-forward": "Forward",
+                "go-up": "Parent Directory",
+                "go-refresh": "Refresh",
+                "progress": {
+                    "delete": "{0} item(s) have been deleted in {1} item(s)",
+                    "upload": "{0} item(s) will be upladed,remaining {1} item(s)",
+                    "download": "{0} item(s) will be downloaded, remaining {1} item(s)",
+                    "prepare-download": "Prepare to download...",
+                    "prepare-upload": "Prepare to upload...",
+                    "donwload-finished": "All files have been downloaded.",
+                    "upload-finished": "All files have been upladed."
+                },
+                "columns": {
+                    "name": "File name",
+                    "size": "Size",
+                    "type": "Type",
+                    "user": "User",
+                    "group": "User group",
+                    "lastModify": "Last modify time",
+                    "perms": "Permissions",
+                    "fmt-time": "{0}"
+                },
+                "file-types": {
+                    "dir": "Directory",
+                    "file": "File"
+                }
+            }
+        },
+        "sftp": {
+            "err-dialog-title": "Operation Error"
+        }
+    }
+}

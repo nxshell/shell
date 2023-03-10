@@ -10,7 +10,7 @@
 		/>
 		<slot>
 			<el-input v-model="fileNames" readonly>
-				<el-button slot="append" type="text" size="small" plain @click="openFile">{{ T('Select') }}</el-button>
+				<el-button slot="append" type="text" size="small" plain @click="openFile">{{ $t('Select') }}</el-button>
 			</el-input>
 		</slot>
 	</div>

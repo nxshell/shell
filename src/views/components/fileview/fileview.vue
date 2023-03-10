@@ -12,7 +12,7 @@
 					<el-tooltip
 						class="item"
 						effect="dark"
-						:content="T('home.fileview.mainview.go-back')"
+						:content="$t('home.fileview.mainview.go-back')"
 						placement="right-end"
 					>
 						<el-button type="text" icon="el-icon-back" :disabled="!canGoBack" @click="goBack" />
@@ -20,7 +20,7 @@
 					<el-tooltip
 						class="item"
 						effect="dark"
-						:content="T('home.fileview.mainview.go-forward')"
+						:content="$t('home.fileview.mainview.go-forward')"
 						placement="right-end"
 					>
 						<el-button type="text" icon="el-icon-right" :disabled="!canForward" @click="forward" />
@@ -28,7 +28,7 @@
 					<el-tooltip
 						class="item"
 						effect="dark"
-						:content="T('home.fileview.mainview.go-up')"
+						:content="$t('home.fileview.mainview.go-up')"
 						placement="right-end"
 					>
 						<el-button type="text" icon="el-icon-top" :disabled="!canGoUp" @click="goUp" />
@@ -36,7 +36,7 @@
 					<el-tooltip
 						class="item"
 						effect="dark"
-						:content="T('home.fileview.mainview.go-refresh')"
+						:content="$t('home.fileview.mainview.go-refresh')"
 						placement="right-end"
 					>
 						<el-button type="text" icon="el-icon-refresh" :disabled="!refresh" @click="refresh" />
@@ -54,7 +54,7 @@
 			<template slot="right">
 				<el-input
 					v-model="searchKeyWords"
-					:placeholder="T('home.fileview.mainview.search-tab')"
+					:placeholder="$t('home.fileview.mainview.search-tab')"
 					clearable
 					class="nx-search-input"
 					suffix-icon="el-icon-search"
@@ -84,7 +84,7 @@
 			:speed="currentProgressStatus.speed"
 		/>
 		<!-- 查看文件属性弹窗 -->
-		<el-dialog :title="T('home.fileview.prop-dialog.file-props')" width="40%" :visible.sync="filePropDialog.show">
+		<el-dialog :title="$t('home.fileview.prop-dialog.file-props')" width="40%" :visible.sync="filePropDialog.show">
 			<div class="file-prop-dialog">
 				<el-scrollbar style="height: 100%">
 					<el-descriptions
@@ -105,38 +105,38 @@
 							</template>
 							{{ filePropDialog.dirent.filename }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.type')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.type')" :span="10">
 							{{ filePropDialog.dirent.type }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.location')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.location')" :span="10">
 							{{ filePropDialog.dirent.location }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.size')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.size')" :span="10">
 							{{ filePropDialog.dirent.size | fileSize }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.modify-time')" :span="10">
-							{{ T('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.modify-time')" :span="10">
+							{{ $t('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.user')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.user')" :span="10">
 							{{ filePropDialog.dirent.user }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.group')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.group')" :span="10">
 							{{ filePropDialog.dirent.group }}
 						</el-descriptions-item>
-						<el-descriptions-item :label="T('home.fileview.prop-dialog.perms')" :span="10">
+						<el-descriptions-item :label="$t('home.fileview.prop-dialog.perms')" :span="10">
 							{{ filePropDialog.dirent.perms }}
 						</el-descriptions-item>
 					</el-descriptions>
 				</el-scrollbar>
 			</div>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseFilePropDialog">{{ T('components.Cancel') }}</el-button>
-				<el-button type="primary" @click="handleCloseFilePropDialog">{{ T('components.OK') }}</el-button>
+				<el-button @click="handleCloseFilePropDialog">{{ $t('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleCloseFilePropDialog">{{ $t('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 创建文件夹弹窗 -->
 		<el-dialog
-			:title="T('home.fileview.createdir-dialog.title')"
+			:title="$t('home.fileview.createdir-dialog.title')"
 			:visible.sync="dirCreateDialog.show"
 			:close-on-click-modal="false"
 			width="450px"
@@ -144,24 +144,24 @@
 			<n-space vertical :item-style="{width: '100%'}">
 				<el-input
 					v-model="dirCreateDialog.dirname"
-					:placeholder="T('home.fileview.createdir-dialog.placeholder')"
+					:placeholder="$t('home.fileview.createdir-dialog.placeholder')"
 				/>
 				<el-alert
 					v-if="!isValidNewDirName"
-					:title="T('home.fileview.createdir-dialog.invalid-dir-name')"
+					:title="$t('home.fileview.createdir-dialog.invalid-dir-name')"
 					:closable="false"
 					type="warning"
 					show-icon
 				/>
 			</n-space>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCreateDirCancel">{{ T('components.Cancel') }}</el-button>
-				<el-button type="primary" @click="handleCreateDirConfirm">{{ T('components.OK') }}</el-button>
+				<el-button @click="handleCreateDirCancel">{{ $t('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleCreateDirConfirm">{{ $t('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 重命名弹窗 -->
 		<el-dialog
-			:title="T('home.fileview.rename-dialog.title')"
+			:title="$t('home.fileview.rename-dialog.title')"
 			:visible.sync="renameDialog.show"
 			:close-on-click-modal="false"
 			width="400px"
@@ -169,11 +169,11 @@
 			<n-space vertical :item-style="{width: '100%'}">
 				<el-input
 					v-model="renameDialog.dirname"
-					:placeholder="T('home.fileview.rename-dialog.placeholder')"
+					:placeholder="$t('home.fileview.rename-dialog.placeholder')"
 				></el-input>
 				<el-alert
 					v-if="!isValidRenameDirName"
-					:title="T('home.fileview.rename-dialog.invalid-name')"
+					:title="$t('home.fileview.rename-dialog.invalid-name')"
 					:closable="false"
 					type="warning"
 					show-icon
@@ -181,13 +181,13 @@
 			</n-space>
 
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleRenameCancel">{{ T('components.Cancel') }}</el-button>
-				<el-button type="primary" @click="handleRenameConfirm">{{ T('components.OK') }}</el-button>
+				<el-button @click="handleRenameCancel">{{ $t('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleRenameConfirm">{{ $t('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 文件权限修改弹窗 -->
 		<el-dialog
-			:title="T('home.fileview.chmod-dialog.title')"
+			:title="$t('home.fileview.chmod-dialog.title')"
 			:visible.sync="chmodDialog.show"
 			:close-on-click-modal="false"
 			width="400px"
@@ -195,11 +195,11 @@
 			<n-space vertical :item-style="{width: '100%'}">
 				<el-input
 					v-model="chmodDialog.permissions"
-					:placeholder="T('home.fileview.chmod-dialog.placeholder')"
+					:placeholder="$t('home.fileview.chmod-dialog.placeholder')"
 				></el-input>
 				<el-alert
 					v-if="!isValidPermissions"
-					:title="T('home.fileview.chmod-dialog.invalid-permissions')"
+					:title="$t('home.fileview.chmod-dialog.invalid-permissions')"
 					:closable="false"
 					type="warning"
 					show-icon
@@ -207,13 +207,13 @@
 			</n-space>
 
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseChmodDialog">{{ T('components.Cancel') }}</el-button>
-				<el-button type="primary" @click="handleChmodConfirm">{{ T('components.OK') }}</el-button>
+				<el-button @click="handleCloseChmodDialog">{{ $t('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleChmodConfirm">{{ $t('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<!-- 文件移动弹窗 -->
 		<el-dialog
-			:title="T('home.fileview.move-dialog.title')"
+			:title="$t('home.fileview.move-dialog.title')"
 			:visible.sync="moveDialog.show"
 			:close-on-click-modal="false"
 			width="400px"
@@ -224,15 +224,15 @@
 				</el-select>
 			</div>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="handleCloseMoveDialog">{{ T('components.Cancel') }}</el-button>
-				<el-button type="primary" @click="handleMoveConfirm">{{ T('components.OK') }}</el-button>
+				<el-button @click="handleCloseMoveDialog">{{ $t('components.Cancel') }}</el-button>
+				<el-button type="primary" @click="handleMoveConfirm">{{ $t('components.OK') }}</el-button>
 			</div>
 		</el-dialog>
 		<el-dialog :title="askDialog.title" :visible.sync="askDialog.show" :close-on-click-modal="false">
 			<!-- 合并目录 -->
 			<template v-if="askDialog.questionType === 'merge'">
 				<el-descriptions
-					:title="T('home.fileview.ask-dialogs.merge.message', askDialog.args.name)"
+					:title="$t('home.fileview.ask-dialogs.merge.message', askDialog.args.name)"
 					:colon="false"
 					:column="2"
 				>
@@ -242,10 +242,10 @@
 						</template>
 						<div class="n-description">
 							<n-space vertical>
-								<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
 								<p>
 									{{
-										T(
+										$t(
 											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
 											askDialog.args.src.lastModify
 										)
@@ -260,10 +260,10 @@
 						</template>
 						<div class="n-description">
 							<n-space vertical>
-								<p>{{ T('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
 								<p>
 									{{
-										T(
+										$t(
 											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
 											askDialog.args.src.lastModify
 										)
@@ -274,7 +274,7 @@
 					</el-descriptions-item>
 					<el-descriptions-item labelStyle="margin-right: 0;">
 						<el-checkbox v-model="askDialog.keep">
-							{{ T('home.fileview.ask-dialogs.merge.keep') }}
+							{{ $t('home.fileview.ask-dialogs.merge.keep') }}
 						</el-checkbox>
 					</el-descriptions-item>
 				</el-descriptions>
@@ -282,7 +282,7 @@
 			<!-- 覆盖文件 -->
 			<template v-if="askDialog.questionType === 'overwrite'">
 				<el-descriptions
-					:title="T('home.fileview.ask-dialogs.overwrite.message', askDialog.args.name)"
+					:title="$t('home.fileview.ask-dialogs.overwrite.message', askDialog.args.name)"
 					:colon="false"
 					:column="2"
 				>
@@ -293,16 +293,16 @@
 						<div class="n-description">
 							<n-space vertical>
 								<p>
-									{{ T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+									{{ $t('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
 								</p>
 								<p>
 									{{
-										T('home.fileview.ask-dialogs.overwrite.file-info-size', askDialog.args.src.size)
+										$t('home.fileview.ask-dialogs.overwrite.file-info-size', askDialog.args.src.size)
 									}}
 								</p>
 								<p>
 									{{
-										T(
+										$t(
 											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
 											askDialog.args.src.lastModify
 										)
@@ -318,11 +318,11 @@
 						<div class="n-description">
 							<n-space vertical>
 								<p>
-									{{ T('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+									{{ $t('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
 								</p>
 								<p>
 									{{
-										T(
+										$t(
 											'home.fileview.ask-dialogs.overwrite.file-info-size',
 											askDialog.args.dest.size
 										)
@@ -330,7 +330,7 @@
 								</p>
 								<p>
 									{{
-										T(
+										$t(
 											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
 											askDialog.args.dest.lastModify
 										)
@@ -341,23 +341,23 @@
 					</el-descriptions-item>
 					<el-descriptions-item labelStyle="margin-right: 0;">
 						<el-checkbox v-model="askDialog.keep">
-							{{ T('home.fileview.ask-dialogs.overwrite.keep') }}
+							{{ $t('home.fileview.ask-dialogs.overwrite.keep') }}
 						</el-checkbox>
 					</el-descriptions-item>
 				</el-descriptions>
 			</template>
 			<template #footer>
 				<el-button v-if="askDialog.questionType === 'merge'" type="primary" @click="handleMergeFolder">
-					{{ T('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
+					{{ $t('home.fileview.ask-dialogs.common-buttons.btn-merge') }}
 				</el-button>
 				<el-button v-if="askDialog.questionType === 'overwrite'" type="danger" @click="handleOverwrite">
-					{{ T('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
+					{{ $t('home.fileview.ask-dialogs.common-buttons.btn-overwrite') }}
 				</el-button>
 				<el-button type="warning" @click="handleSkip">
-					{{ T('home.fileview.ask-dialogs.common-buttons.btn-skip') }}
+					{{ $t('home.fileview.ask-dialogs.common-buttons.btn-skip') }}
 				</el-button>
 				<el-button @click="handleTransCancel">
-					{{ T('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
+					{{ $t('home.fileview.ask-dialogs.common-buttons.btn-cancel') }}
 				</el-button>
 			</template>
 		</el-dialog>
@@ -769,8 +769,8 @@ export default {
 			} catch (e) {
 				if (e.message === 'No such file') {
 					this.$confirm(
-						this.T('home.fileview.confirm-dialogs.errors.path-not-exist', entryPath),
-						this.T('home.fileview.confirm-dialogs.errors.title'),
+						this.$t('home.fileview.confirm-dialogs.errors.path-not-exist', entryPath),
+						this.$t('home.fileview.confirm-dialogs.errors.title'),
 						{
 							type: 'error'
 						}
@@ -803,13 +803,13 @@ export default {
 		},
 		getDirEntryType(dirent) {
 			const types = {
-				directory: this.T('home.fileview.prop-dialog.directory'),
-				file: this.T('home.fileview.prop-dialog.file'),
-				socket: this.T('home.fileview.prop-dialog.socket'),
-				symbolLink: this.T('home.fileview.prop-dialog.symbol-link'),
-				blockDevice: this.T('home.fileview.prop-dialog.block-dev'),
-				charDevice: this.T('home.fileview.prop-dialog.char-dev'),
-				fifo: this.T('home.fileview.prop-dialog.fifo')
+				directory: this.$t('home.fileview.prop-dialog.directory'),
+				file: this.$t('home.fileview.prop-dialog.file'),
+				socket: this.$t('home.fileview.prop-dialog.socket'),
+				symbolLink: this.$t('home.fileview.prop-dialog.symbol-link'),
+				blockDevice: this.$t('home.fileview.prop-dialog.block-dev'),
+				charDevice: this.$t('home.fileview.prop-dialog.char-dev'),
+				fifo: this.$t('home.fileview.prop-dialog.fifo')
 			}
 
 			if (dirent.isDirectory()) {
@@ -835,8 +835,8 @@ export default {
 				dirents = await fsInstance.readdir(dirPath)
 			} catch (err) {
 				this.$confirm(
-					this.T('home.fileview.confirm-dialogs.errors.error-message', err.message),
-					this.T('home.fileview.confirm-dialogs.errors.title'),
+					this.$t('home.fileview.confirm-dialogs.errors.error-message', err.message),
+					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
 					}
@@ -874,7 +874,7 @@ export default {
 					type: type,
 					user: dirent.getUid(),
 					group: dirent.getGid(),
-					lastModify: this.T('home.fileview.mainview.columns.fmt-time', dirent.getMTime()),
+					lastModify: this.$t('home.fileview.mainview.columns.fmt-time', dirent.getMTime()),
 					perms: dirent.getPermsString(),
 					dirent
 				}
@@ -888,22 +888,22 @@ export default {
 			if (dirent.isFile()) {
 				iconType = {
 					icon: getFileIcon(dirent.name),
-					type: this.T('home.fileview.mainview.file-types.file')
+					type: this.$t('home.fileview.mainview.file-types.file')
 				}
 			} else if (dirent.isDirectory()) {
 				iconType = {
 					icon: getFolderIcon(dirent.name),
-					type: this.T('home.fileview.mainview.file-types.dir')
+					type: this.$t('home.fileview.mainview.file-types.dir')
 				}
 			} else if (dirent.isSymbolicLink()) {
 				iconType = {
 					icon: getFileLinkIcon(dirent.name),
-					type: this.T('home.fileview.mainview.file-types.file')
+					type: this.$t('home.fileview.mainview.file-types.file')
 				}
 			} else {
 				iconType = {
 					icon: getFileIcon(dirent.name),
-					type: this.T('home.fileview.mainview.file-types.file')
+					type: this.$t('home.fileview.mainview.file-types.file')
 				}
 			}
 
@@ -1047,10 +1047,10 @@ export default {
 
 		showAskDialog(transfer, question, args) {
 			if (question === 'merge') {
-				this.askDialog.title = this.T('home.fileview.ask-dialogs.merge.title')
+				this.askDialog.title = this.$t('home.fileview.ask-dialogs.merge.title')
 				this.askDialog.icon = getFolderIcon(args.name)
 			} else if (question === 'overwrite') {
-				this.askDialog.title = this.T('home.fileview.ask-dialogs.overwrite.title')
+				this.askDialog.title = this.$t('home.fileview.ask-dialogs.overwrite.title')
 				this.askDialog.icon = getFileIcon(args.name)
 			}
 			this.askDialog.show = true
@@ -1110,7 +1110,7 @@ export default {
 					type: 'dir'
 				})
 				transfer.on('prepare', () => {
-					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-upload'))
+					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-upload'))
 				})
 
 				transfer.on('ask', ({question, args}) => {
@@ -1122,7 +1122,7 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.T('home.fileview.mainview.progress.upload', totalFileCount || 1, remainder || 1),
+						this.$t('home.fileview.mainview.progress.upload', totalFileCount || 1, remainder || 1),
 						speed
 					)
 				})
@@ -1159,7 +1159,7 @@ export default {
 					type
 				})
 				transfer.on('prepare', () => {
-					this.updateProgress(progressId, 0, this.T('home.fileview.mainview.progress.prepare-download'))
+					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-download'))
 				})
 
 				transfer.on('ask', ({question, args}) => {
@@ -1171,7 +1171,7 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.T('home.fileview.mainview.progress.download', totalFileCount || 1, remainder || 1),
+						this.$t('home.fileview.mainview.progress.download', totalFileCount || 1, remainder || 1),
 						speed
 					)
 				})
@@ -1184,8 +1184,8 @@ export default {
 				transfer.on('error', (err) => {
 					// const message = err.message;
 					// this.$confirm({
-					//     title: this.T("home.fileview.confirm-dialogs.errors.title"),
-					//     message: this.T("home.fileview.confirm-dialogs.errors.download-error", message),
+					//     title: this.$t("home.fileview.confirm-dialogs.errors.title"),
+					//     message: this.$t("home.fileview.confirm-dialogs.errors.download-error", message),
 					//     type: "error"
 					// });
 					// this.progressFinished(progressId);
@@ -1255,7 +1255,7 @@ export default {
 				this.refresh()
 				this.handleCloseRenameDialog()
 			} catch (err) {
-				this.$confirm(err.message, this.T('home.sftp.err-dialog-title'), {
+				this.$confirm(err.message, this.$t('home.sftp.err-dialog-title'), {
 					type: 'error'
 				})
 			}
@@ -1300,7 +1300,7 @@ export default {
 				this.refresh()
 				this.handleCloseChmodDialog()
 			} catch (err) {
-				this.$confirm(err.message, this.T('home.sftp.err-dialog-title'), {
+				this.$confirm(err.message, this.$t('home.sftp.err-dialog-title'), {
 					type: 'error'
 				})
 			}
@@ -1334,7 +1334,7 @@ export default {
 				this.refresh()
 				this.handleCloseMoveDialog()
 			} catch (err) {
-				this.$confirm(err.message, this.T('home.sftp.err-dialog-title'), {
+				this.$confirm(err.message, this.$t('home.sftp.err-dialog-title'), {
 					type: 'error'
 				})
 			}
@@ -1393,7 +1393,7 @@ export default {
 		async handleContextMenu_UploadFile() {
 			const coreService = powertools.getService('powertools-core')
 			const selectedFiles = await coreService.showOpenDialog({
-				title: this.T('home.fileview.file-dialog.open-file'),
+				title: this.$t('home.fileview.file-dialog.open-file'),
 				properties: ['openFile']
 			})
 
@@ -1401,14 +1401,14 @@ export default {
 				return
 			}
 
-			const progressId = this.createProgress(this.T('home.fileview.mainview.progress.prepare-upload'))
+			const progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-upload'))
 			try {
 				await this.upload(selectedFiles.filePaths[0], 'file', progressId)
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.T('home.fileview.confirm-dialogs.errors.upload-error', message),
-					this.T('home.fileview.confirm-dialogs.errors.title'),
+					this.$t('home.fileview.confirm-dialogs.errors.upload-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
 					}
@@ -1422,7 +1422,7 @@ export default {
 		async handleContextMenu_UploadFolder() {
 			const coreService = powertools.getService('powertools-core')
 			const selectedFiles = await coreService.showOpenDialog({
-				title: this.T('home.fileview.file-dialog.open-folder'),
+				title: this.$t('home.fileview.file-dialog.open-folder'),
 				properties: ['openDirectory']
 			})
 
@@ -1430,15 +1430,15 @@ export default {
 				return
 			}
 
-			const progressId = this.createProgress(this.T('home.fileview.mainview.progress.prepare-upload'))
+			const progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-upload'))
 
 			try {
 				await this.upload(selectedFiles.filePaths[0], 'dir', progressId)
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.T('home.fileview.confirm-dialogs.errors.upload-error', message),
-					this.T('home.fileview.confirm-dialogs.errors.title'),
+					this.$t('home.fileview.confirm-dialogs.errors.upload-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
 					}
@@ -1456,7 +1456,7 @@ export default {
 
 			const coreService = powertools.getService('powertools-core')
 			const selectedFiles = await coreService.showSaveDialog({
-				title: this.T('home.fileview.file-dialog.save-file'),
+				title: this.$t('home.fileview.file-dialog.save-file'),
 				defaultPath: fileItem.dirent.name,
 				properties: []
 			})
@@ -1464,15 +1464,15 @@ export default {
 				return
 			}
 
-			const progressId = this.createProgress(this.T('home.fileview.mainview.progress.prepare-download'))
+			const progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-download'))
 
 			try {
 				await this.download(filePath, selectedFiles.filePath, 'file', progressId)
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.T('home.fileview.confirm-dialogs.errors.download-error', message),
-					this.T('home.fileview.confirm-dialogs.errors.title'),
+					this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
 					}
@@ -1489,22 +1489,22 @@ export default {
 
 			const coreService = powertools.getService('powertools-core')
 			const selectedFiles = await coreService.showOpenDialog({
-				title: this.T('home.fileview.file-dialog.save-folder'),
+				title: this.$t('home.fileview.file-dialog.save-folder'),
 				properties: ['openDirectory']
 			})
 			if (selectedFiles.canceled) {
 				return
 			}
 
-			const progressId = this.createProgress(this.T('home.fileview.mainview.progress.prepare-download'))
+			const progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-download'))
 
 			try {
 				await this.download(filePath, selectedFiles.filePaths[0], 'dir', progressId, true)
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.T('home.fileview.confirm-dialogs.errors.download-error', message),
-					this.T('home.fileview.confirm-dialogs.errors.title'),
+					this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
 					}
@@ -1541,7 +1541,7 @@ export default {
 				await this.refresh()
 				this.handleCloseCreateDirDialog()
 			} catch (e) {
-				this.$confirm(e.message, this.T('home.fileview.confirm-dialogs.errors.title'), {
+				this.$confirm(e.message, this.$t('home.fileview.confirm-dialogs.errors.title'), {
 					type: 'error'
 				})
 			}
@@ -1558,8 +1558,8 @@ export default {
 		async deleteFile(filePath) {
 			try {
 				await this.$confirm(
-					this.T('home.fileview.confirm-dialogs.delete-file.message', filePath),
-					this.T('home.fileview.confirm-dialogs.delete-file.title'),
+					this.$t('home.fileview.confirm-dialogs.delete-file.message', filePath),
+					this.$t('home.fileview.confirm-dialogs.delete-file.title'),
 					{
 						type: 'warning'
 					}
@@ -1574,7 +1574,7 @@ export default {
 				await fsInstance.remove(filePath)
 				this.refresh()
 			} catch (e) {
-				this.$confirm(e.message, this.T('home.fileview.confirm-dialogs.errors.title'), {
+				this.$confirm(e.message, this.$t('home.fileview.confirm-dialogs.errors.title'), {
 					type: 'error'
 				})
 			}
@@ -1583,8 +1583,8 @@ export default {
 		async deleteDirectory(dirPath) {
 			try {
 				await this.$confirm(
-					this.T('home.fileview.confirm-dialogs.delete-dir.message', dirPath),
-					this.T('home.fileview.confirm-dialogs.delete-dir.title'),
+					this.$t('home.fileview.confirm-dialogs.delete-dir.message', dirPath),
+					this.$t('home.fileview.confirm-dialogs.delete-dir.title'),
 					{
 						type: 'warning'
 					}
@@ -1594,7 +1594,7 @@ export default {
 				return
 			}
 
-			const progressId = this.createProgress(this.T('home.fileview.mainview.progress.delete'))
+			const progressId = this.createProgress(this.$t('home.fileview.mainview.progress.delete'))
 			try {
 				const fsInstance = await this.getFs()
 				/* 遍历目录时采用的深度优先遍历 */
@@ -1611,11 +1611,11 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.T('home.fileview.mainview.progress.delete', i, totalCount)
+						this.$t('home.fileview.mainview.progress.delete', i, totalCount)
 					)
 				}
 			} catch (e) {
-				this.$confirm(e.message, this.T('home.fileview.confirm-dialogs.errors.title'), {
+				this.$confirm(e.message, this.$t('home.fileview.confirm-dialogs.errors.title'), {
 					type: 'error'
 				})
 			} finally {
@@ -1627,8 +1627,8 @@ export default {
 		async deleteFiles() {
 			try {
 				await this.$confirm(
-					this.T('home.fileview.confirm-dialogs.delete-many.message', this.selectedItems.length),
-					this.T('home.fileview.confirm-dialogs.delete-many.title'),
+					this.$t('home.fileview.confirm-dialogs.delete-many.message', this.selectedItems.length),
+					this.$t('home.fileview.confirm-dialogs.delete-many.title'),
 					{
 						type: 'warning'
 					}
@@ -1661,7 +1661,7 @@ export default {
 				}
 
 				const totalCount = allFiles.length
-				progressId = this.createProgress(this.T('home.fileview.mainview.progress.delete'))
+				progressId = this.createProgress(this.$t('home.fileview.mainview.progress.delete'))
 				for (let i = 0; i < totalCount; i++) {
 					let file = allFiles[i]
 					if (file.isDir) {
@@ -1673,11 +1673,11 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.T('home.fileview.mainview.progress.delete', i, totalCount)
+						this.$t('home.fileview.mainview.progress.delete', i, totalCount)
 					)
 				}
 			} catch (e) {
-				this.$confirm(e.message, this.T('home.fileview.confirm-dialogs.errors.title'), {
+				this.$confirm(e.message, this.$t('home.fileview.confirm-dialogs.errors.title'), {
 					type: 'error'
 				})
 			} finally {
@@ -1721,8 +1721,8 @@ export default {
 				if (size > 1024 * 1024 * 3) {
 					try {
 						await this.$confirm(
-							this.T('home.fileview.confirm-dialogs.not-allow-open-file.message'),
-							this.T('home.fileview.confirm-dialogs.not-allow-open-file.title'),
+							this.$t('home.fileview.confirm-dialogs.not-allow-open-file.message'),
+							this.$t('home.fileview.confirm-dialogs.not-allow-open-file.title'),
 							{
 								type: 'info'
 							}
@@ -1748,7 +1748,7 @@ export default {
 
 		async handleFileDrop(files) {
 			for (let i = 0; i < files.length; i++) {
-				let progressId = this.createProgress(this.T('home.fileview.mainview.progress.prepare-download'))
+				let progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-download'))
 				let file = files[i]
 				try {
 					let type = file.isDir ? 'dir' : 'file'
@@ -1757,8 +1757,8 @@ export default {
 				} catch (err) {
 					const message = err.message
 					await this.$confirm(
-						this.T('home.fileview.confirm-dialogs.errors.download-error', message),
-						this.T('home.fileview.confirm-dialogs.errors.title'),
+						this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+						this.$t('home.fileview.confirm-dialogs.errors.title'),
 						{
 							type: 'error'
 						}

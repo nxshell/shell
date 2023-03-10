@@ -30,7 +30,7 @@
 					}"
 					@click.self="handleSort(column.dataKey)"
 				>
-					{{ T(column.label) }}
+					{{ $t(column.label) }}
 					<span class="resize" v-mouse-drag="getColumnResizeHandler(idx)">|</span>
 				</div>
 			</div>
@@ -704,7 +704,7 @@ export default {
 		margin: 10px;
 
 		&.detail {
-			margin-top: 40px;
+			//margin-top: 40px;
 		}
 
 		.item-placeholder {

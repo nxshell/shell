@@ -19,20 +19,20 @@
 					<el-button type="text" :icon="themeIcon" />
 					<el-dropdown-menu class="theme-btn" slot="dropdown">
 						<el-dropdown-item :disabled="theme === 'light'" command="light" icon="el-icon-sunny">
-							{{ T('app.theme.light') }}
+							{{ $t('app.theme.light') }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'dark'" command="dark" icon="el-icon-moon">
-							{{ T('app.theme.dark') }}
+							{{ $t('app.theme.dark') }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'pink'" command="pink" icon="el-icon-grape">
-							{{ T('app.theme.pink') }}
+							{{ $t('app.theme.pink') }}
 						</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 				<!-- 设置按钮 -->
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting"></el-button>
 				<!-- 版本信息 -->
-				<el-tooltip v-if="needUpdate" effect="dark" :content="T('app.need-update')" placement="bottom">
+				<el-tooltip v-if="needUpdate" effect="dark" :content="$t('app.need-update')" placement="bottom">
 					<el-button
 						type="text"
 						:class="{'version-btn': needUpdate}"
@@ -40,7 +40,7 @@
 						@click="handlerVersionUpdate"
 					/>
 				</el-tooltip>
-				<el-tooltip v-else effect="dark" :content="`${T('app.current-version')} ${version}`">
+				<el-tooltip v-else effect="dark" :content="`${$t('app.current-version')} ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline"></el-button>
 				</el-tooltip>
 			</n-space>
@@ -241,6 +241,7 @@ export default {
 	}
 
 	.icon-setting-container {
+		padding-bottom: 10px;
 		::v-deep .el-button {
 			width: 40px;
 

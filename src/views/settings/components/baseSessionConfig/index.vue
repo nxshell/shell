@@ -1,19 +1,19 @@
 <template>
 	<div class="n-session-config">
 		<el-form :form="sessionForm">
-			<el-form-item :label="T('home.profile.base.host-name.title')">
+			<el-form-item :label="$t('home.profile.base.host-name.title')">
 				<el-input v-model="sessionForm.hostName" />
 			</el-form-item>
 			<!-- 操作系统 -->
-			<el-form-item :label="T(OsType.title)">
+			<el-form-item :label="$t(OsType.title)">
 				<el-select v-model="sessionForm[OsType.name]">
-					<el-option v-for="(o,i) in OsType.options" :label="T(o.label)" :value="o.value" :key="i" />
+					<el-option v-for="(o,i) in OsType.options" :label="$t(o.label)" :value="o.value" :key="i" />
 				</el-select>
 			</el-form-item>
 			<!-- 协议 -->
-			<el-form-item :label="T(Protocol.title)">
+			<el-form-item :label="$t(Protocol.title)">
 				<el-select v-model="sessionForm[Protocol.name]" @change="protocolChange">
-					<el-option v-for="(o,i) in Protocol.options" :label="T(o.label)" :value="o.value" :key="i" />
+					<el-option v-for="(o,i) in Protocol.options" :label="$t(o.label)" :value="o.value" :key="i" />
 				</el-select>
 			</el-form-item>
 		</el-form>

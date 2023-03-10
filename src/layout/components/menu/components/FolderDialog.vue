@@ -10,13 +10,13 @@
 		@close="handlerClose"
 	>
 		<el-form ref="createFolderRef" :model="folderForm" :rules="createFolderRules" @submit.native.prevent>
-			<el-form-item :label="T('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
+			<el-form-item :label="$t('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
 				<el-input v-model="folderForm.folderName" @keyup.native.enter="handlerClick" />
 			</el-form-item>
 		</el-form>
 		<span slot="footer" class="dialog-footer">
-			<el-button @click="visible = false">{{ T('components.Cancel') }}</el-button>
-			<el-button type="primary" @click="handlerClick">{{ T('components.OK') }}</el-button>
+			<el-button @click="visible = false">{{ $t('components.Cancel') }}</el-button>
+			<el-button type="primary" @click="handlerClick">{{ $t('components.OK') }}</el-button>
 		</span>
 	</el-dialog>
 </template>
@@ -45,15 +45,15 @@ export default {
 	},
 	computed: {
 		title() {
-			return this.edit ? this.T('home.host-manager.dialog-edit-folder.edit-title') : this.T('home.host-manager.dialog-edit-folder.add-title')
+			return this.edit ? this.$t('home.host-manager.dialog-edit-folder.edit-title') : this.$t('home.host-manager.dialog-edit-folder.add-title')
 		}
 	},
 	methods: {
 		validateFolderName(rule, value, callback) {
 			if (!value) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.placeholder')))
+				callback(new Error(this.$t('home.fileview.createdir-dialog.placeholder')))
 			} else if (/[\/:*?."？《》、，。'<>|]/.test(value)) {
-				callback(new Error(this.T('home.fileview.createdir-dialog.invalid-dir-name')))
+				callback(new Error(this.$t('home.fileview.createdir-dialog.invalid-dir-name',['\\ / : * ? \" < > | '])))
 			} else {
 				callback()
 			}

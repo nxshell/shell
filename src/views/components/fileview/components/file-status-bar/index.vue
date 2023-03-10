@@ -4,8 +4,8 @@
 		<div v-if="!showProgress" class="status-bar-item">
 			{{
 				selectedLength > 0
-					? T('home.fileview.mainview.total-selected-count', fileTotal, selectedLength)
-					: T('home.fileview.mainview.total-file-count', fileTotal)
+					? $t('home.fileview.mainview.total-selected-count', fileTotal, selectedLength)
+					: $t('home.fileview.mainview.total-file-count', fileTotal)
 			}}
 		</div>
 		<div v-if="showProgress" class="status-bar-item">

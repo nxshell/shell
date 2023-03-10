@@ -1,37 +1,38 @@
 <template>
 	<el-dialog
-		:title="T('components.auth.title')"
+		:title="$t('components.auth.title')"
 		:visible.sync="showDialog"
+		:append-to-body="true"
 		width="400px"
 		:close-on-click-modal="false"
 	>
 		<div v-if="type === 'auth'">
 			<el-form label-position="left" label-width="80px" @submit.native.prevent>
-				<el-form-item :label="T('components.auth.authType.title')">
+				<el-form-item :label="$t('components.auth.authType.title')">
 					<el-select v-model="authType" style="width: 100%;">
-						<el-option v-for="item in options" :key="item.value" :label="T(item.label)" :value="item.value">
+						<el-option v-for="item in options" :key="item.value" :label="$t(item.label)" :value="item.value">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item
 					v-if="['password','publickey','keyboard-interactive'].includes(authType)"
-					:label="T('components.auth.username.title')"
+					:label="$t('components.auth.username.title')"
 				>
 					<el-input v-model="authUserName" :placeholder="authUserName" disabled />
 				</el-form-item>
-				<el-form-item v-if="authType === 'password'" :label="T('components.auth.password.title')">
+				<el-form-item v-if="authType === 'password'" :label="$t('components.auth.password.title')">
 					<el-input ref="password" type="password" v-model="authPassword" @keydown.enter.native="doOK" />
 				</el-form-item>
-				<el-form-item v-if="authType === 'publickey'" :label="T('components.auth.publickey.title')">
+				<el-form-item v-if="authType === 'publickey'" :label="$t('components.auth.publickey.title')">
 					<pt-file v-model="authPublicKey" type="text" />
 				</el-form-item>
-				<el-form-item v-if="authType === 'publickey'" :label="T('components.auth.passphrase.title')">
+				<el-form-item v-if="authType === 'publickey'" :label="$t('components.auth.passphrase.title')">
 					<el-input v-model="authPassphrase" type="password" @keydown.enter.native="doOK" />
 				</el-form-item>
 			</el-form>
 		</div>
 		<el-form v-else-if="type === 'username'" label-position="left" label-width="80px" @submit.native.prevent>
-			<el-form-item :label="T('components.auth.username.title')">
+			<el-form-item :label="$t('components.auth.username.title')">
 				<el-input ref="username" type="text" v-model="authUserName" @keydown.enter.native="doOK" />
 			</el-form-item>
 		</el-form>
@@ -40,8 +41,8 @@
 			<el-input ref="prompt" type="text" v-model="promptValue" />
 		</div>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="handleCancel">{{ T('components.Cancel') }}</el-button>
-			<el-button type="primary" @click="doOK">{{ T('components.OK') }}</el-button>
+			<el-button @click="handleCancel">{{ $t('components.Cancel') }}</el-button>
+			<el-button type="primary" @click="doOK">{{ $t('components.OK') }}</el-button>
 		</div>
 	</el-dialog>
 </template>

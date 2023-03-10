@@ -15,14 +15,14 @@
 			<pt-menu :menu="item.submenu" :translate="true" @pop-stack="showSubmenu = false" ref="submenu" />
 			<div class="pt-menu-item-container" slot="reference">
 				<span class="item-icon"><!--占位--></span>
-				<span class="item-label">{{ translate ? T(label) : label }}</span>
+				<span class="item-label">{{ translate ? $t(label) : label }}</span>
 				<span class="item-accelerator">{{ accelerator }}</span>
 				<n-icon name="arrow-right" size="18" className="item-submenu-arrow" />
 			</div>
 		</el-popover>
 		<div v-else-if="item.type === 'normal'" class="pt-menu-item-container">
 			<span class="item-icon"><!--占位--></span>
-			<span class="item-label">{{ translate ? T(label) : label }}</span>
+			<span class="item-label">{{ translate ? $t(label) : label }}</span>
 			<span class="item-accelerator">{{ accelerator }}</span>
 			<span class="item-submenu-arrow"><!--占位--></span>
 		</div>

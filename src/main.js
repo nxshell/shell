@@ -11,6 +11,7 @@ import PtSessionManger from "@/services";
 
 import Element from './element'
 import '@/icons'
+import i18n from '@/locals'
 
 Vue.use(PtComponents);
 Vue.use(PtSessionManger);
@@ -24,6 +25,7 @@ Vue.config.productionTip = false;
     new Vue({
         router,
         store,
+		i18n,
         render: h => h(App)
     }).$mount("#app");
 }();

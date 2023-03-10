@@ -6,7 +6,7 @@
 				:key="idx"
 				:icon="tabItem.icon"
 				:closable="tabItem.title !== 'Welcome'"
-				:title="translate ? T(tabItem.title) : tabItem.title"
+				:title="translate ? $t(tabItem.title) : tabItem.title"
 				:selected="idx === currentTab"
 				:showSplit="idx !== currentTab && idx + 1 !== currentTab && idx !== tabs.length - 1 && !flat"
 				:hideClose="hideClose"

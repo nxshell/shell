@@ -2,7 +2,7 @@
 	<div class="pt-profile-view">
 		<el-scrollbar style="height: 100%;">
 			<section v-show="execExpr(section.show)" v-for="(section, index) in sections" :key="index">
-				<h1 :ref="section.name">{{ T(section.title) }}</h1>
+				<h1 :ref="section.name">{{ $t(section.title) }}</h1>
 				<pt-profile-item
 					v-for="(item, itemIdx) in section.items"
 					:key="index + '_' + itemIdx"

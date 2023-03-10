@@ -1,8 +1,8 @@
 <template>
 	<div class="pt-profile-item" v-if="show" :class="{simple: simple}">
 		<template v-if="!simple">
-			<h2>{{ T(title) }}</h2>
-			<p>{{ T(description) }}</p>
+			<h2>{{ $t(title) }}</h2>
+			<p>{{ $t(description) }}</p>
 			<el-row>
 				<el-col :span="8">
 					<el-input v-model="editValue" v-if="type === 'text'" type="text" />
@@ -21,7 +21,7 @@
 						<el-option
 							v-for="(opt, idx) in options"
 							:key="idx"
-							:label="T(opt.label)"
+							:label="$t(opt.label)"
 							:value="opt.value"
 						/>
 					</el-select>
@@ -30,9 +30,9 @@
 			</el-row>
 		</template>
 		<template v-else>
-			<el-row :title="T(description)">
+			<el-row :title="$t(description)">
 				<el-col :span="8">
-					<label>{{ T(title) }}</label>
+					<label>{{ $t(title) }}</label>
 				</el-col>
 				<el-col :span="8">
 					<el-input v-model="editValue" v-if="type === 'text'" type="text" />
@@ -48,7 +48,7 @@
 					<pt-file v-model="editValue" type="text" v-if="type === 'file'" />
 					<pt-folder v-model="editValue" type="text" v-if="type === 'folder'" />
 					<el-select v-model="editValue" v-if="type === 'select'" style="width: 100%;">
-						<el-option v-for="(opt, idx) in options" :key="idx" :label="T(opt.label)" :value="opt.value" />
+						<el-option v-for="(opt, idx) in options" :key="idx" :label="$t(opt.label)" :value="opt.value" />
 					</el-select>
 					<component v-if="component" :is="component" v-bind:context="context" />
 				</el-col>

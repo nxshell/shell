@@ -2,18 +2,18 @@
 	<div v-bind="$attrs" class="nx-toolbar">
 		<el-input
 			v-model="searchKeywords"
-			:placeholder="T('home.host-manager.search.placeholder')"
+			:placeholder="$t('home.host-manager.search.placeholder')"
 			class="nx-search-input"
 			clearable
 			suffix-icon="el-icon-search"
 		/>
 		<n-space :size="5">
-			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-folder')" placement="top-start">
+			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-folder')" placement="top-start">
 				<span class="host-tree-btn" @click.prevent="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
-			<el-tooltip class="item" effect="dark" :content="T('home.sessions-context-menu.create-session')" placement="top-start">
+			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-session')" placement="top-start">
 				<span class="host-tree-btn" @click.prevent="gotoCreateShellSession">
 					<i class="el-icon-circle-plus-outline" />
 				</span>
