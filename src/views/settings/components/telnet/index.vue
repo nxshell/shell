@@ -9,21 +9,21 @@
 	>
 		<el-form ref="telnetFormRef" :form="sessionForm" :rules="telnetFormRules" label-position="right"
 		         label-width="120px">
-			<el-form-item :label="T('home.profile.base.host-name.title')" prop="hostName">
+			<el-form-item :label="$t('home.profile.base.host-name.title')" prop="hostName">
 				<el-input v-model="sessionForm.hostName" />
 			</el-form-item>
 			<!-- 操作系统 -->
-			<el-form-item :label="T(OsType.title)" prop="osType">
+			<el-form-item :label="$t(OsType.title)" prop="osType">
 				<el-select v-model="sessionForm[OsType.name]" style="width: 100%">
-					<el-option v-for="(o,i) in OsType.options" :label="T(o.label)" :value="o.value" :key="i" />
+					<el-option v-for="(o,i) in OsType.options" :label="$t(o.label)" :value="o.value" :key="i" />
 				</el-select>
 			</el-form-item>
 			<!-- 主机 -->
-			<el-form-item :label="T('home.profile.base.host.title')" prop="host">
+			<el-form-item :label="$t('home.profile.base.host.title')" prop="host">
 				<el-input v-model="sessionForm.host" />
 			</el-form-item>
 			<!-- 端口 -->
-			<el-form-item :label="T('home.profile.base.port.title')" prop="hostTelnetPort">
+			<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
 				<el-input v-model="sessionForm.hostTelnetPort" />
 			</el-form-item>
 		</el-form>

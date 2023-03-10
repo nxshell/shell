@@ -1,7 +1,7 @@
 <template>
 	<div id="app" class="main-window mycolor">
 		<nx-layout
-			:title="T('app.powertools-shell')"
+			:title="$t('app.powertools-shell')"
 			:isMainWindow="true"
 			:leftPanel="left_panel"
 			:topPanel="top_panel">
@@ -17,23 +17,7 @@
 <script>
 import { mapState } from 'vuex'
 import NxLayout from '@/layout/NxLayout'
-
-import Lang from '../lang'
-
-import * as globalSetting from './services/globalSetting'
 import * as EventBus from './services/eventbus'
-
-let localeName = navigator.language
-const defaultLocalName = 'en-US'
-
-async function loadLang(locale) {
-	const esModule = await Lang[locale]()
-	return esModule.default
-}
-
-function getUserConfigLanguage() {
-	return globalSetting.getProfile('xterm')?.language ?? null
-}
 
 export default {
 	name: 'App',
@@ -51,18 +35,6 @@ export default {
 	},
 	async created() {
 		window.document.documentElement.setAttribute('nx-theme', this.$store.getters.theme)
-
-		let _name = getUserConfigLanguage()
-		if (_name) {
-			localeName = _name
-		}
-		let lang = await loadLang(localeName)
-		if (!lang) {
-			localeName = defaultLocalName
-			lang = await loadLang(localeName)
-		}
-		this.locale(localeName, lang)
-		this.setLocale(localeName)
 		if (process.env.NODE_ENV !== 'development') {
 			await this.$router.push({
 				name: 'Home'

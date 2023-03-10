@@ -5,7 +5,7 @@
 			<el-tooltip
 				class="item"
 				effect="dark"
-				:content="T('home.session-instance.duplicate-session')"
+				:content="$t('home.session-instance.duplicate-session')"
 				placement="top-start">
 				<span class="btn" @click="copySession">
 					<i class="el-icon-copy-document" />
@@ -14,13 +14,13 @@
 			<el-tooltip
 				class="item"
 				effect="dark"
-				:content="T('home.session-instance.reconnect')"
+				:content="$t('home.session-instance.reconnect')"
 				placement="top-start">
 				<span class="btn" @click="reconSession">
 					<i class="el-icon-refresh" />
 				</span>
 			</el-tooltip>
-			<el-tooltip class="item" effect="dark" :content="T('home.session-instance.SFTP')" placement="top-start">
+			<el-tooltip class="item" effect="dark" :content="$t('home.session-instance.SFTP')" placement="top-start">
 				<span class="btn" @click="openSFTP">
 					<i class="el-icon-folder-opened" />
 				</span>
@@ -240,7 +240,7 @@ export default {
 		tunnelTitle() {
 			return this.tunnelMapTitle[this.sessionInstanceId]
 				? this.tunnelMapTitle[this.sessionInstanceId]
-				: this.T('home.session-instance.tunnel')
+				: this.$t('home.session-instance.tunnel')
 		}
 	},
 
@@ -313,9 +313,9 @@ export default {
 			const sessionInstance = this.$sessionManager.getSessionInstanceById(this.sessionInstanceId)
 			const port = await sessionInstance.openTunnel()
 			if (port) {
-				this.updateTunnelTitle(this.sessionInstanceId, this.T('home.session-instance.tunnel-success', port))
+				this.updateTunnelTitle(this.sessionInstanceId, this.$t('home.session-instance.tunnel-success', [port]))
 			} else {
-				this.updateTunnelTitle(this.sessionInstanceId, this.T('home.session-instance.tunnel'))
+				this.updateTunnelTitle(this.sessionInstanceId, this.$t('home.session-instance.tunnel'))
 			}
 		},
 

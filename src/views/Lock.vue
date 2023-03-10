@@ -4,19 +4,19 @@
 			<div class="n-lock-config__header">
 				<n-space v-if="lock">
 					<i class="el-icon-lock"></i>
-					{{ T('lock.lock_desc') }}
+					{{ $t('lock.lock_desc') }}
 				</n-space>
 				<n-space v-else>
 					<i class="el-icon-unlock"></i>
-					{{ T('lock.unlock_desc') }}
+					{{ $t('lock.unlock_desc') }}
 				</n-space>
 			</div>
 			<el-form ref="form" label-width="80px" @submit.native.prevent>
-				<el-form-item v-if="lock" :label="T('lock.password_desc')">
+				<el-form-item v-if="lock" :label="$t('lock.password_desc')">
 					<el-input
 						v-model="password"
 						:type="`${showPassword ? 'text' : 'password'}`"
-						:placeholder="T('lock.placeholder')"
+						:placeholder="$t('lock.placeholder')"
 					>
 						<n-icon
 							slot="suffix"
@@ -26,11 +26,11 @@
 						/>
 					</el-input>
 				</el-form-item>
-				<el-form-item v-if="lock" :label="T('lock.password_verify')">
+				<el-form-item v-if="lock" :label="$t('lock.password_verify')">
 					<el-input
 						v-model="password_verify"
 						:type="`${showPasswordVerify ? 'text' : 'password'}`"
-						:placeholder="T('lock.placeholder-verify')"
+						:placeholder="$t('lock.placeholder-verify')"
 					>
 						<n-icon
 							slot="suffix"
@@ -40,11 +40,11 @@
 						/>
 					</el-input>
 				</el-form-item>
-				<el-form-item v-if="!lock" :label="T('lock.unlock_password_desc')">
+				<el-form-item v-if="!lock" :label="$t('lock.unlock_password_desc')">
 					<el-input
 						v-model="password_input"
 						:type="`${showUnlockPassword ? 'text' : 'password'}`"
-						:placeholder="T('lock.placeholder')"
+						:placeholder="$t('lock.placeholder')"
 					>
 						<n-icon
 							slot="suffix"
@@ -57,12 +57,12 @@
 			</el-form>
 			<div v-if="lock" class="n-lock-config__footer">
 				<n-space :size="105">
-					<el-button @click="back">{{ T('components.Cancel') }}</el-button>
-					<el-button type="primary" @click="handleOk">{{ T('components.OK') }}</el-button>
+					<el-button @click="back">{{ $t('components.Cancel') }}</el-button>
+					<el-button type="primary" @click="handleOk">{{ $t('components.OK') }}</el-button>
 				</n-space>
 			</div>
 			<div v-else class="n-lock-config__footer">
-				<el-button type="primary" @click="handleUnLock">{{ T('components.OK') }}</el-button>
+				<el-button type="primary" @click="handleUnLock">{{ $t('components.OK') }}</el-button>
 			</div>
 		</div>
 	</div>

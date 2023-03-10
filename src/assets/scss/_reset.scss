@@ -142,6 +142,7 @@ a {
     &:hover,
     &:focus {
       color: var(--n-text-color-base) !important;
+      border-color: var(--n-button-primary-hover) !important;
       background-color: var(--n-button-primary-hover) !important;
     }
   }

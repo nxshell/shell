@@ -1,4 +1,4 @@
-<template xmlns="" xmlns="">
+<template>
 	<div class="pt-vnc-view">
 		<div class="n-editor-toolbar">
 			<div class="n-editor-toolbar__nav">
@@ -13,7 +13,7 @@
 				</el-select>
 				<el-input
 					v-model="searchKeyWords"
-					:placeholder="T('home.editor.search-tab')"
+					:placeholder="$t('home.editor.search-tab')"
 					clearable
 					class="nx-search-input"
 					suffix-icon="el-icon-search"
@@ -30,7 +30,7 @@ import { mapState } from 'vuex'
 
 import { EditorView, keymap, lineNumbers } from '@codemirror/view'
 import { Compartment, EditorSelection, SelectionRange } from '@codemirror/state'
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { highlightSelectionMatches, SearchCursor } from '@codemirror/search'
 
 import { javascript } from '@codemirror/lang-javascript'
@@ -145,7 +145,7 @@ export default {
 				}
 			]
 			const extensions = [
-				keymap.of([...defaultKeymap, ...historyKeymap, ...ctrl_s_key]),
+				keymap.of([...defaultKeymap, ...historyKeymap, ...ctrl_s_key, indentWithTab]),
 				lineNumbers(),
 				history(),
 				highlightSelectionMatches(),

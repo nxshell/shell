@@ -5,14 +5,14 @@
 				name="copy"
 				slot="left"
 				size="medium"
-				:title="T('home.session-instance.ctrldelete')"
+				:title="$t('home.session-instance.ctrldelete')"
 				flat
 				@click="sendCtrlAltDel"
 			/>
 			<n-icon
 				name="refresh"
 				slot="left"
-				:title="T('home.session-instance.reconnect')"
+				:title="$t('home.session-instance.reconnect')"
 				@click="reconnect"
 			/>
 			<el-input v-model="url" readonly slot="center" />
@@ -21,7 +21,7 @@
 				:name="shutdownIcon"
 				slot="right"
 				size="24"
-				:title="T('home.session-instance.shutdown')"
+				:title="$t('home.session-instance.shutdown')"
 				@click="shutdown"
 			/>
 		</pt-toolbar>

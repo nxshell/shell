@@ -4,13 +4,13 @@
 			<div class="header">
 				<n-icon name="logo" size="50"/>
 				<div class="title">
-					<div class="welcome">{{ T("home.user-center.login") }}</div>
+					<div class="welcome">{{ $t("home.user-center.login") }}</div>
 					<div class="product-name">NxShell</div>
 				</div>
 			</div>
 			<div class="auth-notice">
 				<div class="sepline"></div>
-				<div class="text">{{ T("home.user-center.auth-type") }}</div>
+				<div class="text">{{ $t("home.user-center.auth-type") }}</div>
 				<div class="sepline"></div>
 			</div>
 			<div class="third-auths">
@@ -30,25 +30,25 @@
 				<div class="user-name">
 					{{ userInfo.user_name }}
 				</div>
-				<a class="logout" href="javascript:;" @click="logout">{{ T("home.user-center.logout") }}</a>
+				<a class="logout" href="javascript:;" @click="logout">{{ $t("home.user-center.logout") }}</a>
 			</div>
 			<div class="user-contents">
 				<div class="user-contents-nav">
 					<pt-list :listData="navItems" dataKey="title">
 						<template v-slot="scope">
-							<span>{{ T(scope.item.data.title) }}</span>
+							<span>{{ $t(scope.item.data.title) }}</span>
 						</template>
 					</pt-list>
 				</div>
 				<div class="user-contents-body">
-					<p>{{ T("home.user-center.thanks") }}</p>
-					<p>{{ T("home.user-center.look-forward-to-feedback") }}</p>
+					<p>{{ $t("home.user-center.thanks") }}</p>
+					<p>{{ $t("home.user-center.look-forward-to-feedback") }}</p>
 					<a href="javascript:;" @click="gotoFeedback">{{
-							T("home.user-center.goto-feedback-github")
+							$t("home.user-center.goto-feedback-github")
 						}}</a><span
 					class="email">&nbsp;{{
-						T("home.user-center.goto-feedback-or")
-					}}&nbsp;<span>{{ T("home.user-center.goto-feedback-email") }}</span></span>
+						$t("home.user-center.goto-feedback-or")
+					}}&nbsp;<span>{{ $t("home.user-center.goto-feedback-email") }}</span></span>
 					<div v-if="0" class="thanks-given">
 						<i>为了感谢您的反馈，一旦您的建议和意见被我们采用，我们将把您的名字记录到我们的贡献列表中，让更多人了解您为大家做的贡献！</i>
 					</div>

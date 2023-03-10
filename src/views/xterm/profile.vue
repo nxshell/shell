@@ -2,14 +2,14 @@
 	<div class="n-session-setting">
 		<div class="n-session-setting-left">
 			<el-tabs v-model="currentState.profileCurSection" tab-position="left" style="height: 100%">
-				<el-tab-pane v-for="item in navList" :key="item.name" :name="item.name" :label="T(item.text)" />
+				<el-tab-pane v-for="item in navList" :key="item.name" :name="item.name" :label="$t(item.text)" />
 			</el-tabs>
 		</div>
 		<div class="n-session-setting-right">
 			<div class="n-session-setting-right__header">
 				<div class="n-session-setting-right__header__left"></div>
 				<div class="n-session-setting-right__header__right">
-					<el-switch v-model="simple" :active-text="T('home.profile.operator.configure-mode')" />
+					<el-switch v-model="simple" :active-text="$t('home.profile.operator.configure-mode')" />
 				</div>
 			</div>
 			<div class="n-session-setting-right__content">
@@ -29,10 +29,10 @@
 			</div>
 			<div class="n-session-setting-right__footer">
 				<el-button className="btn-save" @click="handleSaveClick">
-					{{ T('home.profile.operator.save') }}
+					{{ $t('home.profile.operator.save') }}
 				</el-button>
 				<el-button type="primary" className="btn-save-connect" @click="handleSaveAndConnectClick">
-					{{ T('home.profile.operator.save-conn') }}
+					{{ $t('home.profile.operator.save-conn') }}
 				</el-button>
 			</div>
 		</div>

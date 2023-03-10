@@ -1,7 +1,7 @@
 <template>
 	<div class="n-setting-wrapper">
 		<div class="n-setting-header">
-			<span class="n-setting-header__left">{{ T('home.profile.global-setting') }}</span>
+			<span class="n-setting-header__left">{{ $t('home.profile.global-setting') }}</span>
 		</div>
 		<div class="n-setting-content">
 			<el-scrollbar>
@@ -11,12 +11,12 @@
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(termTheme.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(termTheme.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[termTheme.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in termTheme.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -24,7 +24,7 @@
 							</el-col>
 						</el-row>
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(cursorStyle.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(cursorStyle.title) }}</el-col>
 							<el-col :span="16">
 								<el-radio-group v-model="settingsForm[cursorStyle.name]" @change="handlerSettingChange">
 									<el-radio-button label="block">█</el-radio-button>
@@ -35,19 +35,19 @@
 						</el-row>
 						<!-- 是否闪烁 -->
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(cursorBlink.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(cursorBlink.title) }}</el-col>
 							<el-col :span="16">
 								<el-switch v-model="settingsForm[cursorBlink.name]" @change="handlerSettingChange" />
 							</el-col>
 						</el-row>
 						<!-- 字体 -->
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(fontFamily.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(fontFamily.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[fontFamily.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in fontFamily.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -56,12 +56,12 @@
 						</el-row>
 						<!-- 字体大小 -->
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(fontSize.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(fontSize.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[fontSize.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in fontSize.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -73,12 +73,12 @@
 				<el-row :gutter="40">
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(fontWeight.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(fontWeight.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[fontWeight.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in fontWeight.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -88,7 +88,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(lineHeight.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(lineHeight.title) }}</el-col>
 							<el-col :span="16">
 								<el-input-number
 									v-model="settingsForm[lineHeight.name]"
@@ -104,12 +104,12 @@
 				<el-row :gutter="40">
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(charset.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(charset.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[charset.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in charset.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -119,7 +119,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(letterSpacing.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(letterSpacing.title) }}</el-col>
 							<el-col :span="16">
 								<el-input-number
 									v-model="settingsForm[letterSpacing.name]"
@@ -135,12 +135,12 @@
 				<el-row :gutter="40">
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{ T(language.title) }}</el-col>
+							<el-col :span="8" class="n-setting-content__label">{{ $t(language.title) }}</el-col>
 							<el-col :span="16">
 								<el-select v-model="settingsForm[language.name]" @change="handlerSettingChange">
 									<el-option
 										v-for="(item, index) in language.options"
-										:label="T(item.label)"
+										:label="$t(item.label)"
 										:value="item.value"
 										:key="index"
 									/>
@@ -150,9 +150,9 @@
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
 						<el-row :gutter="40" style="margin-bottom: 20px">
-							<el-col :span="8" class="n-setting-content__label">{{
-								T('home.profile.system.nxconfig.title')
-							}}</el-col>
+							<el-col :span="8" class="n-setting-content__label">
+							{{ $t('home.profile.system.nxconfig.title') }}
+							</el-col>
 							<el-col :span="16">
 								<pt-folder v-model="settingsForm['nxconfig']" @change="handlerSettingChange" />
 							</el-col>
@@ -211,6 +211,11 @@ export default {
 	},
 	created() {
 		this.initDefaultSettings()
+	},
+	watch: {
+		'settingsForm.language': function (n, o) {
+			this.$i18n.locale = n
+		}
 	},
 	methods: {
 		initDefaultSettings() {

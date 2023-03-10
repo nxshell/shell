@@ -1,7 +1,6 @@
 <template>
 	<div class="pt-xterm-session">
 		<div class="xterm-container" ref="xterm_container">
-			<!-- <pt-xterm ref="xterm" @key="onXtermKey" @resize="onXtermResize"/> -->
 			<xterm-instance
 				v-for="(sessId, idx) in sessions"
 				:key="sessId"
@@ -121,7 +120,7 @@ export default {
 			this.currentSessionId = sessionId
 			this.addSession(sessionId)
 			if (!this.tunnelMapTitle[sessionId]) {
-				this.updateTunnelTitle(sessionId, this.T('home.session-instance.tunnel'))
+				this.updateTunnelTitle(sessionId, this.$t('home.session-instance.tunnel'))
 			}
 		}
 		next()
@@ -131,7 +130,7 @@ export default {
 		this.currentSessionId = parseInt(this.$route.params.sessionId)
 		this.addSession(this.currentSessionId)
 		if (!this.tunnelMapTitle[this.currentSessionId]) {
-			this.updateTunnelTitle(this.currentSessionId, this.T('home.session-instance.tunnel'))
+			this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel'))
 		}
 	},
 
@@ -216,9 +215,9 @@ export default {
 			const sessionInstance = this.$sessionManager.getSessionInstanceById(this.currentSessionId)
 			const port = await sessionInstance.openTunnel()
 			if (port) {
-				this.updateTunnelTitle(this.currentSessionId, this.T('home.session-instance.tunnel-success', port))
+				this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel-success', [port]))
 			} else {
-				this.updateTunnelTitle(this.currentSessionId, this.T('home.session-instance.tunnel'))
+				this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel'))
 			}
 		},
 
