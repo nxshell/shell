@@ -115,7 +115,7 @@
 							{{ filePropDialog.dirent.size | fileSize }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.modify-time')" :span="10">
-							{{ $t('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
+							{{ filePropDialog.dirent.mtime }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.user')" :span="10">
 							{{ filePropDialog.dirent.user }}
