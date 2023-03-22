@@ -199,7 +199,7 @@ class NxDataTransferServer extends NxDataTransfer {
                 }
                 let endDate   = new Date();
                 let _seconds = (endDate.getTime() - startDate.getTime()) / 1000;
-                let speed = that._speedHuman(totalWrite / _seconds, 2);
+                let speed = that._speedHuman(totalWrite * 8 / _seconds, 2);
                 that._emit({
                     event: "transferring",
                     args: {
@@ -313,7 +313,7 @@ class NxDataTransferServer extends NxDataTransfer {
         }
         if (speed === 0) return '0';
         if (typeof precision === 'undefined') precision = 1;
-        const units = ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s', 'PB/s'];
+        const units = ['b/s', 'Kb/s', 'Mb/s', 'Gb/s', 'Tb/s', 'Pb/s'];
         const num = Math.floor(Math.log(speed) / Math.log(1000));
         const value = (speed / Math.pow(1000, Math.floor(num))).toFixed(precision);
         return `${value} ${units[num]}`;
