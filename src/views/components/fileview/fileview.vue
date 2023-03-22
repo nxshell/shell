@@ -1,12 +1,6 @@
 <template xmlns="">
 	<div class="pt-file-view">
-		<pt-toolbar
-			:centerStyle="{
-				overflow: 'hidden',
-				marginLeft: '10px',
-				marginRight: '10px'
-			}"
-		>
+		<pt-toolbar :centerStyle="{ overflow: 'hidden', marginLeft: '10px', marginRight: '10px' }">
 			<template slot="left">
 				<n-space :size="5">
 					<el-tooltip
@@ -92,16 +86,12 @@
 						size="large"
 						:colon="false"
 						style="padding: 10px 30px"
-						:labelStyle="{width: '150px'}"
-						:contentStyle="{height: '32px', 'line-height': '32px'}"
+						:labelStyle="{ width: '150px' }"
+						:contentStyle="{ height: '32px', 'line-height': '32px' }"
 					>
 						<el-descriptions-item :span="10">
 							<template slot="label">
-								<n-icon
-									size="28"
-									type="img"
-									:name="filePropDialog.dirent.fileicon"
-								/>
+								<n-icon size="28" type="img" :name="filePropDialog.dirent.fileicon" />
 							</template>
 							{{ filePropDialog.dirent.filename }}
 						</el-descriptions-item>
@@ -115,7 +105,7 @@
 							{{ filePropDialog.dirent.size | fileSize }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.modify-time')" :span="10">
-							{{ $t('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
+							{{ t('home.fileview.prop-dialog.modify-time-format', [filePropDialog.dirent.mtime]) }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.user')" :span="10">
 							{{ filePropDialog.dirent.user }}
@@ -141,7 +131,7 @@
 			:close-on-click-modal="false"
 			width="450px"
 		>
-			<n-space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{ width: '100%' }">
 				<el-input
 					v-model="dirCreateDialog.dirname"
 					:placeholder="$t('home.fileview.createdir-dialog.placeholder')"
@@ -166,7 +156,7 @@
 			:close-on-click-modal="false"
 			width="400px"
 		>
-			<n-space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{ width: '100%' }">
 				<el-input
 					v-model="renameDialog.dirname"
 					:placeholder="$t('home.fileview.rename-dialog.placeholder')"
@@ -192,7 +182,7 @@
 			:close-on-click-modal="false"
 			width="400px"
 		>
-			<n-space vertical :item-style="{width: '100%'}">
+			<n-space vertical :item-style="{ width: '100%' }">
 				<el-input
 					v-model="chmodDialog.permissions"
 					:placeholder="$t('home.fileview.chmod-dialog.placeholder')"
@@ -232,7 +222,7 @@
 			<!-- 合并目录 -->
 			<template v-if="askDialog.questionType === 'merge'">
 				<el-descriptions
-					:title="$t('home.fileview.ask-dialogs.merge.message', askDialog.args.name)"
+					:title="$t('home.fileview.ask-dialogs.merge.message', [askDialog.args.name])"
 					:colon="false"
 					:column="2"
 				>
@@ -242,7 +232,7 @@
 						</template>
 						<div class="n-description">
 							<n-space vertical>
-								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', [askDialog.args.name]) }}</p>
 								<p>
 									{{
 										$t(
@@ -260,7 +250,7 @@
 						</template>
 						<div class="n-description">
 							<n-space vertical>
-								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', askDialog.args.name) }}</p>
+								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', [askDialog.args.name]) }}</p>
 								<p>
 									{{
 										$t(
@@ -282,7 +272,7 @@
 			<!-- 覆盖文件 -->
 			<template v-if="askDialog.questionType === 'overwrite'">
 				<el-descriptions
-					:title="$t('home.fileview.ask-dialogs.overwrite.message', askDialog.args.name)"
+					:title="$t('home.fileview.ask-dialogs.overwrite.message', [askDialog.args.name])"
 					:colon="false"
 					:column="2"
 				>
@@ -293,11 +283,15 @@
 						<div class="n-description">
 							<n-space vertical>
 								<p>
-									{{ $t('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+									{{
+										$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
+									}}
 								</p>
 								<p>
 									{{
-										$t('home.fileview.ask-dialogs.overwrite.file-info-size', askDialog.args.src.size)
+										$t('home.fileview.ask-dialogs.overwrite.file-info-size', [
+											askDialog.args.src.size
+										])
 									}}
 								</p>
 								<p>
@@ -318,7 +312,9 @@
 						<div class="n-description">
 							<n-space vertical>
 								<p>
-									{{ $t('home.fileview.ask-dialogs.overwrite.file-info-name', askDialog.args.name) }}
+									{{
+										$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
+									}}
 								</p>
 								<p>
 									{{
@@ -367,9 +363,9 @@
 <script>
 import path from 'path'
 import PtFileViewAddress from './address'
-import {getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName} from '../../fileicons'
-import {Dirent} from '../../../../common/filesystem/dirent'
-import {createDataTransfer} from '@/services/nxsys/dataTransfer'
+import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../../fileicons'
+import { Dirent } from '../../../../common/filesystem/dirent'
+import { createDataTransfer } from '@/services/nxsys/dataTransfer'
 import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
 
 function sort(dirent1, dirent2) {
@@ -440,7 +436,7 @@ export default {
 				{
 					dataKey: 'size',
 					label: 'home.fileview.mainview.columns.size',
-					width: 60,
+					width: 60
 				},
 				{
 					dataKey: 'type',
@@ -769,7 +765,7 @@ export default {
 			} catch (e) {
 				if (e.message === 'No such file') {
 					this.$confirm(
-						this.$t('home.fileview.confirm-dialogs.errors.path-not-exist', entryPath),
+						this.$t('home.fileview.confirm-dialogs.errors.path-not-exist', [entryPath]),
 						this.$t('home.fileview.confirm-dialogs.errors.title'),
 						{
 							type: 'error'
@@ -835,7 +831,7 @@ export default {
 				dirents = await fsInstance.readdir(dirPath)
 			} catch (err) {
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.error-message', err.message),
+					this.$t('home.fileview.confirm-dialogs.errors.error-message', [err.message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -864,7 +860,7 @@ export default {
 
 			let List = [...dirList, ...fileList]
 			this.fileItems = List.map((dirent) => {
-				const {icon, type} = this.getIconAndType(dirent)
+				const { icon, type } = this.getIconAndType(dirent)
 				return {
 					name: dirent.name,
 					icon: icon,
@@ -874,7 +870,9 @@ export default {
 					type: type,
 					user: dirent.getUid(),
 					group: dirent.getGid(),
-					lastModify: this.$t('home.fileview.mainview.columns.fmt-time', dirent.getMTime()),
+					lastModify: this.$t('home.fileview.mainview.columns.fmt-time', [
+						this.$d(dirent.getMTime(), 'long')
+					]),
 					perms: dirent.getPermsString(),
 					dirent
 				}
@@ -1113,16 +1111,16 @@ export default {
 					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-upload'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
-						this.$t('home.fileview.mainview.progress.upload', totalFileCount || 1, remainder || 1),
+						this.$t('home.fileview.mainview.progress.upload', [totalFileCount || 1, remainder || 1]),
 						speed
 					)
 				})
@@ -1162,16 +1160,16 @@ export default {
 					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-download'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
-						this.$t('home.fileview.mainview.progress.download', totalFileCount || 1, remainder || 1),
+						this.$t('home.fileview.mainview.progress.download', [totalFileCount || 1, remainder || 1]),
 						speed
 					)
 				})
@@ -1377,7 +1375,7 @@ export default {
 				location,
 				type: this.getDirEntryType(dirent),
 				size: dirent.getSize(),
-				mtime: dirent.getMTime(),
+				mtime: this.$d(dirent.getMTime(), 'long'),
 				user: dirent.getUid(),
 				group: dirent.getGid(),
 				perms: dirent.getPermsString()
@@ -1407,7 +1405,7 @@ export default {
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.upload-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.upload-error', [message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -1437,7 +1435,7 @@ export default {
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.upload-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.upload-error', [message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -1471,7 +1469,7 @@ export default {
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.download-error', [message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -1503,7 +1501,7 @@ export default {
 			} catch (err) {
 				const message = err.message
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+					this.$t('home.fileview.confirm-dialogs.errors.download-error', [message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -1558,7 +1556,7 @@ export default {
 		async deleteFile(filePath) {
 			try {
 				await this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.delete-file.message', filePath),
+					this.$t('home.fileview.confirm-dialogs.delete-file.message', [filePath]),
 					this.$t('home.fileview.confirm-dialogs.delete-file.title'),
 					{
 						type: 'warning'
@@ -1583,7 +1581,7 @@ export default {
 		async deleteDirectory(dirPath) {
 			try {
 				await this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.delete-dir.message', dirPath),
+					this.$t('home.fileview.confirm-dialogs.delete-dir.message', [dirPath]),
 					this.$t('home.fileview.confirm-dialogs.delete-dir.title'),
 					{
 						type: 'warning'
@@ -1611,7 +1609,7 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.$t('home.fileview.mainview.progress.delete', i, totalCount)
+						this.$t('home.fileview.mainview.progress.delete', i, [totalCount])
 					)
 				}
 			} catch (e) {
@@ -1627,7 +1625,7 @@ export default {
 		async deleteFiles() {
 			try {
 				await this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.delete-many.message', this.selectedItems.length),
+					this.$t('home.fileview.confirm-dialogs.delete-many.message', [this.selectedItems.length]),
 					this.$t('home.fileview.confirm-dialogs.delete-many.title'),
 					{
 						type: 'warning'
@@ -1673,7 +1671,7 @@ export default {
 					this.updateProgress(
 						progressId,
 						progress,
-						this.$t('home.fileview.mainview.progress.delete', i, totalCount)
+						this.$t('home.fileview.mainview.progress.delete', [i, totalCount])
 					)
 				}
 			} catch (e) {
@@ -1757,7 +1755,7 @@ export default {
 				} catch (err) {
 					const message = err.message
 					await this.$confirm(
-						this.$t('home.fileview.confirm-dialogs.errors.download-error', message),
+						this.$t('home.fileview.confirm-dialogs.errors.download-error', [message]),
 						this.$t('home.fileview.confirm-dialogs.errors.title'),
 						{
 							type: 'error'

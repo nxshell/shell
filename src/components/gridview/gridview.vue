@@ -704,7 +704,7 @@ export default {
 		margin: 10px;
 
 		&.detail {
-			//margin-top: 40px;
+			margin-top: 40px;
 		}
 
 		.item-placeholder {
