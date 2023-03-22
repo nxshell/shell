@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import { EditorView, keymap, lineNumbers } from '@codemirror/view'
 import { Compartment, EditorSelection, SelectionRange } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
@@ -44,6 +42,8 @@ import { php } from '@codemirror/lang-php'
 import { python } from '@codemirror/lang-python'
 import { xml } from '@codemirror/lang-xml'
 import themes from './themes'
+import { mapState } from 'pinia'
+import { useSettingStore, useTabStore } from '@/store'
 
 export default {
 	name: 'PtEditorView',
@@ -74,7 +74,8 @@ export default {
 	},
 
 	computed: {
-		...mapState(['theme', 'editorChange'])
+		...mapState(useSettingStore, ['theme']),
+		...mapState(useTabStore, ['editorChange'])
 	},
 	watch: {
 		searchKeyWords(newVal) {
@@ -89,7 +90,7 @@ export default {
 			this.themeChange(theme)
 		},
 		'editor_view.state.doc'(n, o) {
-			this.$store.dispatch('updateEditorStatus', n.toString() !== this.oldValue)
+			this.editorChange = n.toString() !== this.oldValue
 		}
 	},
 

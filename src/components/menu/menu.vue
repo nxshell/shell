@@ -6,7 +6,6 @@
 
 <script>
 import { getLastMenuId, pushMenu } from "./menuManager";
-
 export default {
 	name: "PtMenu",
 	props: {

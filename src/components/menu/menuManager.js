@@ -25,13 +25,13 @@ function removeContextMenuHandler(ctxMenuId) {
 const contextMenuDirective = {
     bind (el, binding, vnode) {
         const ctxMenuId = getLastMenuId();
+
         const handler = addContextMenuHandler(ctxMenuId, async function(evt) {
             evt.preventDefault();
             evt.stopPropagation();
             // 不管三七二十一，只要触发右键菜单，之前所有的菜单全部关闭掉
             // 对！！就这么豪横~
             closeAllMenu();
-
             /**
              * 允许绑定
              */
@@ -45,7 +45,6 @@ const contextMenuDirective = {
             if (menu && typeof menu.then === "function") {
                 menu = await menu;
             }
-
             showContextMenu(menu, evt);
         });
         el.addEventListener("contextmenu", handler);
@@ -106,7 +105,6 @@ export function popMenu(initiator) {
 export default {
     install() {
         initDefaultMenuHandler();
-
         Vue.directive('contextMenu', contextMenuDirective);
     }
 }

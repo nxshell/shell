@@ -1,6 +1,7 @@
 import { getSessionIcon, getSystemIcon } from '@/views/sysicons'
 import { getFolderIcon, getFileIconBySuffix } from '@/views/fileicons'
 import mousetrap from 'mousetrap'
+import { useTabStore } from '@/store'
 
 /**
  * 激活会话Tab
@@ -14,10 +15,11 @@ export async function activeSession(sessInst) {
         return
     }
     await this.$router.push({ path: router.path })
-    const activeSessionIndex = this.$store.getters.sessionInstTabs.findIndex((inst) => {
+    const tabStore = useTabStore()
+    const activeSessionIndex = tabStore.sessionInstTabs.findIndex((inst) => {
         return inst.data.id === sessInst.id
     })
-    await this.$store.dispatch('updateActiveTabIndex', activeSessionIndex)
+    await tabStore.updateActiveTabIndex(activeSessionIndex)
     sessInst.active()
 }
 
@@ -28,7 +30,8 @@ export async function activeSession(sessInst) {
  */
 export async function handleSessionInstActive(index) {
     const sessTabItem = this.sessionInstTabs[index]
-    await this.$store.dispatch('updateActiveTabIndex', index)
+    const tabStore = useTabStore()
+    tabStore.updateActiveTabIndex(index)
     if (!sessTabItem) {
         return
     }
@@ -45,17 +48,13 @@ export async function updateSessionInstTabs() {
     const sessionTabs = instList.map((inst) => {
         const item = {
             icon: {
-                iconName: 'setting',
-                type: 'svg'
-            },
-            title: inst.name,
-            data: inst
+                iconName: 'setting', type: 'svg'
+            }, title: inst.name, data: inst
         }
         switch (inst.type) {
             case 'shell':
                 item.icon = {
-                    iconName: getSystemIcon(inst.cfg.osType),
-                    type: 'img'
+                    iconName: getSystemIcon(inst.cfg.osType), type: 'img'
                 }
                 if (inst.name === '') {
                     item.title = inst.cfg.hostAddress
@@ -63,20 +62,17 @@ export async function updateSessionInstTabs() {
                 break
             case 'welcome':
                 item.icon = {
-                    iconName: getSessionIcon(inst.type),
-                    type: 'img'
+                    iconName: getSessionIcon(inst.type), type: 'img'
                 }
                 break
             case 'login':
                 item.icon = {
-                    iconName: 'user',
-                    type: 'svg'
+                    iconName: 'user', type: 'svg'
                 }
                 break
             case 'sftp':
                 item.icon = {
-                    iconName: getFolderIcon(''),
-                    type: 'img'
+                    iconName: getFolderIcon(''), type: 'img'
                 }
                 if (inst.name === '') {
                     item.title = inst.cfg.hostAddress
@@ -84,8 +80,7 @@ export async function updateSessionInstTabs() {
                 break
             case 'editor':
                 item.icon = {
-                    iconName: getFileIconBySuffix(inst.ext_name),
-                    type: 'img'
+                    iconName: getFileIconBySuffix(inst.ext_name), type: 'img'
                 }
                 if (inst.name === '') {
                     item.title = inst.cfg.hostAddress
@@ -93,8 +88,7 @@ export async function updateSessionInstTabs() {
                 break
             case 'vnc':
                 item.icon = {
-                    iconName: getSessionIcon(inst.type),
-                    type: 'img'
+                    iconName: getSessionIcon(inst.type), type: 'img'
                 }
                 break
             default:
@@ -105,7 +99,8 @@ export async function updateSessionInstTabs() {
         // });
         return item
     })
-    await this.$store.dispatch('updateSessionInstanceTabs', sessionTabs)
+    const tabStore = useTabStore()
+    tabStore.updateSessionInstanceTabs(sessionTabs)
 }
 
 export function setupBarShortCut() {

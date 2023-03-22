@@ -17,6 +17,26 @@ const i18n = createI18n(
         silentTranslationWarn: true,
         missingWarn: false,
         fallbackWarn: false,
+        datetimeFormats: {
+            'en-US': {
+                long: {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            },
+            'zh-CN': {
+                long: {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            }
+        },
         // 添加多语言（每一个语言标示对应一个语言文件）
         messages: {
             'zh-CN': zh,

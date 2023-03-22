@@ -17,8 +17,6 @@ import PtGridViewItem from "./gridview/gridviewItem.vue";
 import PtList from "./list/list.vue";
 import PtMenu from "./menu/menu.vue";
 import PtMenuItem from "./menu/menuitem.vue";
-import PtTab from "./tab/tab.vue";
-import PtTabItem from "./tab/tabitem.vue";
 import PtToolbar from "./bars/toolbar.vue";
 import PtXterm from "./xterm/xterm";
 import PtMenuManager from "./menu/menuManager";
@@ -35,8 +33,6 @@ const components = [
     PtList,
     PtMenu,
     PtMenuItem,
-    PtTab,
-    PtTabItem,
     PtToolbar,
     PtXterm
 ];

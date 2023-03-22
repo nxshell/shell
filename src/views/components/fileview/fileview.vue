@@ -115,7 +115,7 @@
 							{{ filePropDialog.dirent.size | fileSize }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.modify-time')" :span="10">
-							{{ $t('home.fileview.prop-dialog.modify-time-format', filePropDialog.dirent.mtime) }}
+							{{ $t('home.fileview.prop-dialog.modify-time-format', [filePropDialog.dirent.mtime]) }}
 						</el-descriptions-item>
 						<el-descriptions-item :label="$t('home.fileview.prop-dialog.user')" :span="10">
 							{{ filePropDialog.dirent.user }}
@@ -367,9 +367,9 @@
 <script>
 import path from 'path'
 import PtFileViewAddress from './address'
-import {getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName} from '../../fileicons'
-import {Dirent} from '../../../../common/filesystem/dirent'
-import {createDataTransfer} from '@/services/nxsys/dataTransfer'
+import { getFileIcon, getFolderIcon, getFileLinkIcon, getFileExtName } from '../../fileicons'
+import { Dirent } from '../../../../common/filesystem/dirent'
+import { createDataTransfer } from '@/services/nxsys/dataTransfer'
 import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
 
 function sort(dirent1, dirent2) {
@@ -398,9 +398,9 @@ function formatFileSize(size, detail = false) {
 		unit = 'KB'
 	}
 	if (detail) {
-		return `${v}${unit} (${size} Bytes)`
+		return `${ v }${ unit } (${ size } Bytes)`
 	} else {
-		return `${v}${unit}`
+		return `${ v }${ unit }`
 	}
 }
 
@@ -730,6 +730,7 @@ export default {
 			if (this.searchKeyWords) {
 				return this.searchResult
 			} else {
+				console.log('SSD发放的', this.fileItems)
 				return this.fileItems
 			}
 		}
@@ -799,7 +800,7 @@ export default {
 
 	methods: {
 		formatProgress() {
-			return `${this.currentProgressStatus.progress} ${this.currentProgressStatus.speed}%`
+			return `${ this.currentProgressStatus.progress } ${ this.currentProgressStatus.speed }%`
 		},
 		getDirEntryType(dirent) {
 			const types = {
@@ -835,7 +836,7 @@ export default {
 				dirents = await fsInstance.readdir(dirPath)
 			} catch (err) {
 				this.$confirm(
-					this.$t('home.fileview.confirm-dialogs.errors.error-message', err.message),
+					this.$t('home.fileview.confirm-dialogs.errors.error-message', [err.message]),
 					this.$t('home.fileview.confirm-dialogs.errors.title'),
 					{
 						type: 'error'
@@ -864,7 +865,7 @@ export default {
 
 			let List = [...dirList, ...fileList]
 			this.fileItems = List.map((dirent) => {
-				const {icon, type} = this.getIconAndType(dirent)
+				const { icon, type } = this.getIconAndType(dirent)
 				return {
 					name: dirent.name,
 					icon: icon,
@@ -874,7 +875,7 @@ export default {
 					type: type,
 					user: dirent.getUid(),
 					group: dirent.getGid(),
-					lastModify: this.$t('home.fileview.mainview.columns.fmt-time', dirent.getMTime()),
+					lastModify: this.$t('home.fileview.mainview.columns.fmt-time', [this.$d(dirent.getMTime(), 'long')]),
 					perms: dirent.getPermsString(),
 					dirent
 				}
@@ -919,7 +920,8 @@ export default {
 				let stat = await fsInstance.lstat(realPath)
 				let dirent = new Dirent(realPath, stat)
 				return dirent
-			} catch (err) {}
+			} catch (err) {
+			}
 			return false
 		},
 
@@ -1113,12 +1115,12 @@ export default {
 					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-upload'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1162,12 +1164,12 @@ export default {
 					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-download'))
 				})
 
-				transfer.on('ask', ({question, args}) => {
+				transfer.on('ask', ({ question, args }) => {
 					this.showAskDialog(transfer, question, args)
 				})
 
 				transfer.on('transferring', (args) => {
-					const {progress, remainder, totalFileCount, speed} = args
+					const { progress, remainder, totalFileCount, speed } = args
 					this.updateProgress(
 						progressId,
 						progress,
@@ -1551,9 +1553,12 @@ export default {
 			this.handleCloseCreateDirDialog()
 		},
 
-		handlePaste() {},
-		handleCut() {},
-		handleCopy() {},
+		handlePaste() {
+		},
+		handleCut() {
+		},
+		handleCopy() {
+		},
 
 		async deleteFile(filePath) {
 			try {
@@ -1727,7 +1732,8 @@ export default {
 								type: 'info'
 							}
 						)
-					} catch (e) {}
+					} catch (e) {
+					}
 					return
 				}
 				const fs = await this.getFs()

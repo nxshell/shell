@@ -34,10 +34,11 @@ import {
 	updateSessionInstTabs
 } from '@/layout/components/tabbar/tabs-utools'
 import * as EventBus from '@/services/eventbus'
-import { mapState } from 'vuex'
 import { contextMenuMixin } from './context-menu-mixin'
 import BScroll from '@better-scroll/core'
 import MouseWheel from '@better-scroll/mouse-wheel'
+import {  mapState, mapStores } from 'pinia'
+import { useSettingStore, useTabStore } from '@/store'
 
 BScroll.use(MouseWheel)
 
@@ -65,13 +66,14 @@ export default {
 				this.$sessionManager.createWelcomeSessionInstance()
 			} else {
 				if (this.activeTabIndex >= this.sessionInstTabs.length) {
-					this.$store.dispatch('updateActiveTabIndex', this.sessionInstTabs.length - 1)
+					this.tabStore.updateActiveTabIndex(this.sessionInstTabs.length - 1)
 				}
 				this.handleSessionInstActive(this.activeTabIndex || 0)
 			}
 		})
 		EventBus.subscript('updateTabBySessionId', (session_id) => {
-			const activeSessionIndex = this.$store.getters.sessionInstTabs.findIndex((inst) => {
+			const activeSessionIndex = this.sessionInstTabs.findIndex((inst) => {
+				console.log(inst)
 				return inst.data.id === session_id
 			})
 
@@ -94,7 +96,9 @@ export default {
 		})
 	},
 	computed: {
-		...mapState(['activeTabIndex', 'sessionInstTabs', 'noCloseConfirm', 'editorChange'])
+		...mapStores(useTabStore, useSettingStore),
+		...mapState(useSettingStore, ['tabCloseConfirm']),
+		...mapState(useTabStore, ['activeTabIndex', 'sessionInstTabs', 'editorChange'])
 	},
 	watch: {
 		sessionInstTabs: function (n, o) {
@@ -130,7 +134,7 @@ export default {
 			if (session.type === 'editor' && !this.editorChange) {
 				session.beforeClose()
 				session.close()
-				this.$store.dispatch('updateActiveTabIndex', index)
+				this.tabStore.updateActiveTabIndex(index)
 				return
 			} else if (session.type === 'editor') {
 				this.$confirm(
@@ -147,11 +151,11 @@ export default {
 				})
 				return
 			}
-			const noConfirm = this.$store.getters.noCloseConfirm
+			const noConfirm = this.tabCloseConfirm
 			if (noConfirm && session.type !== "editor") {
 				session.beforeClose()
 				session.close()
-				this.$store.dispatch('updateActiveTabIndex', index)
+				this.tabStore.updateActiveTabIndex(index)
 				return
 			}
 			const isEditor = session && session.type === 'editor'
@@ -182,7 +186,7 @@ export default {
 							trueLabel: true,
 							falseLabel: false,
 							on: {
-								change: (value) => this.$store.dispatch('updateNoCloseConfirm', value)
+								change: (value) => this.settingStore.updateTabCloseConfirm(value)
 							}
 						}, null)
 					]
@@ -195,7 +199,7 @@ export default {
 			}).then(() => {
 				session.beforeClose()
 				session.close()
-				this.$store.dispatch('updateActiveTabIndex', index)
+				this.tabStore.updateActiveTabIndex(index)
 			}).catch(() => {
 
 			})
@@ -205,7 +209,7 @@ export default {
 		 * 处理会话Tab的右键菜单
 		 */
 		handleSessionTabsContextMenu(tabItemIdx) {
-			this.$store.dispatch('updateActiveTabIndex', tabItemIdx)
+			this.tabStore.updateActiveTabIndex(tabItemIdx)
 			const {
 				data: { type }
 			} = this.sessionInstTabs[tabItemIdx]
@@ -229,7 +233,7 @@ export default {
 				this.sessionInstTabs.splice(index, 0, moving)
 				// 排序变化后目标对象的索引变成源对象的索引
 				this.dragIndex = index
-				this.$store.dispatch('updateActiveTabIndex', index)
+				this.tabStore.updateActiveTabIndex(index)
 			}
 		}
 	}

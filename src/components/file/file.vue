@@ -116,12 +116,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pt-file {
 	position: relative;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
+
+	::v-deep .el-input-group__append {
+		.el-button {
+			span {
+				padding-right: 10px;
+			}
+		}
+	}
 }
 </style>

@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
 import path from 'path'
 import xtermTheme from 'xterm-theme'
 import PtAuthDialog from '../components/auth/auth'
@@ -63,6 +62,8 @@ import { xzmodem } from './xzmodem.js'
 import { create_iconv } from './iconv.js'
 import { createLogger } from '@/services/nxsys/logger'
 import mousetrap from 'mousetrap'
+import { mapState } from 'pinia'
+import { useSessionStore } from '@/store/modules/session'
 
 export default {
 	name: 'XtermInstance',
@@ -217,7 +218,7 @@ export default {
 	},
 
 	computed: {
-		...mapGetters(['keyboardToAll']),
+		...mapState(useSessionStore, ['keyboardToAll']),
 		currentSessionInfo() {
 			const currentSessionInfo = {
 				url: ''
@@ -256,7 +257,6 @@ export default {
 	},
 
 	methods: {
-		...mapMutations(['setKeyboardToAll']),
 		xtermFocus() {
 			EventBus.publish("updateTabBySessionId", this.sessionInstanceId)
 		},
@@ -452,13 +452,13 @@ export default {
 			})
 
 			let newConfig = null
-			if (data.type == "password") {
+			if (data.type === "password") {
 				newConfig = {
 					authType: "password",
 					username: data.username,
 					password: data.password
 				}
-			} else if (data.type == "publickey") {
+			} else if (data.type === "publickey") {
 				newConfig = {
 					authType: "cert",
 					username: data.username,
@@ -594,10 +594,10 @@ export default {
 			})
 		},
 		send_many() {
-			this.setKeyboardToAll(true)
+			this.keyboardToAll = true
 		},
 		send_one() {
-			this.setKeyboardToAll(false)
+			this.keyboardToAll = false
 			EventBus.remove('sendToAllTerm')
 		},
 		handleSearch() {

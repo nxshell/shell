@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
+import pinia from "./store";
 
 import "@fontsource/dejavu-mono";
 import "./assets/scss/default.scss";
@@ -24,8 +24,8 @@ Vue.config.productionTip = false;
 
     new Vue({
         router,
-        store,
-		i18n,
+        pinia,
+        i18n,
         render: h => h(App)
     }).$mount("#app");
 }();

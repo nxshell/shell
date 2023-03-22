@@ -36,8 +36,8 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
 /**
  * 右键打开链接
  */
-export function handleSessionTreeContextMenu_Connect() {
-    this.handleHostOpen(this.currentSelectedSessionNode.data.data)
+export async function handleSessionTreeContextMenu_Connect() {
+    await this.handleHostOpen(this.currentSelectedSessionNode.data.data)
 }
 
 /**
@@ -93,7 +93,7 @@ export function handleSessionTreeContextMenu_SFTP() {
 export function handleSessionTreeContextMenu_RenameFolder() {
     const folderName = this.currentSelectedSessionNode.data.data.name
     this.isEdit = true
-    this.$refs.folderDialogRef.show(folderName)
+    this.$refs.folderDialogRef?.show(folderName)
 }
 
 /**

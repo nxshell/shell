@@ -2,7 +2,7 @@
 	<div class="pt-login" :class="{'login-success': userInfo != null}">
 		<template v-if="userInfo == null">
 			<div class="header">
-				<n-icon name="logo" size="50"/>
+				<n-icon name="logo" size="50" />
 				<div class="title">
 					<div class="welcome">{{ $t("home.user-center.login") }}</div>
 					<div class="product-name">NxShell</div>
@@ -26,10 +26,8 @@
 		</template>
 		<template v-else>
 			<div class="user-info">
-				<el-avatar :avatarUrl="avatarUrl" :avatarName="avatarName" className="avatar" />
-				<div class="user-name">
-					{{ userInfo.user_name }}
-				</div>
+				<el-avatar :avatarUrl="avatar" />
+				<div class="user-name">{{ userName }}</div>
 				<a class="logout" href="javascript:;" @click="logout">{{ $t("home.user-center.logout") }}</a>
 			</div>
 			<div class="user-contents">
@@ -59,7 +57,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapState } from 'pinia'
+import { useUserStore } from '@/store/modules/user'
 
 export default {
 	name: "Login",
@@ -81,13 +80,7 @@ export default {
 	},
 
 	computed: {
-		...mapGetters(['userInfo']),
-		avatarUrl() {
-			return this.userInfo ? this.userInfo.user_avatar : "";
-		},
-		avatarName() {
-			return this.userInfo ? this.userInfo.user_name : "";
-		}
+		...mapState(useUserStore, ['avatar', 'userName']),
 	},
 
 	created() {
@@ -95,14 +88,13 @@ export default {
 			if (typeof evt.data != "object" || !("user_name" in evt.data)) {
 				return;
 			}
-			this.setUserInfo(evt.data);
+			this.userInfo = evt.data;
 		};
 
 		window.addEventListener("message", this.cbFunc);
 	},
 
 	methods: {
-		...mapMutations(['setUserInfo']),
 		gotoAuth(type) {
 			const oAuthUrl = this.OAUTH[type];
 			powertools.openDialog(oAuthUrl, { width: 1100, height: 725 });
@@ -114,7 +106,7 @@ export default {
 		},
 
 		logout() {
-			this.setUserInfo(null);
+			this.userInfo = {};
 		}
 	},
 

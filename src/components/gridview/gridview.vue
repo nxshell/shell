@@ -245,7 +245,6 @@ export default {
 			const { startRow, endRow } = this.viewVisual
 
 			const cols = this.view.cols
-
 			return this.items.slice(startRow * cols, (endRow + 1) * cols)
 		},
 
@@ -704,7 +703,7 @@ export default {
 		margin: 10px;
 
 		&.detail {
-			//margin-top: 40px;
+			margin-top: 40px;
 		}
 
 		.item-placeholder {

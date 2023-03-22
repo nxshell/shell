@@ -54,6 +54,7 @@
 		</el-scrollbar>
 		<!--编辑文件夹-->
 		<nx-folder-dialog ref="folderDialogRef" :edit="isEdit" @ok="handleOk" />
+		<SSHModal ref="sshModalRef" />
 	</div>
 </template>
 
@@ -73,15 +74,17 @@ import {
 	treeOpClipboardCut
 } from './tools'
 import * as EventBus from '@/services/eventbus'
-import { mapMutations, mapState } from 'vuex'
 import { activeSession } from '@/layout/components/tabbar/tabs-utools'
 import NxFolderDialog from './components/FolderDialog.vue'
 import NSpace from '@/components/space'
 import { showContextMenu } from '@/components/menu/contextmenu'
+import { mapActions, mapState, mapStores } from 'pinia'
+import { useTabStore } from '@/store'
+import { SSHModal } from '@/views/components'
 
 export default {
 	name: 'NxMenus',
-	components: { NSpace, NxFolderDialog },
+	components: { NSpace, NxFolderDialog, SSHModal },
 	data() {
 		return {
 			sessionConfigsTree: [],
@@ -185,7 +188,8 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['currentSelectedSessionNode'])
+		...mapStores(useTabStore),
+		...mapState(useTabStore, ['currentSelectedSessionNode'])
 	},
 	filters: {
 		formatIconName: function (value) {
@@ -211,15 +215,16 @@ export default {
 		})
 		// 订阅会话创建事件
 		EventBus.subscript('create-session-toolbar', () => {
-			this.gotoCreateShellSession()
+			// this.gotoCreateShellSession()
+			this.$refs.sshModalRef?.showModal()
 		})
 		this.$nextTick(() => {
 			this.updateSessionTree()
-			this.updateCurrentSelectedSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
+			this.updateSelectSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
 		})
 	},
 	methods: {
-		...mapMutations(['updateCurrentSelectedSessionNode']),
+		...mapActions(useTabStore, ['updateSelectSessionNode']),
 		activeSession,
 		addSessionConfig,
 		processSessionConfigTree,
@@ -258,7 +263,7 @@ export default {
 				data: { data: sessionData }
 			} = node
 			const sessionNode = { data: data, node: node, treeNode: this.$refs.sessionTree }
-			this.updateCurrentSelectedSessionNode(sessionNode)
+			this.updateSelectSessionNode(sessionNode)
 			if (sessionData.type === SESSION_CONFIG_TYPE.FOLDER) {
 				// 目录节点不启动会话实例
 				return
@@ -283,7 +288,7 @@ export default {
 		},
 		nodeContextmenu(event, data, node, vnode) {
 			const sessionNode = { data: data, node: node, treeNode: this.$refs.sessionTree }
-			this.updateCurrentSelectedSessionNode(sessionNode)
+			this.updateSelectSessionNode(sessionNode)
 			const { type: nodeType } = data.data
 			let menuContent = []
 			if (nodeType === SESSION_CONFIG_TYPE.FOLDER) {
@@ -377,7 +382,7 @@ export default {
 		 */
 		handleSessionTreeContainerClick() {
 			this.highlightCurrent = false
-			this.updateCurrentSelectedSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
+			this.updateSelectSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
 		},
 		// 查看编辑会话配置
 		async handleSessionTreeContextMenu_Prop() {
@@ -412,7 +417,6 @@ export default {
 		},
 		handleSessionTreeContextMenu_CreateFolder() {
 			const folderDialog = this.$refs.folderDialogRef
-			debugger
 			folderDialog?.show('')
 		}
 	}
