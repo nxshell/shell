@@ -185,19 +185,21 @@ class NxDataTransferServer extends NxDataTransfer {
         let totalWrite = 0;
         let srcFileHandle;
         let destFileHandle;
-        let has_write_len = totalWrite;
 
         try {
             srcFileHandle = await sourceFS.open(sourcePath, "r");
             destFileHandle = await destFS.open(destPath, "w");
             let rwOffset = 0;
             let that = this;
+            let startDate = new Date();
 
             function send_speed() {
                 if (! emitProgress) {
                     return;
                 }
-                let speed = that._speedHuman((totalWrite - has_write_len), 2);
+                let endDate   = new Date();
+                let _seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+                let speed = that._speedHuman(totalWrite / _seconds, 2);
                 that._emit({
                     event: "transferring",
                     args: {
@@ -205,7 +207,6 @@ class NxDataTransferServer extends NxDataTransfer {
                         speed: speed
                     }
                 });
-                has_write_len = totalWrite;
             }
 
             let loop = 0;
@@ -215,11 +216,7 @@ class NxDataTransferServer extends NxDataTransfer {
                     await destFS.write(destFileHandle, rwBuffer, 0, bytesRead, rwOffset);
                     rwOffset += bytesRead;
                 }
-
-                if (bytesRead < BUFF_SIZE) {
-                    break;
-                }
-
+                
                 totalWrite += bytesRead;
 
                 if(loop > 10) {
@@ -227,6 +224,10 @@ class NxDataTransferServer extends NxDataTransfer {
                     loop = 0;
                 }
                 loop += 1;
+
+                if (bytesRead < BUFF_SIZE) {
+                    break;
+                }
             }
 
         } catch (err) {
