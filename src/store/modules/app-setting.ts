@@ -12,7 +12,6 @@ export interface ISetting {
     tabCloseConfirm: boolean
     configPanel: boolean
     layoutMode: LayoutModeType
-    test: string
 }
 
 const useSettingStore = defineStore('setting', {
@@ -22,8 +21,7 @@ const useSettingStore = defineStore('setting', {
         userLock: false,
         tabCloseConfirm: (globalSetting.getProfile("xterm")?.noCloseConfirm as unknown as boolean) || false,
         configPanel: true,
-        layoutMode: 'normal',
-        test: '而此时'
+        layoutMode: 'normal'
     }),
     actions: {
         async changeTheme(theme: ThemeType) {

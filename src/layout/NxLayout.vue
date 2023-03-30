@@ -58,7 +58,6 @@ import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSettingStore } from "@/store";
 import { useI18n } from "vue-i18n-bridge";
-import { LayoutModeType } from "@/store/modules/app-setting";
 
 const { t } = useI18n()
 const IS_MAC_OS = /macintosh/i.test(navigator.userAgent)

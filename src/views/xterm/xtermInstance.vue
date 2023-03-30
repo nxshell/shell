@@ -63,7 +63,7 @@ import { create_iconv } from './iconv.js'
 import { createLogger } from '@/services/nxsys/logger'
 import mousetrap from 'mousetrap'
 import { mapState } from 'pinia'
-import { useSessionStore } from '@/store/modules/session'
+import { useSessionStore } from '@/store'
 
 export default {
 	name: 'XtermInstance',
@@ -249,8 +249,8 @@ export default {
 		$route: {
 			handler(route) {
 				if (route.name === 'XTermSession') {
-					this.$refs.xterm.onFocus('focus')
-					this.$refs.xterm.currentSize()
+					this.$refs.xterm?.onFocus('focus')
+					this.$refs.xterm?.currentSize()
 				}
 			}
 		}

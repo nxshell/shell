@@ -29,7 +29,7 @@ import { useTabStore } from '@/store'
 import { getCurrentInstance, onBeforeMount } from "vue";
 
 const { configPanel, showTabs } = storeToRefs(useTabStore())
-const instance = getCurrentInstance()
+const proxy = getCurrentInstance()?.proxy
 
 const handlerCollapsed = () => {
 	const action = configPanel.value ? 'close' : 'open'
@@ -39,7 +39,7 @@ const handlerCollapsed = () => {
 
 onBeforeMount(async () => {
 	// @ts-ignore
-	const sessionManager = instance?.proxy.$sessionManager
+	const sessionManager = proxy.$sessionManager
 	// 避免重复创建欢迎会话实例
 	if (!sessionManager.getSessionIntances().find((x) => x.name === 'Welcome')) {
 		await sessionManager.createWelcomeSessionInstance()

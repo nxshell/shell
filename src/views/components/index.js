@@ -1,3 +1,3 @@
-import SSHModal from './session/ssh/index.vue'
+import SshModal from './session/ssh/index.vue'
 
-export { SSHModal }
+export { SshModal }

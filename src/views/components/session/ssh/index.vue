@@ -10,98 +10,181 @@
 	>
 		<el-form
 			ref="sshSubFormRef"
-			:form="sshSubForm"
+			:model="sshSubForm"
+			:rules="rules"
 			class="n-session-ssh-container"
 			label-position="top"
 			label-width="80px"
 		>
 			<div class="n-session-ssh-container__left">
-				<el-form-item :label="t('home.profile.base.host-name.title')">
-					<el-input v-model="sshSubForm.hostName" />
+				<el-form-item :label="t('home.profile.base.host-name.title')" prop="hostName">
+					<el-input
+						v-model="sshSubForm.hostName"
+						:placeholder="t('home.profile.base.host-name.placeholder')"
+					/>
 				</el-form-item>
-				<el-form-item label="分组">
-					<el-select v-model="sshSubForm.group" placeholder="请选择分组" style="width: 100%">
+				<el-form-item :label="t('home.profile.base.host-group.title')" prop="group">
+					<el-select
+						v-model="sshSubForm.group"
+						:placeholder="t('home.profile.base.host-group.placeholder')"
+						style="width: 100%"
+					>
 						<el-option v-for="item in group" :label="item.label" :value="item.value" :key="item.value" />
 					</el-select>
 				</el-form-item>
+				<!-- 后续添加图标支持 -->
 			</div>
 			<div class="n-session-ssh-container__right">
-				<el-tabs v-model="activeTab">
-					<el-tab-pane label="通用" name="base">
+				<el-tabs v-model="activeTab" type="border-card">
+					<!-- 通用 -->
+					<el-tab-pane :label="t('components.session.base.label')" name="base">
 						<el-row :gutter="5">
 							<el-col :xs="4" :sm="4" :md="4" :lg="6" :xl="4">
-								<el-form-item label="链接类型">
-									<el-select v-model="sshSubForm.host" placeholder="请选择链接类型">
-										<el-option :value="1" label="直连"></el-option>
-										<el-option :value="2" label="转发"></el-option>
-										<el-option :value="3" label="SOCKS代理"></el-option>
+								<el-form-item :label="t('components.session.base.link-type.label')">
+									<el-select
+										v-model="sshSubForm.proxy"
+										:placeholder="t('components.session.base.link-type.placeholder')"
+									>
+										<el-option
+											value="none"
+											:label="t('components.session.base.link-type.options.directly')"
+										/>
+										<el-option
+											value="socksv5"
+											:label="t('components.session.base.link-type.options.socks')"
+										/>
 									</el-select>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="15">
 								<el-form-item :label="t('home.profile.base.host.title')">
-									<el-input v-model="sshSubForm.host" placeholder="请输入主机地址" />
+									<el-input
+										v-model="sshSubForm.hostAddress"
+										:placeholder="t('home.profile.base.host.placeholder')"
+									/>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="8" :sm="8" :md="6" :lg="6" :xl="4">
 								<el-form-item :label="t('home.profile.base.port.title')">
-									<el-input-number size="small" v-model="sshSubForm.port" placeholder="请输入端口" />
+									<el-input-number
+										size="small"
+										v-model="sshSubForm.hostPort"
+										:placeholder="t('home.profile.base.port.placeholder')"
+									/>
 								</el-form-item>
 							</el-col>
 						</el-row>
-						<el-radio-group v-model="authMethod">
-							<el-radio-button :label="1">{{ t('home.profile.auth.auth-type.options.password') }}</el-radio-button>
-							<el-radio-button :label="2">{{ t('home.profile.auth.auth-type.options.publickey') }}</el-radio-button>
-							<el-radio-button :label="3">{{ t('home.profile.auth.auth-type.options.keyboard-interactive') }}</el-radio-button>
+						<!--Socks代理-->
+						<el-row :gutter="5" v-if="sshSubForm.proxy === 'socksv5'">
+							<el-col :xs="12" :sm="12" :md="12" :lg="18" :xl="19">
+								<el-form-item :label="t('home.profile.auth.socksv5.host.title')">
+									<el-input v-model="sshSubForm.proxyHost" placeholder="请输入代理主机地址" />
+								</el-form-item>
+							</el-col>
+							<el-col :xs="8" :sm="8" :md="6" :lg="6" :xl="4">
+								<el-form-item :label="t('home.profile.auth.socksv5.port.title')">
+									<el-input-number
+										size="small"
+										v-model="sshSubForm.proxyPort"
+										placeholder="请输入代理主机端口"
+									/>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-radio-group v-model="sshSubForm.authType">
+							<el-radio-button label="password">
+								{{ t('home.profile.auth.auth-type.options.password') }}
+							</el-radio-button>
+							<el-radio-button label="cert">
+								{{ t('home.profile.auth.auth-type.options.publickey') }}
+							</el-radio-button>
+							<el-radio-button label="keyboard-interactive">
+								{{ t('home.profile.auth.auth-type.options.keyboard-interactive') }}
+							</el-radio-button>
 						</el-radio-group>
 						<el-row :gutter="5">
 							<el-col :span="12">
-								<el-form-item label="用户名">
-									<el-input v-model="sshSubForm.host" placeholder="请输入用户名" />
+								<el-form-item :label="t('home.profile.auth.username.title')">
+									<el-input
+										v-model="sshSubForm.username"
+										:placeholder="t('home.profile.auth.username.placeholder')"
+									/>
+								</el-form-item>
+								<el-form-item v-if="authMethod === 2" :label="t('home.profile.auth.passphrase.title')">
+									<el-input
+										v-model="sshSubForm.passphrase"
+										:placeholder="t('home.profile.auth.passphrase.placeholder')"
+										show-password
+									/>
 								</el-form-item>
 							</el-col>
 							<el-col :span="12">
-								<el-form-item v-if="authMethod === 1" label="密码">
-									<el-input v-model="sshSubForm.host" placeholder="请输入用户名" />
+								<el-form-item v-if="authMethod === 1" :label="t('home.profile.auth.password.title')">
+									<el-input
+										v-model="sshSubForm.password"
+										:placeholder="t('home.profile.auth.password.placeholder')"
+										show-password
+									/>
 								</el-form-item>
 								<el-form-item v-if="authMethod === 2" :label="t('home.profile.auth.publickey.title')">
-									<pt-file v-model="sshSubForm.host" placeholder="请选择私钥文件" />
+									<pt-file
+										v-model="sshSubForm.cert"
+										:placeholder="t('home.profile.auth.publickey.placeholder')"
+									/>
 								</el-form-item>
 							</el-col>
 						</el-row>
 					</el-tab-pane>
-					<el-tab-pane label="端口" name="second">
-						<div class="port-container">
-							<el-input placeholder="127.0.0.1" />
-							<el-input-number :min="1" :max="65535" />
-							<span class="port-container-link">
-								<i class="el-icon-right"></i>
-							</span>
-							<el-input placeholder="127.0.0.1" />
-							<el-input-number :min="1" :max="65535" />
-						</div>
+					<!-- 端口转发 -->
+					<el-tab-pane :label="t('components.session.port.label')" name="second">
+						<el-form-item :label="t('home.profile.auth.forwardin.title')">
+							<div class="n-port-forward">
+								<div class="n-port-forward__source">
+									<el-input v-model="sshSubForm.forwardInRemoteHost" placeholder="127.0.0.1" />
+									<el-input-number v-model="sshSubForm.forwardInRemotePort" :min="1" :max="65535" />
+								</div>
+								<div class="n-port-forward__link">
+									<div style="width: 100%; display: inline-flex; justify-content: center">
+										<i class="el-icon-right"></i>
+									</div>
+								</div>
+								<div class="n-port-forward__target">
+									<el-input v-model="sshSubForm.forwardInLocalHost" placeholder="127.0.0.1" />
+									<el-input-number v-model="sshSubForm.forwardInLocalPort" :min="1" :max="65535" />
+								</div>
+							</div>
+						</el-form-item>
 					</el-tab-pane>
-					<el-tab-pane label="高级" name="third">
+					<!-- 主题 -->
+					<el-tab-pane :label="t('components.session.theme.label')" name="fourth"></el-tab-pane>
+					<!-- 高级 -->
+					<el-tab-pane :label="t('components.session.advanced.label')" name="third">
 						<n-space vertical fill>
 							<n-space fill align="space-between">
-								<span>X11 转发</span>
-								<el-switch></el-switch>
+								<!--X11 转发-->
+								<span>{{ t('home.profile.auth.forward-type.title') }}</span>
+								<el-switch v-model="sshSubForm.forward" active-value="x11" inactive-value="none" />
 							</n-space>
 							<n-space fill align="space-between">
-								<span>活动状态保持间隔</span>
-								<el-input-number></el-input-number>
+								<!--活动状态保持间隔-->
+								<span>{{ t('home.profile.connect.keepalive.title') }}</span>
+								<el-input-number v-model="sshSubForm.keepAliveInterval" />
 							</n-space>
 							<n-space fill align="space-between">
-								<span>连续无应答次数</span>
-								<el-input-number></el-input-number>
+								<span>{{ t('home.profile.connect.keepalive-count-max.title') }}</span>
+								<el-input-number v-model="sshSubForm.keepAliveCountMax" />
 							</n-space>
 							<n-space fill align="space-between">
-								<span>连接超时</span>
-								<el-input-number></el-input-number>
+								<span>{{ t('home.profile.connect.ready-timeout.title') }}</span>
+								<el-input-number v-model="sshSubForm.readyTimeout" />
+							</n-space>
+							<n-space fill align="space-between">
+								<!--X11 转发-->
+								<span>{{ t('home.profile.connect.sftp-dirt.title') }}</span>
+								<el-input v-model="sshSubForm.sftpDirt" style="width: 200px" />
 							</n-space>
 						</n-space>
 					</el-tab-pane>
-					<el-tab-pane label="主题" name="fourth">主题</el-tab-pane>
 				</el-tabs>
 			</div>
 		</el-form>
@@ -112,6 +195,12 @@
 	</el-dialog>
 </template>
 
+<script>
+export default {
+	name: 'SshModal'
+}
+</script>
+
 <script setup>
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -120,27 +209,64 @@ import { useI18n } from 'vue-i18n-bridge'
 
 const { t } = useI18n()
 const visible = ref(false)
-const title = ref('')
+const sshSubFormRef = ref()
 const sshSubForm = ref({
+	sessType: 'ssh',
+	protocal: 'ssh',
+	proxy: 'none',
 	hostName: '',
 	group: '',
-	host: '',
-	port: 80
+	hostAddress: '',
+	hostPort: 22,
+	authType: 'password',
+	username: '',
+	password: '',
+	cert: '',
+	passphrase: '',
+	forwardInRemoteHost: 'localhost',
+	forwardInRemotePort: 10024,
+	forwardInLocalHost: 'localhost',
+	forwardInLocalPort: 10024,
+	proxyHost: '',
+	proxyPort: 1080,
+	forward: 'none',
+	sftpDirt: '/',
+	keepAliveInterval: 60,
+	keepAliveCountMax: 3,
+	readyTimeout: 20000
+})
+const rules = ref({
+	hostName: [{ required: true, message: t('home.profile.base.host-name.description') }]
 })
 const activeTab = ref('base')
 const authMethod = ref(1)
 const emits = defineEmits(['cancel', 'ok'])
-const { group } = storeToRefs(useSessionStore())
+const sessionStore = useSessionStore()
+// sessionStore.$subscribe((mutation, state) => {
+// 	console.log('订阅更新', state.menuTree, state.group)
+// })
+const { group, menuTree } = storeToRefs(sessionStore)
 const showModal = () => {
+	sshSubFormRef.value?.resetFields()
 	visible.value = true
 }
+
 const handleCancel = () => {
-	visible.value = false
 	emits('cancel')
-}
-const handleOk = () => {
+	sshSubFormRef.value?.resetFields()
+	sshSubFormRef.value?.clearValidate()
 	visible.value = false
-	emits('ok')
+}
+
+const handleOk = () => {
+	sshSubFormRef.value?.validate((valid) => {
+		if (valid) {
+			emits('ok', sshSubForm.value)
+			visible.value = false
+		} else {
+			return false
+		}
+	})
 }
 defineExpose({
 	showModal
@@ -161,23 +287,17 @@ defineExpose({
 	&__right {
 		flex: 1;
 
-		.n-base-host {
+		.n-port-forward {
 			display: flex;
 			column-gap: 5px;
-		}
-
-		.port-container {
-			display: flex;
 			justify-content: space-between;
-			align-items: center;
-			column-gap: 3px;
+			width: 100%;
 
-			&-link {
+			&__source,
+			&__target {
 				flex: 1;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				padding: 0 10px;
+				display: inline-flex;
+				column-gap: 5px;
 			}
 		}
 	}

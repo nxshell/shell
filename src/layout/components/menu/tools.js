@@ -37,7 +37,8 @@ export function processSessionConfigTree(sessionConfigs, searchKeywords) {
  * 右键打开链接
  */
 export async function handleSessionTreeContextMenu_Connect() {
-    await this.handleHostOpen(this.currentSelectedSessionNode.data.data)
+    console.log('打开链接', this.currentNode)
+    await this.handleHostOpen(this.currentNode.sessionData.data)
 }
 
 /**
@@ -83,10 +84,7 @@ export function handleOpenSFTP(data) {
 }
 
 export function handleSessionTreeContextMenu_SFTP() {
-    const {
-        data: { data }
-    } = this.currentSelectedSessionNode
-    this.$sessionManager.createSFTPSessionInstance(data)
+    this.$sessionManager.createSFTPSessionInstance(this.currentNode.sessionData.data)
 }
 
 // 重命名会话文件夹

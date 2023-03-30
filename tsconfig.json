@@ -2,7 +2,10 @@
     "compilerOptions": {
         "target": "ES2015",
         "module": "commonjs",
+        // 启用所有严格类型检查选项
         "strict": true,
+        // 禁止this 值为 any
+        "noImplicitThis": true,
         "allowJs": true,
         "strictNullChecks": true,
         "esModuleInterop": true,

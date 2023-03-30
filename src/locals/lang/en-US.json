@@ -25,19 +25,47 @@
                 "title": "Auth Type"
             },
             "username": {
-                "title": "user"
+                "title": "user",
+                "placeholder": "Please enter username"
             },
             "password": {
-                "title": "Password"
+                "title": "Password",
+                "placeholder": "Please enter password"
             },
             "publickey": {
-                "title": "Priavte Key"
+                "title": "Priavte Key",
+                "placeholder": "Please select private key"
             },
             "keyboard": {
                 "title": "keyboard Interactive"
             },
             "passphrase": {
-                "title": "Private key password"
+                "title": "Private key password",
+                "placeholder": "Please enter private key password"
+            }
+        },
+        "session": {
+            "base": {
+                "label": "Universal",
+                "link-type": {
+                    "label": "Link Type",
+                    "placeholder": "Please select link type",
+                    "options": {
+                        "directly": "Directly",
+                        "socks": "Socks Proxy"
+                    }
+                }
+            },
+            "port": {
+                "label": "Port"
+            },
+            "advanced": {
+                "label": "Advanced"
+            },
+            "theme": {
+                "label": "Theme"
+            },
+            "ssh": {
             }
         }
     },
@@ -55,7 +83,7 @@
     },
     "home": {
         "editor": {
-            "search-tab": "Please input search content"
+            "search-tab": "Please enter search content"
         },
         "nav": {
             "user-login": "Click for login page",
@@ -122,7 +150,12 @@
                 "title": "Basic config",
                 "host-name": {
                     "title": "Host name",
+                    "placeholder": "Please enter hostname",
                     "description": "The host name can use characters or numbers, which is required."
+                },
+                "host-group": {
+                    "title": "Host Group",
+                    "placeholder": "Please select host group"
                 },
                 "os": {
                     "title": "Operating system",
@@ -137,10 +170,12 @@
                 },
                 "host": {
                     "title": "Host",
+                    "placeholder": "Please enter host ip",
                     "description": "Address of the host, IP(IPv4/IPv6）, domain name, or hostname."
                 },
                 "port": {
                     "title": "Port",
+                    "placeholder": "Please enter host port",
                     "description": "Port number,default to 22.",
                     "ftpdescription": "Port number,default to 21.",
                     "telnetdescription": "Port number,default to 23.",
@@ -347,19 +382,23 @@
                 },
                 "username": {
                     "title": "Name",
-                    "description": "The name to login the host."
+                    "description": "The name to login the host.",
+                    "placeholder": "Please enter login username"
                 },
                 "password": {
                     "title": "Password",
-                    "description": "The password associated with the name to login the host."
+                    "description": "The password associated with the name to login the host.",
+                    "placeholder": "Please enter login password"
                 },
                 "publickey": {
                     "title": "Private key",
-                    "description": "Select or drag the private key here, which is paired with the host."
+                    "description": "Select or drag the private key here, which is paired with the host.",
+                    "placeholder": "Please select private key"
                 },
                 "passphrase": {
                     "title": "Passphrase",
-                    "description": "The password associated with the private key."
+                    "description": "The password associated with the private key.",
+                    "placeholder": "If you have a key password, please enter"
                 },
                 "secure": {
                     "title": "SSL",
@@ -583,7 +622,7 @@
             "mainview": {
                 "total-file-count": "{0} itme(s)",
                 "total-selected-count": "Totally {0} item(s),you have selected {1} item(s)",
-                "search-tab": "Please input search file name",
+                "search-tab": "Please enter search file name",
                 "go-back": "Back",
                 "go-forward": "Forward",
                 "go-up": "Parent Directory",

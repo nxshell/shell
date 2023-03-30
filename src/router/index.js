@@ -1,4 +1,4 @@
-import Vue, { getCurrentInstance } from 'vue'
+import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainLayout from '@/layout/MainLayout.vue'
 
