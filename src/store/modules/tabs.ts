@@ -28,9 +28,6 @@ const useTabStore = defineStore('tab', {
             }
             this.activeTabIndex = index
         },
-        updateSessionInstanceTabs(sessionTabs: any) {
-            this.sessionInstTabs = sessionTabs
-        },
         updateSelectSessionNode(sessionNode: any) {
             this.currentSelectedSessionNode = sessionNode
         },

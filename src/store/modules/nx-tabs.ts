@@ -1,11 +1,10 @@
 import { defineStore } from "pinia";
 import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
-import { subscript, unsubscript } from '@/services/eventbus'
+import { subscript } from '@/services/eventbus'
 import router from '@/router'
-import { getSessionIcon, getSystemIcon } from '@/views/sysicons'
-import { getFolderIcon, getFileIconBySuffix } from '@/views/fileicons'
+import { getFileIcon, getFolderIcon, getSystemIcon } from '@/icons/system-icon'
+
 import { getProfile, updateProfile } from '@/services/globalSetting'
-import session from "@/store/modules/session";
 
 export interface INxTabProps {
     id: number | -1
@@ -33,41 +32,23 @@ const useNxTabsStore = defineStore('nxTabs', () => {
     function updateTabInstance() {
         const instances = sessionManager.getSessionIntances()
         tabData.value = instances.map((x: Record<string, any>) => {
+            const { id, type, name, cfg, ext_name } = x
+            console.log('结果', x);
             const tabInstance: INxTabProps = {
-                icon: "",
-                iconType: "img",
-                id: x.id,
-                sessionType: x.type,
-                title: x.name,
-                session: x
+                id,
+                sessionType: type,
+                title: name === '' ? cfg.hostAddress : name,
+                session: x,
+                iconType: 'svg',
+                icon: type === 'welcome' ? 'logo' :
+                    type === 'login' ? 'user' :
+                        type === 'shell' ? getSystemIcon(cfg.osType) :
+                            type === 'sftp' ? getFolderIcon('') :
+                                type === 'editor' ? getFileIcon(ext_name) :
+                                    ''
             }
-            switch (x.type) {
-                case 'shell':
-                    tabInstance.icon = getSystemIcon(x.cfg.osType)
-                    if (x.name === '') {
-                        tabInstance.title = x.cfg.hostAddress
-                    }
-                    break
-                case 'welcome':
-                case 'vnc':
-                    tabInstance.icon = getSessionIcon(x.type)
-                    break
-                case 'login':
-                    tabInstance.icon = 'user'
-                    break
-                case 'sftp':
-                    tabInstance.icon = getFolderIcon('')
-                    if (x.name === '') {
-                        tabInstance.title = x.cfg.hostAddress
-                    }
-                    break
-                case 'editor':
-                    tabInstance.icon = getFileIconBySuffix(x.ext_name)
-                    if (x.name === '') {
-                        tabInstance.title = x.cfg.hostAddress
-                    }
-                    break
-                default:
+            if (type === 'shell' || type === 'sftp' || type === 'editor') {
+                tabInstance.title = name === '' ? cfg.hostAddress : name
             }
             return tabInstance
         })
@@ -125,6 +106,10 @@ const useNxTabsStore = defineStore('nxTabs', () => {
         updateProfile("xterm", { ...defaultSettings, noCloseConfirm: value }).then(() => noConfirm.value = value)
     }
 
+    function updateEditChange(status: boolean) {
+        editorChange.value = status
+    }
+
     onMounted(() => {
         // 关闭会话是否需要确认
         noConfirm.value = getProfile("xterm")?.noCloseConfirm as boolean || false
@@ -155,6 +140,7 @@ const useNxTabsStore = defineStore('nxTabs', () => {
         currentActive,
         noConfirm,
         editorChange,
+        updateEditChange,
         activateSession,
         activateSessionByInstance,
         updateNoConfirm,

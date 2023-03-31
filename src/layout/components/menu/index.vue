@@ -1,20 +1,20 @@
 <template>
 	<div
 		class="nx-menu-wrapper"
-		v-context-menu="sessionConfigsTreeContextMenu.empty"
+		v-context-menu="contextMenus.empty"
 		@contextmenu.stop="handleSessionTreeContainerClick"
 		@click="handleSessionTreeContainerClick"
 	>
 		<!-- 提示创建会话配置 -->
 		<el-scrollbar style="height: calc(100% - 32px)">
 			<el-tree
-				ref="sessionTree"
+				ref="sessionTreeRef"
 				node-key="id"
 				icon-class="empty"
 				draggable
-				:highlight-current="highlightCurrent"
+				:highlight-current="menuProps.highlightCurrent"
 				:data="menuTree"
-				:default-expanded-keys="expandedKeys"
+				:default-expanded-keys="menuProps.expandedKeys"
 				:props="{ children: 'children', label: 'text' }"
 				@node-contextmenu="nodeContextmenu"
 				@node-drop="handleNodeDrop"
@@ -25,7 +25,7 @@
 				<template v-slot="{ node, data: { type, protocol, children, data } }">
 					<span class="custom-tree-node" @dblclick.stop="handleHostOpen(data)">
 						<n-space>
-							<n-icon v-if="!children" type="img" v-bind:name="data | formatIconName" size="18" />
+							<n-icon v-if="!children" type="svg" v-bind:name="formatIconName(data)" size="18" />
 							<i v-else-if="node.expanded" class="el-icon-folder-opened" style="font-size: 18px" />
 							<i v-else class="el-icon-folder" style="font-size: 18px" />
 							<span :title="node.label || '-'">{{ node.label }}</span>
@@ -53,423 +53,392 @@
 			/>
 		</el-scrollbar>
 		<!--编辑文件夹-->
-		<nx-folder-dialog ref="folderDialogRef" :edit="isEdit" @ok="handleOk" />
+		<nx-folder-dialog ref="folderDialogRef" @ok="handleOk" />
 		<!-- SSH会话弹窗 -->
 		<ssh-modal ref="sshModalRef" @ok="handleSessionOk" />
 	</div>
 </template>
 
-<script>
-import { treeIconFilter } from '@/views/sysicons'
+<script setup>
 import { SESSION_CONFIG_TYPE } from '@/services/sessionMgr'
 import {
 	addSessionConfig,
-	handleOpenSFTP,
 	handleSessionTreeContextMenu_Connect,
 	handleSessionTreeContextMenu_ImportConfig,
 	handleSessionTreeContextMenu_RenameFolder,
 	handleSessionTreeContextMenu_SaveConfig,
-	handleSessionTreeContextMenu_SFTP,
-	processSessionConfigTree,
 	treeOpClipboardCopy,
 	treeOpClipboardCut
 } from './tools'
-import * as EventBus from '@/services/eventbus'
+import { subscript } from '@/services/eventbus'
 import NxFolderDialog from './components/FolderDialog.vue'
 import NSpace from '@/components/space'
 import { showContextMenu } from '@/components/menu/contextmenu'
-import { mapActions, mapState, mapStores } from 'pinia'
-import { useNxTabsStore, useSessionStore, useTabStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { useNxTabsStore, useSessionStore } from '@/store'
 import { SshModal } from '@/views/components'
-import * as globalSetting from '@/services/globalSetting'
+import { getCurrentInstance, nextTick, onMounted, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n-bridge'
 
-export default {
-	name: 'NxMenus',
-	components: { NSpace, NxFolderDialog, SshModal },
-	data() {
-		return {
-			sessionConfigsTree: [],
-			isEdit: false,
-			showContentMenu: false,
-			highlightCurrent: true,
-			expandedKeys: [],
-			sessionConfigsTreeContextMenu: {
-				folder: [
-					{
-						label: 'home.sessions-context-menu.create-folder',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_CreateFolder
-					},
-					{
-						label: 'home.sessions-context-menu.create-session',
-						type: 'submenu',
-						handler: this.handleSessionTreeContextMenu_CreateSessionConfig,
-						submenu: [
-							{
-								label: 'SSH',
-								type: 'normal'
-							},
-							{
-								label: 'SFTP',
-								type: 'normal'
-							},
-							{
-								label: 'Serial',
-								type: 'normal'
-							},
-							{
-								label: 'Telnet',
-								type: 'normal'
-							},
-							{
-								label: 'VNC',
-								type: 'normal'
-							}
-						]
-					},
-					{
-						label: 'home.sessions-context-menu.cut',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Cut
-					},
-					{
-						label: 'home.sessions-context-menu.copy',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Copy
-					},
-					{
-						label: 'home.sessions-context-menu.paste',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Paste
-					},
-					{
-						label: 'home.sessions-context-menu.delete',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Delete
-					},
-					{
-						label: 'home.sessions-context-menu.rename',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_RenameFolder
-					}
-				],
-				node: [
-					{
-						label: 'home.sessions-context-menu.connect',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Connect
-					},
-					{
-						label: 'home.sessions-context-menu.cut',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Cut
-					},
-					{
-						label: 'home.sessions-context-menu.copy',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Copy
-					},
-					{
-						label: 'home.sessions-context-menu.delete',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Delete
-					},
-					{
-						label: 'home.sessions-context-menu.prop',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_Prop
-					}
-				],
-				empty: [
-					{
-						label: 'home.sessions-context-menu.create-folder',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_CreateFolder
-					},
-					{
-						label: 'home.sessions-context-menu.create-session',
-						type: 'submenu',
-						handler: this.gotoCreateShellSession,
-						submenu: [
-							{
-								label: 'SSH',
-								type: 'normal'
-							},
-							{
-								label: 'SFTP',
-								type: 'normal'
-							},
-							{
-								label: 'Serial',
-								type: 'normal'
-							},
-							{
-								label: 'Telnet',
-								type: 'normal'
-							},
-							{
-								label: 'VNC',
-								type: 'normal'
-							}
-						]
-					},
-					{
-						label: 'home.sessions-context-menu.save-config',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_SaveConfig
-					},
-					{
-						label: 'home.sessions-context-menu.import-config',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_ImportConfig
-					}
-				]
-			},
-			treeOpClipboard: {
-				data: null,
-				operate: ''
-			}
-		}
-	},
-	computed: {
-		...mapStores(useTabStore, useSessionStore, useNxTabsStore),
-		...mapState(useSessionStore, ['menuTree', 'search', 'currentNode'])
-	},
-	filters: {
-		formatIconName: function (value) {
-			if (!value) return 'linux'
-			return treeIconFilter(value)['iconName']
-		}
-	},
-	async mounted() {
-		// 订阅主机搜索事件
-		EventBus.subscript('nx-menu-search', (keywords) => {
-			this.sessionStore.updateProcess(keywords)
-		})
-		// 订阅新建文件夹事件
-		EventBus.subscript('create-session-folder', this.handleSessionTreeContextMenu_CreateFolder)
-		// 订阅菜单刷新事件
-		EventBus.subscript('refresh-session-tree', this.sessionStore.updateProcess)
-		// 订阅会话创建事件
-		EventBus.subscript('create-session-toolbar', () => {
-			// this.gotoCreateShellSession()
-			this.$refs.sshModalRef?.showModal()
-		})
-		this.$nextTick(() => {
-			this.sessionStore.updateCurrentNode(this.$refs.sessionTree)
-			// this.appendSessionConfig({ data: null, node: null, treeNode: this.$refs.sessionTree })
-		})
-	},
-	methods: {
-		...mapActions(useTabStore, ['updateSelectSessionNode']),
-		...mapActions(useSessionStore, ['appendSessionConfig']),
-		addSessionConfig,
-		processSessionConfigTree,
-		treeOpClipboardCut,
-		treeOpClipboardCopy,
-		handleSessionTreeContextMenu_Connect,
-		handleOpenSFTP,
-		handleSessionTreeContextMenu_SFTP,
-		handleSessionTreeContextMenu_SaveConfig,
-		handleSessionTreeContextMenu_ImportConfig,
-		handleSessionTreeContextMenu_RenameFolder,
-		async handleNodeDrop(source, parentNode, position) {
-			const targetSession = this.$sessionManager.getSessionConfigById(parentNode.data.data._id)
-			const sourceNode = this.$sessionManager.getSessionConfigById(source.data.data._id)
-			sourceNode._parent.removeSubSessionConfig(sourceNode, true)
-			if (position === 'inner') {
-				targetSession.addSessionConfig(sourceNode)
-			} else {
-				const { index } = targetSession._parent.findSubSessionConfig(parentNode.data.data._id)
-				const destIndex = index + (position === 'before' ? 0 : 1)
-				targetSession._parent.addSessionConfig(sourceNode, destIndex)
-			}
-			await this.$sessionManager.saveSessionConfigs()
-			this.sessionStore.updateProcess()
-		},
-		handleNodeExpand(data, node) {
-			this.expandedKeys = [node.key]
-		},
-		handleNodeCollapse(data, node, vnode, element) {
-			this.expandedKeys.splice(
-				this.expandedKeys.findIndex((item) => item === node.key),
-				1
-			)
-		},
-		handleNodeSelected(data, node, _vnode, _element) {
-			// 修复由于当前文件夹下子元素为0 导致tree无法触发原有打开关闭事件
-			if (data.isFolder && data.children.length === 0) node.expanded = !node.expanded
-			const { data: sessionData } = data
-			this.sessionStore.updateCurrentNode(this.$refs.sessionTree, node, data)
-			if (data.isFolder) {
-				// 目录节点不启动会话实例
-				return
-			}
-			// 尝试激活会话实例窗口
-			const sessionInstance = this.$sessionManager.matchSessionInstanceByConfig(sessionData)
-			if (!sessionInstance) {
-				// 没有匹配到则创建新的实例
-				return
-			}
+const sessionTreeRef = ref()
+const folderDialogRef = ref()
+const sshModalRef = ref()
+const { t } = useI18n()
+const menuProps = reactive({
+	highlightCurrent: false,
+	expandedKeys: []
+})
+const nxTabStore = useNxTabsStore()
+const sessionStore = useSessionStore()
+const {} = storeToRefs(nxTabStore)
+const { menuTree, search, currentNode } = storeToRefs(sessionStore)
+const proxy = getCurrentInstance().proxy
 
-			this.$nextTick(() => {
-				this.nxTabsStore.activateSessionByInstance(sessionInstance[0])
-			})
-		},
-		async handleHostOpen(sessionData) {
-			if (sessionData.type === SESSION_CONFIG_TYPE.FOLDER) {
-				// 目录节点不启动会话实例
-				return
-			}
-			await this.$sessionManager.createSessionInstance(sessionData)
-		},
-		nodeContextmenu(event, data, node, vnode) {
-			this.sessionStore.updateCurrentNode(this.$refs.sessionTree, node, data)
-			const { type: nodeType } = data.data
-			let menuContent = []
-			if (data.isFolder) {
-				menuContent = this.sessionConfigsTreeContextMenu.folder
-			}
+const createFolder = (name) => {
+	folderDialogRef.value?.show(name)
+}
+const gotoCreateShellSession = async () => {
+	const sessionConfig = proxy.$sessionManager.createShellSessionConfig(t('home.profile.default-session-name'))
+	addSessionConfig(sessionConfig)
+	await proxy.$sessionManager.createShellSettingSessionInstance(sessionConfig)
+}
 
-			if (nodeType === SESSION_CONFIG_TYPE.NODE) {
-				// TODO: 获取SessionConfig的状态，过滤掉一些无用状态
-				const contextMenu = [...this.sessionConfigsTreeContextMenu.node]
-				const {
-					config: { protocal }
-				} = data.data
-				if (protocal === 'ssh') {
-					contextMenu.unshift({
-						label: 'home.sessions-context-menu.sftp',
-						type: 'normal',
-						handler: this.handleSessionTreeContextMenu_SFTP
-					})
-				}
-				menuContent = contextMenu
-			}
-			showContextMenu(menuContent, event)
-		},
-		// 删除会话或者会话目录
-		handleSessionTreeContextMenu_Delete() {
-			const { data, node } = this.currentSelectedSessionNode
-			const { _id } = data.data
-			const sessionConfig = this.$sessionManager.getSessionConfigById(_id)
-			const message =
-				sessionConfig.type === SESSION_CONFIG_TYPE.NODE
-					? this.$t('home.host-manager.dialog-delete-confirm.delete-node', [sessionConfig.name])
-					: this.$t('home.host-manager.dialog-delete-confirm.delete-folder', [sessionConfig.name])
-			this.$confirm(message, this.$t('home.host-manager.dialog-delete-confirm.title'), {
-				type: 'warning'
-			}).then(() => {
-				this.$sessionManager.removeSessionConfig(sessionConfig)
-				this.sessionStore.updateProcess()
-				this.handleSessionTreeContainerClick()
-			})
-		},
-		updateSessionTree() {
-			const sessionConfigs = this.$sessionManager.getSessionConfigs()
-			this.sessionConfigsTree = this.processSessionConfigTree(sessionConfigs)
-		},
-		treeOpClipboardPaste() {
-			const { data } = this.treeOpClipboard
-			try {
-				return (data && this.treeOpClipboard) || null
-			} catch (error) {
-				console.error('剪切复制异常', error)
-				return null
-			} finally {
-				// 当前只粘贴一次，避免不必要的麻烦
-				this.treeOpClipboard = {
-					data: null,
-					operate: ''
-				}
-			}
-		},
-		// 剪切会话
-		handleSessionTreeContextMenu_Cut() {
-			this.treeOpClipboardCut(this.currentSelectedSessionNode)
-		},
-		// 复制会话
-		handleSessionTreeContextMenu_Copy() {
-			this.treeOpClipboardCopy(this.currentSelectedSessionNode)
-		},
-		// 粘贴会话
-		handleSessionTreeContextMenu_Paste() {
-			const pasteData = this.treeOpClipboardPaste()
-			if (!pasteData) {
-				return
-			}
-			// 追加新的节点
-			const {
-				data: { data: nodeData, node, treeNode },
-				operate
-			} = pasteData
-			const sourceSessionConfig = this.$sessionManager.getSessionConfigById(nodeData.id)
-			if (sourceSessionConfig) {
-				// 如果是剪切则移除旧节点数据
-				if (operate === 'cut') {
-					treeNode.remove(nodeData)
-					sourceSessionConfig._parent.removeSubSessionConfig(sourceSessionConfig, true)
-				}
-				// 新增会话
-				this.addSessionConfig(operate === 'cut' ? sourceSessionConfig : sourceSessionConfig.duplicate())
-			} else {
-				console.warn('srcSessionConfig is null')
-			}
-		},
-		/**
-		 * 树容器操作
-		 */
-		handleSessionTreeContainerClick() {
-			this.highlightCurrent = false
-			this.updateSelectSessionNode({ data: null, node: null, treeNode: this.$refs.sessionTree })
-		},
-		// 查看编辑会话配置
-		async handleSessionTreeContextMenu_Prop() {
-			const { data } = this.currentSelectedSessionNode
-			const sessCfg = this.$sessionManager.getSessionConfigById(data.data._id)
-			await this.$sessionManager.createShellSettingSessionInstance(sessCfg)
-		},
-		handleOk(folderSessionConfig) {
-			if (this.isEdit) {
-				const { name } = folderSessionConfig
-				const { data } = this.currentSelectedSessionNode
-				const sessConfigData = data.data
-				const sessionConfig = this.$sessionManager.getSessionConfigById(sessConfigData._id)
-				sessionConfig.update(name)
-			} else {
-				this.addSessionConfig(folderSessionConfig)
-			}
-			this.sessionStore.updateProcess()
-		},
-		/**
-		 * 显示创建
-		 */
-		async gotoCreateShellSession() {
-			const sessionConfig = this.$sessionManager.createShellSessionConfig(
-				this.$t('home.profile.default-session-name')
-			)
-			this.addSessionConfig(sessionConfig)
-			await this.$sessionManager.createShellSettingSessionInstance(sessionConfig)
-		},
-		handleSessionTreeContextMenu_CreateSessionConfig() {
-			this.gotoCreateShellSession()
-		},
-		handleSessionTreeContextMenu_CreateFolder() {
-			const folderDialog = this.$refs.folderDialogRef
-			folderDialog?.show('')
-		},
-		handleSessionOk(data) {
-			const sessionConfig = this.$sessionManager.createShellSessionConfig(data.hostName)
-			sessionConfig.config = { ...data }
-			this.sessionStore.appendSessionConfig(sessionConfig)
-			// console.log('设置', sessionConfig)
-			const ss = this.$sessionManager.getSessionConfigs()
-			console.log('会话', ss)
-			// this.$sessionManager.createSessionInstance(sessConfig)
-			// this.updateSessionConfig()
-		}
+const clipboard = reactive({
+	data: null,
+	operate: ''
+})
+
+const treeOpClipboardPaste = () => {
+	const { data } = clipboard
+	try {
+		return (data && clipboard) || null
+	} catch (error) {
+		console.error('剪切复制异常', error)
+		return null
+	} finally {
+		// 当前只粘贴一次，避免不必要的麻烦
+		clipboard.data = null
+		clipboard.operate = ''
 	}
 }
+const handleOpenSFTP = (data) => {
+	proxy.$sessionManager.createSFTPSessionInstance(data)
+}
+
+const handleSessionTreeContextMenu_SFTP = () => {
+	proxy.$sessionManager.createSFTPSessionInstance(currentNode.value.sessionData)
+}
+
+// 剪切会话
+const handleSessionTreeContextMenu_Cut = () => {
+	treeOpClipboardCut(currentNode.value)
+}
+// 复制会话
+const handleSessionTreeContextMenu_Copy = () => {
+	treeOpClipboardCopy(currentNode.value)
+}
+// 粘贴会话
+const handleSessionTreeContextMenu_Paste = () => {
+	const pasteData = treeOpClipboardPaste()
+	if (!pasteData) {
+		return
+	}
+	// 追加新的节点
+	const {
+		data: { data: nodeData, node, treeNode },
+		operate
+	} = pasteData
+	const sourceSessionConfig = proxy.$sessionManager.getSessionConfigById(nodeData.id)
+	if (sourceSessionConfig) {
+		// 如果是剪切则移除旧节点数据
+		if (operate === 'cut') {
+			treeNode.remove(nodeData)
+			sourceSessionConfig._parent.removeSubSessionConfig(sourceSessionConfig, true)
+		}
+		// 新增会话
+		addSessionConfig(operate === 'cut' ? sourceSessionConfig : sourceSessionConfig.duplicate())
+	} else {
+		console.warn('srcSessionConfig is null')
+	}
+}
+// 查看编辑会话配置
+const handleSessionTreeContextMenu_Prop = async () => {
+	const { data } = currentNode.value
+	const sessCfg = proxy.$sessionManager.getSessionConfigById(data.data._id)
+	await proxy.$sessionManager.createShellSettingSessionInstance(sessCfg)
+}
+// 删除会话或者会话目录
+const handleSessionTreeContextMenu_Delete = () => {
+	const { data, node } = this.currentSelectedSessionNode
+	const { _id } = data.data
+	const sessionConfig = proxy.$sessionManager.getSessionConfigById(_id)
+	const message =
+		sessionConfig.type === SESSION_CONFIG_TYPE.NODE
+			? this.$t('home.host-manager.dialog-delete-confirm.delete-node', [sessionConfig.name])
+			: this.$t('home.host-manager.dialog-delete-confirm.delete-folder', [sessionConfig.name])
+	this.$confirm(message, this.$t('home.host-manager.dialog-delete-confirm.title'), {
+		type: 'warning'
+	}).then(() => {
+		proxy.$sessionManager.removeSessionConfig(sessionConfig)
+		handleSessionTreeContainerClick()
+		sessionStore.updateProcess()
+	})
+}
+const contextMenus = {
+	folder: [
+		{
+			label: 'home.sessions-context-menu.create-folder',
+			type: 'normal',
+			handler: createFolder
+		},
+		{
+			label: 'home.sessions-context-menu.create-session',
+			type: 'submenu',
+			handler: gotoCreateShellSession,
+			submenu: [
+				{
+					label: 'SSH',
+					type: 'normal'
+				},
+				{
+					label: 'SFTP',
+					type: 'normal'
+				},
+				{
+					label: 'Serial',
+					type: 'normal'
+				},
+				{
+					label: 'Telnet',
+					type: 'normal'
+				},
+				{
+					label: 'VNC',
+					type: 'normal'
+				}
+			]
+		},
+		{
+			label: 'home.sessions-context-menu.cut',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Cut
+		},
+		{
+			label: 'home.sessions-context-menu.copy',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Copy
+		},
+		{
+			label: 'home.sessions-context-menu.paste',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Paste
+		},
+		{
+			label: 'home.sessions-context-menu.delete',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Delete
+		},
+		{
+			label: 'home.sessions-context-menu.rename',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_RenameFolder
+		}
+	],
+	node: [
+		{
+			label: 'home.sessions-context-menu.connect',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Connect
+		},
+		{
+			label: 'home.sessions-context-menu.cut',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Cut
+		},
+		{
+			label: 'home.sessions-context-menu.copy',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Copy
+		},
+		{
+			label: 'home.sessions-context-menu.delete',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Delete
+		},
+		{
+			label: 'home.sessions-context-menu.prop',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_Prop
+		}
+	],
+	empty: [
+		{
+			label: 'home.sessions-context-menu.create-folder',
+			type: 'normal',
+			handler: createFolder
+		},
+		{
+			label: 'home.sessions-context-menu.create-session',
+			type: 'submenu',
+			handler: gotoCreateShellSession,
+			submenu: [
+				{
+					label: 'SSH',
+					type: 'normal'
+				},
+				{
+					label: 'SFTP',
+					type: 'normal'
+				},
+				{
+					label: 'Serial',
+					type: 'normal'
+				},
+				{
+					label: 'Telnet',
+					type: 'normal'
+				},
+				{
+					label: 'VNC',
+					type: 'normal'
+				}
+			]
+		},
+		{
+			label: 'home.sessions-context-menu.save-config',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_SaveConfig
+		},
+		{
+			label: 'home.sessions-context-menu.import-config',
+			type: 'normal',
+			handler: handleSessionTreeContextMenu_ImportConfig
+		}
+	]
+}
+
+const handleNodeDrop = async (source, parentNode, position) => {
+	const targetSession = proxy.$sessionManager.getSessionConfigById(parentNode.data.data._id)
+	const sourceNode = proxy.$sessionManager.getSessionConfigById(source.data.data._id)
+	sourceNode._parent.removeSubSessionConfig(sourceNode, true)
+	if (position === 'inner') {
+		targetSession.addSessionConfig(sourceNode)
+	} else {
+		const { index } = targetSession._parent.findSubSessionConfig(parentNode.data.data._id)
+		const destIndex = index + (position === 'before' ? 0 : 1)
+		targetSession._parent.addSessionConfig(sourceNode, destIndex)
+	}
+	await proxy.$sessionManager.saveSessionConfigs()
+	sessionStore.updateProcess()
+}
+
+/**
+ * 树容器操作
+ */
+const handleSessionTreeContainerClick = () => {
+	sessionStore.updateCurrentNode(sessionTreeRef.value)
+	menuProps.highlightCurrent = false
+}
+
+const handleNodeExpand = (data, node) => {
+	menuProps.expandedKeys = [node.key]
+}
+
+const handleNodeCollapse = (data, node, vnode, element) => {
+	menuProps.expandedKeys.splice(menuProps.expandedKeys.findIndex((item) => item === node.key), 1)
+}
+
+const handleNodeSelected = (data, node, _vnode, _element) => {
+	// 修复由于当前文件夹下子元素为0 导致tree无法触发原有打开关闭事件
+	if (data.isFolder && data.children.length === 0) node.expanded = !node.expanded
+	const { data: sessionData } = data
+	sessionStore.updateCurrentNode(sessionTreeRef.value, node, data)
+	if (data.isFolder) {
+		// 目录节点不启动会话实例
+		return
+	}
+	// 尝试激活会话实例窗口
+	const sessionInstance = proxy.$sessionManager.matchSessionInstanceByConfig(sessionData)
+	if (!sessionInstance) {
+		// 没有匹配到则创建新的实例
+		return
+	}
+
+	nextTick(() => {
+		nxTabStore.activateSessionByInstance(sessionInstance[0])
+	})
+}
+
+const nodeContextmenu = (event, data, node, vnode) => {
+	sessionStore.updateCurrentNode(sessionTreeRef.value, node, data)
+	const { type: nodeType } = data.data
+	let menuContent = []
+	if (data.isFolder) {
+		menuContent = contextMenus.folder
+	}
+
+	if (nodeType === SESSION_CONFIG_TYPE.NODE) {
+		// TODO: 获取SessionConfig的状态，过滤掉一些无用状态
+		const contextMenu = [...contextMenus.node]
+		const {
+			config: { protocal }
+		} = data.data
+		if (protocal === 'ssh') {
+			contextMenu.unshift({
+				label: 'home.sessions-context-menu.sftp',
+				type: 'normal',
+				handler: handleSessionTreeContextMenu_SFTP
+			})
+		}
+		menuContent = contextMenu
+	}
+	showContextMenu(menuContent, event)
+}
+
+/**
+ * 打开会话
+ *
+ * @param sessionData
+ * @return {Promise<void>}
+ */
+const handleHostOpen = async (sessionData) => {
+	if (sessionData.type === SESSION_CONFIG_TYPE.FOLDER) {
+		// 目录节点不启动会话实例
+		return
+	}
+	await proxy.$sessionManager.createSessionInstance(sessionData)
+}
+
+const formatIconName = (value) => {
+	return 'linux'
+	// console.log(value)
+	// return !value ? 'linux' : getSystemIcon(value.config.osType)
+}
+
+const handleOk = () => {
+}
+const handleSessionOk = () => {
+}
+
+onMounted(() => {
+	// 订阅主机搜索事件
+	subscript('nx-menu-search', (keywords) => {
+		sessionStore.updateProcess(keywords)
+	})
+	// 订阅新建文件夹事件
+	subscript('create-session-folder', createFolder)
+	// 订阅菜单刷新事件
+	subscript('refresh-session-tree', sessionStore.updateProcess)
+	// 订阅会话创建事件
+	subscript('create-session-toolbar', () => {
+		// gotoCreateShellSession()
+		sshModalRef.value?.showModal()
+	})
+	nextTick(() => {
+		sessionStore.updateCurrentNode(sessionTreeRef.value)
+		// appendSessionConfig({ data: null, node: null, treeNode: $refs.sessionTree })
+	})
+})
 </script>
 
 <style lang="scss" scoped>

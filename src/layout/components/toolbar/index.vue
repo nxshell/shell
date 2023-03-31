@@ -41,10 +41,10 @@ export default {
 	},
 	methods: {
 		async gotoCreateShellSession() {
-			EventBus.publish('create-session-toolbar', {})
+			EventBus.publish('create-session-toolbar')
 		},
 		handleCreateFolder() {
-			EventBus.publish('create-session-folder', {})
+			EventBus.publish('create-session-folder')
 		},
 	}
 }

@@ -7,11 +7,11 @@
 		:visible.sync="visible"
 		:append-to-body="true"
 		width="400px"
-		@close="handlerClose"
+		@before-close="handlerBeforeClose"
 	>
-		<el-form ref="createFolderRef" :model="folderForm" :rules="createFolderRules" @submit.native.prevent>
-			<el-form-item :label="$t('home.host-manager.dialog-edit-folder.folder-name')" prop="folderName">
-				<el-input v-model="folderForm.folderName" @keyup.native.enter="handlerClick" />
+		<el-form ref="createFolderRef" :model="folderForm" @submit.native.prevent>
+			<el-form-item :label="$t('home.host-manager.dialog-edit-folder.folder-name')" prop="name" :rules="[{ validator: validateFolderName, trigger: 'change' }]">
+				<el-input v-model="folderForm.name" @keyup.native.enter="handlerClick" />
 			</el-form-item>
 		</el-form>
 		<span slot="footer" class="dialog-footer">
@@ -21,63 +21,59 @@
 	</el-dialog>
 </template>
 
-<script>
+<script setup>
+import { useI18n } from "vue-i18n-bridge";
+import { reactive, ref } from "vue";
 import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
 
-export default {
-	name: 'NxFolderDialog',
-	props: {
-		edit: {
-			type: Boolean,
-			default: () => false
-		}
-	},
-	data() {
-		return {
-			visible: false,
-			folderForm: {
-				folderName: ''
-			},
-			createFolderRules: {
-				folderName: [{ validator: this.validateFolderName, trigger: 'change' }]
-			}
-		}
-	},
-	computed: {
-		title() {
-			return this.edit ? this.$t('home.host-manager.dialog-edit-folder.edit-title') : this.$t('home.host-manager.dialog-edit-folder.add-title')
-		}
-	},
-	methods: {
-		validateFolderName(rule, value, callback) {
-			if (!value) {
-				callback(new Error(this.$t('home.fileview.createdir-dialog.placeholder')))
-			} else if (/[\/:*?."？《》、，。'<>|]/.test(value)) {
-				callback(new Error(this.$t('home.fileview.createdir-dialog.invalid-dir-name',['\\ / : * ? \" < > | '])))
-			} else {
-				callback()
-			}
-		},
-		show(data) {
-			this.visible = true
-			if (data) {
-				this.folderForm.folderName = data
-			}
-		},
-		handlerClose() {
-			this.$refs.createFolderRef.resetFields()
-		},
-		handlerClick() {
-			this.$refs.createFolderRef.validate((valid) => {
-				if (valid) {
-					const sessionConfig = new SessionConfig(this.folderForm.folderName, SESSION_CONFIG_TYPE.FOLDER)
-					this.$emit('ok', sessionConfig)
-					this.visible = false
-				} else {
-					return false
-				}
-			})
-		}
+const visible = ref(false)
+const createFolderRef = ref()
+const { t } = useI18n()
+const emits = defineEmits(['ok'])
+const title = ref('')
+const folderForm = reactive({
+	name: ''
+})
+const validateFolderName = (rule, value, callback) => {
+	if (!value) {
+		callback(new Error(t('home.fileview.createdir-dialog.placeholder')))
+	} else if (/[\/:*?."？《》、，。'<>|]/.test(value)) {
+		callback(new Error(t('home.fileview.createdir-dialog.invalid-dir-name', ['\\ / : * ? \" < > | '])))
+	} else {
+		callback()
 	}
 }
+
+const show = (name) => {
+	title.value = t('home.host-manager.dialog-edit-folder.add-title')
+	if (name) {
+		folderForm.name = name
+		title.value = t('home.host-manager.dialog-edit-folder.edit-title')
+	}
+	visible.value = true
+}
+
+const handlerBeforeClose = () => {
+	createFolderRef.value?.resetFields()
+}
+
+const handlerClick = () => {
+	createFolderRef.value?.validate((valid) => {
+		if (valid) {
+			const sessionConfig = new SessionConfig(folderForm.name, SESSION_CONFIG_TYPE.FOLDER)
+			emits('ok', sessionConfig)
+			visible.value = false
+		} else {
+			return false
+		}
+	})
+}
+
+defineExpose({ show })
 </script>
+
+<style lang="scss" setup>
+.el-dialog__body {
+	min-height: auto;
+}
+</style>

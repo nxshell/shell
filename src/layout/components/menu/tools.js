@@ -54,8 +54,8 @@ export function treeOpClipboardCut(node) {
  * @param node
  */
 export function treeOpClipboardCopy(node) {
-    this.treeOpClipboard.data = node
-    this.treeOpClipboard.operate = 'copy'
+    clipboard.data = node
+    clipboard.operate = 'copy'
 }
 
 /**
@@ -79,13 +79,7 @@ export function addSessionConfig(sessionConfig) {
     }
 }
 
-export function handleOpenSFTP(data) {
-    this.$sessionManager.createSFTPSessionInstance(data)
-}
 
-export function handleSessionTreeContextMenu_SFTP() {
-    this.$sessionManager.createSFTPSessionInstance(this.currentNode.sessionData.data)
-}
 
 // 重命名会话文件夹
 export function handleSessionTreeContextMenu_RenameFolder() {

@@ -1,7 +1,7 @@
 <template>
     <div class="vnc-workspace">
         <pt-editor-view v-for="(sessId) in sessions" :key="sessId"
-            v-show="currentSessionId == sessId"
+            v-show="currentSessionId === sessId"
             :sessionId="sessId"
         ></pt-editor-view>
     </div>
@@ -21,9 +21,6 @@ export default {
             currentSessionId: -1
         }
     },
-
-    created() {},
-
     beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
             let sessionId = parseInt(to.params.sessionId);

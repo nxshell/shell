@@ -15,7 +15,7 @@
 				@contextmenu.prevent="handleSessionTabsContextMenu(index, item.sessionType)"
 			>
 				<n-space size="5" fill>
-					<n-icon size="18" :name="item.icon" :type="item.iconType" />
+					<n-icon size="18" :name="item.icon" />
 					<span>{{ item.title }}</span>
 				</n-space>
 				<span
