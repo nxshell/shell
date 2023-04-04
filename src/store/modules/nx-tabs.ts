@@ -33,7 +33,6 @@ const useNxTabsStore = defineStore('nxTabs', () => {
         const instances = sessionManager.getSessionIntances()
         tabData.value = instances.map((x: Record<string, any>) => {
             const { id, type, name, cfg, ext_name } = x
-            console.log('结果', x);
             const tabInstance: INxTabProps = {
                 id,
                 sessionType: type,

@@ -21,6 +21,10 @@
             "keyboard-input-on": "打开",
             "keyboard-input-note": "键盘输入将发送到所有打开接受的会话中"
         },
+        "ssh": {
+            "modal-title-add": "新增SSH会话",
+            "modal-title-edit": "编辑SSH会话"
+        },
         "auth": {
             "title": "用户认证",
             "authType": {

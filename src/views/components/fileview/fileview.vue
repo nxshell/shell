@@ -91,7 +91,7 @@
                     >
                         <el-descriptions-item :span="10">
                             <template slot="label">
-                                <n-icon size="28" type="img" :name="filePropDialog.dirent.fileicon" />
+                                <n-icon size="28" :name="filePropDialog.dirent.fileicon" />
                             </template>
                             {{ filePropDialog.dirent.filename }}
                         </el-descriptions-item>
@@ -228,7 +228,7 @@
                 >
                     <el-descriptions-item>
                         <template slot="label">
-                            <n-icon size="32" type="img" :name="askDialog.icon" />
+                            <n-icon size="32" :name="askDialog.icon" />
                         </template>
                         <div class="n-description">
                             <n-space vertical>
@@ -246,7 +246,7 @@
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
-                            <n-icon size="32" type="img" :name="askDialog.icon" />
+                            <n-icon size="32" :name="askDialog.icon" />
                         </template>
                         <div class="n-description">
                             <n-space vertical>
@@ -278,7 +278,7 @@
                 >
                     <el-descriptions-item>
                         <template slot="label">
-                            <n-icon size="32" type="img" :name="askDialog.icon" />
+                            <n-icon size="32" :name="askDialog.icon" />
                         </template>
                         <div class="n-description">
                             <n-space vertical>
@@ -307,7 +307,7 @@
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template slot="label">
-                            <n-icon size="32" type="img" :name="askDialog.icon" />
+                            <n-icon size="32" :name="askDialog.icon" />
                         </template>
                         <div class="n-description">
                             <n-space vertical>
@@ -363,8 +363,7 @@
 <script>
 import path from 'path'
 import PtFileViewAddress from './address'
-import { getFolderIcon, getFileIcon } from '@/icons/system-icon'
-import { getIconForFile, getIconForFolder } from 'vscode-material-icon-theme-js'
+import { getFolderIcon, getFileIcon, getIcon } from '@/icons/system-icon'
 import { Dirent } from '../../../../common/filesystem/dirent'
 import { createDataTransfer } from '@/services/nxsys/dataTransfer'
 import FileStatusBar from '@/views/components/fileview/components/file-status-bar'
@@ -883,8 +882,9 @@ export default {
         },
 
         getIconAndType(dirent) {
+            const type = dirent.isFile() ? 'file' : dirent.isDirectory() ? 'folder' : dirent.isSymbolicLink() ? 'link' : 'unknown'
             return {
-                icon: dirent.isFile() ? getFileIcon(dirent.name) : getFolderIcon(dirent.name),
+                icon: getIcon(dirent.name, type),
                 type: this.$t(`${ dirent.isFile() ? 'home.fileview.mainview.file-types.file' : 'home.fileview.mainview.file-types.dir' }`)
             }
         },
@@ -1353,7 +1353,7 @@ export default {
 
             this.filePropDialog.dirent = {
                 filename: dirent.name,
-                fileicon: dirent.isDirectory() ? getFolderIcon(dirent.name) : getFileIcon(dirent.name),
+                fileicon: this.getIconAndType(dirent).icon,
                 location,
                 type: this.getDirEntryType(dirent),
                 size: dirent.getSize(),

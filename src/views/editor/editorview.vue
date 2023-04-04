@@ -66,6 +66,7 @@ const searchCursor = ref()
 const themeConfig = ref(new Compartment())
 const editorRef = ref()
 const editorInstance = ref()
+const instance = getCurrentInstance()
 const proxy = getCurrentInstance()?.proxy
 const sessionInstance = proxy.$sessionManager.getSessionInstanceById(props.sessionId)
 
@@ -124,10 +125,8 @@ onMounted(async () => {
 
     sessionInstance.on('close', () => {
         try {
-            debugger
-            console.log('ssss',proxy)
-            // proxy.$el.parentNode.removeChild(this.$el)
-            // this.$destroy()
+            proxy.$destroy()
+            proxy.$el.remove()
         } catch (e) {
             console.log('sftp editor instance remove error', e)
         }

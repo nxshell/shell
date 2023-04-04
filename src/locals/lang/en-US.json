@@ -19,6 +19,10 @@
             "keyboard-input-on": "ON",
             "keyboard-input-note": "Keyboard would send to same session which turn on"
         },
+        "ssh": {
+            "modal-title-add": "Add SSH Session",
+            "modal-title-edit": "Edit SSH session"
+        },
         "auth": {
             "title": "Auth",
             "authType": {
