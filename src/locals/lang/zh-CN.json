@@ -176,7 +176,7 @@
                 },
                 "host": {
                     "title": "主机",
-                    "description": "主机地址，可以为IP地址（IPv4/IPv6），主机名称或者域名。",
+                    "description": "请输入主机地址 \"IP地址（IPv4/IPv6），主机名称或者域名。\"",
                     "placeholder": "请输入主机地址"
                 },
                 "port": {
@@ -313,7 +313,7 @@
                     "description": "字符间距"
                 },
                 "cursorBlink": {
-                    "title": "光标是否闪烁",
+                    "title": "闪烁",
                     "description": "光标是否闪烁"
                 },
                 "cursorStyle": {

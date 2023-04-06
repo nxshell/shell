@@ -85,7 +85,6 @@ a {
   &__body {
     color: var(--n-text-color-base) !important;
     padding: 12px 20px !important;
-    min-height: 400px;
   }
 
   &__footer {
@@ -259,6 +258,31 @@ a {
     border-bottom-color: var(--n-select-bg-color) !important;
 
     &:after {
+      border-bottom-color: var(--n-select-bg-color) !important;
+    }
+  }
+}
+
+.el-autocomplete {
+  &-suggestion {
+    border-color: var(--n-select-bg-color) !important;
+    background-color: var(--n-select-bg-color) !important;
+
+    & li {
+      color: var(--n-text-color-base) !important;
+
+      &:hover {
+        background-color: var(--n-select-hover-bg-color) !important;
+      }
+    }
+  }
+}
+
+.el-popper {
+  .popper__arrow {
+    border-bottom-color: var(--n-select-bg-color) !important;
+
+    &::after {
       border-bottom-color: var(--n-select-bg-color) !important;
     }
   }

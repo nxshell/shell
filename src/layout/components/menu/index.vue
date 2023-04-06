@@ -518,6 +518,7 @@ onBeforeUnmount(() => {
   color: var(--n-text-color-base);
   background-color: var(--n-bg-color-base);
   padding: 5px;
+  margin-right: 8px;
 
   &.el-tree--highlight-current {
     .el-tree-node.is-current > .el-tree-node__content {

@@ -86,9 +86,3 @@ const handlerClick = () => {
 
 defineExpose({ show })
 </script>
-
-<style lang="scss" scoped>
-.el-dialog__body {
-  min-height: auto !important;
-}
-</style>

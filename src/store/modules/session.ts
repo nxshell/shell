@@ -134,16 +134,14 @@ const useSessionStore = defineStore('session', () => {
      * @param sessionConfig 会话内容
      */
     function appendSessionConfig(sessionConfig: Record<string, any>) {
-        const { isFolder, node, sessionData, nodeElement } = currentNode
-        if (nodeElement) {
-            if (!sessionData && !node) {
-                sessionManager.addSessionConfig(null, sessionConfig)
-            }
-            if (isFolder) {
-                sessionManager.addSessionConfig(sessionData?.data, sessionConfig)
-            }
-            updateProcess()
+        const { isFolder, node, sessionData } = currentNode
+        if (!sessionData && !node) {
+            sessionManager.addSessionConfig(null, sessionConfig)
         }
+        if (isFolder) {
+            sessionManager.addSessionConfig(sessionData?.data, sessionConfig)
+        }
+        updateProcess()
     }
 
     onMounted(updateProcess)

@@ -7,6 +7,8 @@
         :show-close="false"
         :destroy-on-close="false"
         :close-on-click-modal="false"
+        @close="handleCancel"
+        class="n-ssh-form"
     >
         <el-form
             ref="sshSubFormRef"
@@ -26,7 +28,7 @@
                 <el-form-item :label="t('home.profile.base.host-name.title')" prop="system">
                     <n-space>
                         <el-autocomplete v-model="sshSubForm.system" value-key="icon" :fetch-suggestions="querySearch" clearable placeholder="请输入内容" />
-                        <n-icon :name="sshSubForm.system" size="24"/>
+                        <n-icon :name="sshSubForm.system" size="24" />
                     </n-space>
                 </el-form-item>
                 <el-form-item :label="t('home.profile.base.host-group.title')" prop="group">
@@ -35,16 +37,15 @@
                         :placeholder="t('home.profile.base.host-group.placeholder')"
                         style="width: 100%"
                     >
-                        <el-option v-for="item in group" :label="item.label" :value="item.value" :key="item.value" />
+                        <el-option v-for="(item,index) in group" :label="item.label" :value="item.value" :key="index" />
                     </el-select>
                 </el-form-item>
-                <!-- 后续添加图标支持 -->
             </div>
             <div class="n-session-ssh-container__right">
-                <el-tabs v-model="activeTab" type="border-card">
+                <el-tabs v-model="activeTab" type="border-card" @tab-click="handleTabChange">
                     <!-- 通用 -->
                     <el-tab-pane :label="t('components.session.base.label')" name="base">
-                        <el-row :gutter="5">
+                        <el-row :gutter="5" style="margin-bottom: 18px;">
                             <el-col :xs="4" :sm="4" :md="4" :lg="6" :xl="4">
                                 <el-form-item :label="t('components.session.base.link-type.label')">
                                     <el-select
@@ -63,10 +64,11 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="15">
-                                <el-form-item :label="t('home.profile.base.host.title')">
+                                <el-form-item :label="t('home.profile.base.host.title')" prop="hostAddress">
                                     <el-input
                                         v-model="sshSubForm.hostAddress"
                                         :placeholder="t('home.profile.base.host.placeholder')"
+                                        :rule="[{required:true,message: '请输入主机地址'}]"
                                     />
                                 </el-form-item>
                             </el-col>
@@ -162,7 +164,33 @@
                         </el-form-item>
                     </el-tab-pane>
                     <!-- 主题 -->
-                    <el-tab-pane :label="t('components.session.theme.label')" name="fourth"></el-tab-pane>
+                    <el-tab-pane :label="t('components.session.theme.label')" name="fourth">
+                        <div class="n-theme-form">
+                            <template v-for="(item) in configItems">
+                                <el-row :title="t(item.description)" class="item">
+                                    <el-col :span="6">
+                                        <label>{{ t(item.title) }}</label>
+                                    </el-col>
+                                    <el-col :offset="3" :span="14">
+                                        <el-input v-model="sshSubForm[item.name]" v-if="['text','password'].includes(item.type)" :type="item.type" />
+                                        <el-input-number v-model="sshSubForm[item.name]" v-if="item.type === 'number'" :step="item.step" :min="1" style="width: 100%;" />
+                                        <el-switch v-model="sshSubForm[item.name]" v-if="item.type === 'switch'" />
+                                        <el-radio-group v-if="item.type === 'radio-group'" v-model="sshSubForm[item.name]">
+                                            <el-radio-button v-for="(r,index) in item.options" :label="r.value" :key="index">
+                                                {{ r.label }}
+                                            </el-radio-button>
+                                        </el-radio-group>
+                                        <el-select v-model="sshSubForm[item.name]" v-if="item.type === 'select'" style="width: 100%;">
+                                            <el-option v-for="(opt, idx) in item.options" :key="idx" :label="t(opt.label)" :value="opt.value" />
+                                        </el-select>
+                                    </el-col>
+                                </el-row>
+                            </template>
+                            <div class="item theme">
+                                <xtermThemeList ref="themePreviewRef" :value.sync="sshSubForm.xtermTheme" :theme-options="sshSubForm" />
+                            </div>
+                        </div>
+                    </el-tab-pane>
                     <!-- 高级 -->
                     <el-tab-pane :label="t('components.session.advanced.label')" name="third">
                         <n-space vertical fill>
@@ -195,7 +223,7 @@
             </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="handleCancel">{{ t('components.Cancel') }}</el-button>
+            <el-button @click="visible = false">{{ t('components.Cancel') }}</el-button>
             <el-button type="primary" @click="handleOk">{{ t('components.OK') }}</el-button>
             <el-button type="primary" @click="handleSaveAndConnect">
                 {{ t('home.profile.operator.save-conn') }}
@@ -211,17 +239,19 @@ export default {
 </script>
 
 <script setup>
-import { getCurrentInstance, ref } from 'vue'
+import { getCurrentInstance, ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSessionStore } from '@/store'
 import { useI18n } from 'vue-i18n-bridge'
 import { publish } from '@/services/eventbus'
 import { querySearch } from '@/icons/system-icon'
+import { configItems, formItem } from './xtermTheme'
+import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 
 const { t } = useI18n()
 const visible = ref(false)
 const sshSubFormRef = ref()
-const sshSubForm = ref({
+const defaultForm = {
     sessType: 'ssh',
     protocal: 'ssh',
     proxy: 'none',
@@ -245,10 +275,15 @@ const sshSubForm = ref({
     sftpDirt: '/',
     keepAliveInterval: 60,
     keepAliveCountMax: 3,
-    readyTimeout: 20000
-})
+    readyTimeout: 20000,
+    xtermTheme: 'Night_3024',
+    ...formItem
+}
+const sshSubForm = ref({ ...defaultForm })
+
 const rules = ref({
-    hostName: [{ required: true, message: t('home.profile.base.host-name.description') }]
+    hostName: [{ required: true, message: t('home.profile.base.host-name.description') }],
+    hostAddress: [{ required: true, message: t('home.profile.base.host.description') }],
 })
 const activeTab = ref('base')
 const authMethod = ref(1)
@@ -257,24 +292,29 @@ const sessionStore = useSessionStore()
 const isEdit = ref(false)
 const proxy = getCurrentInstance().proxy
 const sessionConfig = ref()
-
-const { group, menuTree } = storeToRefs(sessionStore)
+const themePreviewRef = ref()
+const { group } = storeToRefs(sessionStore)
 const showModal = (sessionId) => {
-    sshSubFormRef.value?.resetFields()
-    sessionConfig.value = undefined
     if (!!sessionId) {
         isEdit.value = true
         sessionConfig.value = proxy.$sessionManager.getSessionConfigById(sessionId)
-        sshSubForm.value = { ...sessionConfig.value.config }
+        sshSubForm.value = { ...sshSubForm.value, ...sessionConfig.value.config }
     }
     visible.value = true
 }
+const handleTabChange = (value) => {
+    if (value.name === 'fourth') {
+        themePreviewRef.value?.refresh()
+    }
+}
 
 const handleCancel = () => {
-    emits('cancel')
-    sshSubFormRef.value?.resetFields()
+    sshSubForm.value = { ...defaultForm }
     sshSubFormRef.value?.clearValidate()
-    visible.value = false
+    sessionConfig.value = undefined
+    isEdit.value = false
+    activeTab.value = 'base'
+    emits('cancel')
 }
 
 /**
@@ -331,6 +371,10 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-dialog__body {
+  height: 400px;
+}
+
 .n-session-ssh-container {
   display: flex;
   justify-content: space-between;
@@ -357,6 +401,22 @@ defineExpose({
         column-gap: 5px;
       }
     }
+
+    .n-theme-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-gap: 10px;
+      padding-right: 10px;
+      max-height: 340px;
+      grid-template-areas: "normal theme";
+
+      .theme {
+        grid-area: theme;
+        grid-column: 2 / span 1;
+        grid-row: 1 / sapn 4;
+      }
+    }
+
   }
 }
 </style>

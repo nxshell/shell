@@ -175,7 +175,7 @@
                 "host": {
                     "title": "Host",
                     "placeholder": "Please enter host ip",
-                    "description": "Address of the host, IP(IPv4/IPv6）, domain name, or hostname."
+                    "description": "Please enter host address"
                 },
                 "port": {
                     "title": "Port",
