@@ -1,7 +1,5 @@
 import xtermTheme from "xterm-theme";
-
-import xtermPreviewComponent from "@/views/xterm/xtermPreview.vue"
-import { defaultValue } from '@/views/components/session/contants/protocol'
+import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 
 export const configItems = [
     {
@@ -58,7 +56,7 @@ export const configItems = [
         name: "fontSize",
         title: "home.profile.terminal.font-size.title",
         description: "home.profile.terminal.font-size.description",
-        defaultValue: "14",
+        defaultValue: 12,
         type: "select",
         options: [
             {
@@ -293,27 +291,8 @@ export const configItems = [
             },
         ]
     },
-    // {
-    //     name: "xtermTheme",
-    //     title: "home.profile.terminal.xterm-theme.title",
-    //     description: "home.profile.terminal.xterm-theme.title",
-    //     defaultValue: "AdventureTime",
-    //     type: "select",
-    //     options: [
-    //         {
-    //             label: "home.profile.terminal.xterm-theme.options.default",
-    //             value: "default"
-    //         },
-    //         ...Object.keys(xtermTheme).map(themeName => {
-    //             return {
-    //                 label: themeName,
-    //                 value: themeName
-    //             };
-    //         })
-    //     ],
-    //     component: xtermPreviewComponent
-    // }
 ]
 
+export { xtermThemeList }
+
 export const formItem = Object.fromEntries(configItems.flatMap(({ name, defaultValue }) => [[name, defaultValue]]));
-export default {}

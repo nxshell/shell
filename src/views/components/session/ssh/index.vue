@@ -284,6 +284,7 @@ import { publish } from '@/services/eventbus'
 import { querySearch } from '@/icons/system-icon'
 import { configItems, formItem } from './xtermTheme'
 import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
+import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
 
 const { t } = useI18n()
 const visible = ref(false)
@@ -328,12 +329,13 @@ const emits = defineEmits(['cancel', 'ok'])
 const sessionStore = useSessionStore()
 const isEdit = ref(false)
 const proxy = getCurrentInstance().proxy
+const sessionManager = proxy.$sessionManager
 const sessionConfig = ref()
 const { group } = storeToRefs(sessionStore)
 const showModal = (sessionId) => {
 	if (!!sessionId) {
 		isEdit.value = true
-		sessionConfig.value = proxy.$sessionManager.getSessionConfigById(sessionId)
+		sessionConfig.value = sessionManager.getSessionConfigById(sessionId)
 		sshSubForm.value = { ...sshSubForm.value, ...sessionConfig.value.config }
 	}
 	visible.value = true
@@ -348,28 +350,32 @@ const handleCancel = () => {
 	emits('cancel')
 }
 
+const saveOrUpdate = () => {
+	// 更新配置信息
+	const name =
+		sessionConfig.value.name === '' || sshSubForm.value.hostName !== sessionConfig.value.name
+			? sshSubForm.value.hostName
+			: sessionConfig.value.name
+	if (isEdit.value) {
+		sessionConfig.value.update(name, Object.assign(sessionConfig.value.config, sshSubForm.value), '')
+	} else {
+		// 创建会话配置
+		sessionConfig.value = new SessionConfig(name, SESSION_CONFIG_TYPE.NODE, sshSubForm.value, 'telnet session')
+		// 添加会话配置
+		sessionStore.appendSessionConfig(sessionConfig.value)
+	}
+	// 刷新菜单
+	publish('refresh-session-tree')
+	emits('ok', sshSubForm.value)
+}
+
 /**
  * 保存
  */
 const handleOk = () => {
 	sshSubFormRef.value?.validate((valid) => {
 		if (valid) {
-			if (isEdit.value) {
-				// 更新配置信息
-				const name =
-					sessionConfig.value.name === '' || sshSubForm.value.hostName !== sessionConfig.value.name
-						? sshSubForm.value.hostName
-						: sessionConfig.value.name
-				sessionConfig.value.update(name, Object.assign(sessionConfig.value.config, sshSubForm.value), '')
-				// 刷新菜单
-				publish('refresh-session-tree')
-			} else {
-				// 创建会话配置
-				const sessionConfig = proxy.$sessionManager.createShellSessionConfig(sshSubForm.value.hostName)
-				// 添加会话配置
-				sessionStore.appendSessionConfig(sessionConfig)
-			}
-			emits('ok', sshSubForm.value)
+			saveOrUpdate()
 			visible.value = false
 		} else {
 			return false
@@ -383,15 +389,8 @@ const handleOk = () => {
 const handleSaveAndConnect = () => {
 	sshSubFormRef.value?.validate((valid) => {
 		if (valid) {
-			if (isEdit.value) {
-				// 更新配置信息
-				const name = sessionConfig.value.name === '' && sshSubForm.value.hostName
-				sessionConfig.value.update(name, Object.assign(sessionConfig.value.config, sshSubForm.value), '')
-				// 刷新菜单
-			}
-			emits('ok', sshSubForm.value)
-			publish('refresh-session-tree')
-			proxy.$sessionManager.createSessionInstance(sessionConfig.value)
+			saveOrUpdate()
+			sessionManager.createSessionInstance(sessionConfig.value)
 			visible.value = false
 		} else {
 			return false

@@ -41,8 +41,8 @@ import { php } from '@codemirror/lang-php'
 import { python } from '@codemirror/lang-python'
 import { xml } from '@codemirror/lang-xml'
 import themes from './themes'
-import { mapState, storeToRefs } from 'pinia'
-import { useNxTabsStore, useSettingStore, useTabStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { useNxTabsStore, useSettingStore } from '@/store'
 import { getCurrentInstance, onMounted, ref, watchEffect } from 'vue'
 
 const props = defineProps({

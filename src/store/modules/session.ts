@@ -144,8 +144,21 @@ const useSessionStore = defineStore('session', () => {
         updateProcess()
     }
 
+    function updateSendToAllXterm(status: boolean) {
+        keyboardToAll.value = status
+    }
+
     onMounted(updateProcess)
 
-    return { group, menuTree, currentNode, keyboardToAll, updateProcess, appendSessionConfig, updateCurrentNode }
+    return {
+        group,
+        menuTree,
+        currentNode,
+        keyboardToAll,
+        updateSendToAllXterm,
+        updateProcess,
+        appendSessionConfig,
+        updateCurrentNode
+    }
 })
 export default useSessionStore

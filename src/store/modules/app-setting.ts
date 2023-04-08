@@ -9,7 +9,6 @@ export interface ISetting {
     theme: ThemeType
     language: string
     userLock: boolean
-    tabCloseConfirm: boolean
     configPanel: boolean
     layoutMode: LayoutModeType
 }
@@ -19,7 +18,6 @@ const useSettingStore = defineStore('setting', {
         theme: (globalSetting.getProfile('xterm')?.theme as ThemeType) || 'light',
         language: 'zh-CN',
         userLock: false,
-        tabCloseConfirm: (globalSetting.getProfile("xterm")?.noCloseConfirm as unknown as boolean) || false,
         configPanel: true,
         layoutMode: 'normal'
     }),
@@ -31,11 +29,8 @@ const useSettingStore = defineStore('setting', {
                 window.document.documentElement.setAttribute('nx-theme', theme)
             })
         },
-        updateTabCloseConfirm(value: boolean) {
-            const defaultSettings = globalSetting.getProfile("xterm")
-            globalSetting.updateProfile("xterm", { ...defaultSettings, noCloseConfirm: value }).then(() => {
-                this.tabCloseConfirm = value
-            })
+        updateLayoutMode(layout: LayoutModeType) {
+            this.layoutMode = layout
         }
     }
 })

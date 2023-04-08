@@ -25,10 +25,10 @@
 import * as EventBus from '@/services/eventbus'
 import { NxMenus, NxTabMenu } from './components'
 import { storeToRefs } from 'pinia'
-import { useTabStore } from '@/store'
 import { getCurrentInstance, onBeforeMount } from "vue";
+import { useNxTabsStore } from '@/store'
 
-const { configPanel, showTabs } = storeToRefs(useTabStore())
+const { configPanel, showTabs } = storeToRefs(useNxTabsStore())
 const proxy = getCurrentInstance()?.proxy
 
 const handlerCollapsed = () => {

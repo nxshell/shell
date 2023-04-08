@@ -20,11 +20,14 @@ const useNxTabsStore = defineStore('nxTabs', () => {
     const currentActive = ref<number>(0)
     const checkedTabType = ref('')
     const showTabs = ref(true)
+    const configPanel = ref(true)
     const noConfirm = ref(false)
     const editorChange = ref(false)
     const proxy = getCurrentInstance()?.proxy
     // @ts-ignore
     const sessionManager = proxy?.$sessionManager
+
+    const tabIcon: Record<string, string> = { "login": "user", "welcome": "logo", "sftp": "folder-sftp-open" }
 
     /**
      * 监听并更新Tab数据
@@ -39,15 +42,11 @@ const useNxTabsStore = defineStore('nxTabs', () => {
                 title: name === '' ? cfg.hostAddress : name,
                 session: x,
                 iconType: 'svg',
-                icon: type === 'welcome' ? 'logo' :
-                    type === 'login' ? 'user' :
-                        type === 'shell' ? getSystemIcon(cfg.osType) :
-                            type === 'sftp' ? getFolderIcon('') :
-                                type === 'editor' ? getFileIcon(ext_name) :
-                                    ''
+                icon: tabIcon[type] || 'auto'
             }
             if (type === 'shell' || type === 'sftp' || type === 'editor') {
                 tabInstance.title = name === '' ? cfg.hostAddress : name
+                tabInstance.icon = type === 'shell' ? getSystemIcon(cfg.system ?? 'linux') : type === 'editor' ? getFileIcon(ext_name) : tabInstance.icon
             }
             return tabInstance
         })
@@ -135,6 +134,7 @@ const useNxTabsStore = defineStore('nxTabs', () => {
     return {
         tabData,
         showTabs,
+        configPanel,
         checkedTabType,
         currentActive,
         noConfirm,

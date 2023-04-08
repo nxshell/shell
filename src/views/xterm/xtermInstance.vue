@@ -1,12 +1,13 @@
 <template>
-	<div class="xterm-instance" :style="{'background-color': backgroundColor}" @mousedown.middle="handleSelectPaste">
+	<div class="xterm-instance" :style="{ 'background-color': backgroundColor }" @mousedown.middle="handleSelectPaste">
 		<div class="session-toolbar">
 			<span class="host-url">{{ currentSessionInfo.url }}</span>
 			<el-tooltip
 				class="item"
 				effect="dark"
 				:content="$t('home.session-instance.duplicate-session')"
-				placement="top-start">
+				placement="top-start"
+			>
 				<span class="btn" @click="copySession">
 					<i class="el-icon-copy-document" />
 				</span>
@@ -15,7 +16,8 @@
 				class="item"
 				effect="dark"
 				:content="$t('home.session-instance.reconnect')"
-				placement="top-start">
+				placement="top-start"
+			>
 				<span class="btn" @click="reconSession">
 					<i class="el-icon-refresh" />
 				</span>
@@ -46,7 +48,8 @@
 			@titleChange="onTitleChange"
 			@shortcut="handleShortCutEvent"
 			v-context-menu="xtermMenu"
-			:options="options" />
+			:options="options"
+		/>
 		<pt-auth-dialog ref="dialog" @authOk="handleAuthOk" />
 	</div>
 </template>
@@ -62,7 +65,7 @@ import { xzmodem } from './xzmodem.js'
 import { create_iconv } from './iconv.js'
 import { createLogger } from '@/services/nxsys/logger'
 import mousetrap from 'mousetrap'
-import { mapState } from 'pinia'
+import { mapState, mapStores } from 'pinia'
 import { useSessionStore } from '@/store'
 
 export default {
@@ -218,6 +221,7 @@ export default {
 	},
 
 	computed: {
+		...mapStores(useSessionStore),
 		...mapState(useSessionStore, ['keyboardToAll']),
 		currentSessionInfo() {
 			const currentSessionInfo = {
@@ -258,7 +262,7 @@ export default {
 
 	methods: {
 		xtermFocus() {
-			EventBus.publish("updateTabBySessionId", this.sessionInstanceId)
+			EventBus.publish('updateTabBySessionId', this.sessionInstanceId)
 		},
 		genrateUrlBySessionCfg(config) {
 			let url = ''
@@ -268,9 +272,9 @@ export default {
 				// 为了更方便的处理，这里先用http代替protocol ssh
 				let sessionURL = {}
 				try {
-					sessionURL = new URL(`http://${ hostAddress || 'localhost' }`)
+					sessionURL = new URL(`http://${hostAddress || 'localhost'}`)
 				} catch (e) {
-					sessionURL.href = `ssh://${ username }:****@${ hostAddress }:${ hostPort }`
+					sessionURL.href = `ssh://${username}:****@${hostAddress}:${hostPort}`
 				}
 
 				sessionURL.port = hostPort || 22
@@ -284,13 +288,13 @@ export default {
 				url = sessionURL.href.replace('http', 'ssh')
 			} else if (config.protocal === 'telnet') {
 				const { hostAddress, hostTelnetPort, username, password } = config
-				url = `telnet://${ hostAddress }:${ hostTelnetPort }`
+				url = `telnet://${hostAddress}:${hostTelnetPort}`
 			} else if (config.protocal === 'localshell') {
 				url = 'LocalShell Tool'
 			} else {
 				// serial protocol
 				const { port } = config
-				url = `serial@${ port }`
+				url = `serial@${port}`
 			}
 			return url
 		},
@@ -452,15 +456,15 @@ export default {
 			})
 
 			let newConfig = null
-			if (data.type === "password") {
+			if (data.type === 'password') {
 				newConfig = {
-					authType: "password",
+					authType: 'password',
 					username: data.username,
 					password: data.password
 				}
-			} else if (data.type === "publickey") {
+			} else if (data.type === 'publickey') {
 				newConfig = {
-					authType: "cert",
+					authType: 'cert',
 					username: data.username,
 					passphrase: data.passphrase,
 					cert: data.publickey
@@ -483,7 +487,7 @@ export default {
 			let sessionCfg = this.$sessionManager.getSessionConfigByInstanceId(this.sessionInstanceId)
 			if (sessionCfg) {
 				let oldConfig = merge(sessionCfg.config, newConfig)
-				sessionCfg.update(oldConfig.hostName, oldConfig, "")
+				sessionCfg.update(oldConfig.hostName, oldConfig, '')
 			}
 		},
 		loadXzmode() {
@@ -594,11 +598,12 @@ export default {
 			})
 		},
 		send_many() {
-			this.keyboardToAll = true
+			this.sessionStore.updateSendToAllXterm(true)
 		},
 		send_one() {
+			this.sessionStore.updateSendToAllXterm(false)
 			this.keyboardToAll = false
-			EventBus.remove('sendToAllTerm')
+			EventBus.remove('xterm-send-to-all')
 		},
 		handleSearch() {
 			let s = this.$refs.xterm.getSelection()
@@ -685,17 +690,16 @@ export default {
 
 		openSendAll(enable) {
 			this.enableSendToAllTerm = enable
-
 			if (enable) {
-				EventBus.subscript('sendToAllTerm', this.lisenOnOtherTermData)
+				EventBus.subscript('xterm-send-to-all', this.lisenOnOtherTermData)
 			} else {
-				EventBus.unsubscript('sendToAllTerm', this.lisenOnOtherTermData)
+				EventBus.unsubscript('xterm-send-to-all', this.lisenOnOtherTermData)
 			}
 		},
 
 		sendToAllTerm(data) {
 			if (this.keyboardToAll) {
-				EventBus.publish('sendToAllTerm', {
+				EventBus.publish('xterm-send-to-all', {
 					src: this.sessionInstanceId,
 					data: data
 				})

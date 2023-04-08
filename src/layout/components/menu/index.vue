@@ -37,7 +37,7 @@
                             placement="top-start"
                         >
 							<span class="session-extend" @click.stop="handleOpenSFTP(data)">
-								<n-icon name="s-ftp" size="18" />
+								<n-icon name="folder-sftp-open" size="18" />
 							</span>
 						</el-tooltip>
 					</span>
@@ -49,6 +49,7 @@
         <nx-folder-dialog ref="folderDialogRef" />
         <!-- SSH会话弹窗 -->
         <ssh-modal ref="sshModalRef" />
+        <telnet-modal ref="telnetModalRef" />
     </div>
 </template>
 
@@ -63,10 +64,12 @@ import { useNxTabsStore, useSessionStore } from '@/store'
 import { SshModal } from '@/views/components'
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
+import TelnetModal from '@/views/components/session/telnet/index.vue'
 
 const sessionTreeRef = ref()
 const folderDialogRef = ref()
 const sshModalRef = ref()
+const telnetModalRef = ref()
 const { t } = useI18n()
 const menuProps = reactive({
     highlightCurrent: false,
@@ -129,7 +132,8 @@ const handleSessionTreeContextMenu_Paste = () => {
  * @return {Promise<void>}
  */
 const handleSessionTreeContextMenu_Prop = () => {
-    sshModalRef.value?.showModal(currentNode.value.sessionId)
+    telnetModalRef.value?.showModal(currentNode.value.sessionId)
+    // sshModalRef.value?.showModal(currentNode.value.sessionId)
 }
 /**
  * 删除会话或者会话目录
@@ -437,7 +441,7 @@ onMounted(() => {
     // 订阅菜单刷新事件
     subscript('refresh-session-tree', () => sessionStore.updateProcess())
     // 订阅会话创建事件
-    subscript('create-session-toolbar', () => sshModalRef.value?.showModal())
+    subscript('create-session-toolbar', () => telnetModalRef.value?.showModal())
     nextTick(() => sessionStore.updateCurrentNode(sessionTreeRef.value))
 })
 onBeforeUnmount(() => {

@@ -1,262 +1,107 @@
 <template>
 	<div class="pt-xterm-session">
-		<div class="xterm-container" ref="xterm_container">
+		<div ref="xtermContainerRef" class="xterm-container">
 			<xterm-instance
-				v-for="(sessId, idx) in sessions"
-				:key="sessId"
-				:style="xtermWrapper"
+				v-for="(sessionId, idx) in sessions"
+				:key="sessionId"
+				v-show="visible(sessionId)"
+				:sessionInstanceId="sessionId"
+				:style="xtermStyle"
 				class="xterm-wrapper"
-				v-show="xtermShow(sessId)"
-				:sessionInstanceId="sessId"
-				@split_screen="handleSplit"
-				@titleChange="onTitleChange"
-				@change-theme="handleChangeTheme($event, sessId)"
-				@remove-session="removeSession(idx)" />
+				@split_screen="(type) => settingStore.updateLayoutMode(type)"
+				@titleChange="handleTitleChange"
+				@remove-session="handleRemoveSession(idx)"
+			/>
 		</div>
 	</div>
 </template>
 
-<script>
+<script setup>
 import XtermInstance from './xtermInstance'
-import * as EventBus from '@/services/eventbus'
+import { useSettingStore } from '@/store'
+import { computed, getCurrentInstance, nextTick, onActivated, onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router/composables'
+import { useI18n } from 'vue-i18n-bridge'
 
-export default {
-	name: 'PtXtermSession',
-	components: {
-		XtermInstance
-	},
-	data() {
-		return {
-			sessions: [],
-			currentSessionId: -1,
-			sessionIdMapSftpDir: {},
-			tunnelMapTitle: {},
-			themes: {},
-			split_type: 'normal',
-			width: 0
+const { t } = useI18n()
+const xtermContainerRef = ref()
+const sessions = ref([])
+const currentSessionId = ref(-1)
+const sessionIdMapSftpDir = ref({})
+const tunnelMapTitle = ref({})
+const settingStore = useSettingStore()
+const { layoutMode } = storeToRefs(settingStore)
+const proxy = getCurrentInstance().proxy
+const initWidth = ref(0)
+const visible = (sessionId) => (layoutMode.value === 'normal' ? currentSessionId.value === sessionId : true)
+const xtermStyle = computed(() => {
+	let width = '100%'
+	let height = '100%'
+	let min_width = 200
+	let t_len = sessions.value.length
+	let f_len = Math.floor((t_len + 1) / 2)
+
+	if (layoutMode.value === 'grid') {
+		if (t_len < 3) {
+			height = '100%'
+			width = Math.floor(100 / t_len)
+			width = width + '%'
+		} else {
+			height = '50%'
+			width = Math.floor(100 / f_len)
+			width = width + '%'
+			min_width = Math.floor(initWidth.value / f_len)
 		}
-	},
+	} else if (layoutMode.value === 'col') {
+		height = '100%'
+		width = Math.floor(100 / t_len)
+		width = width + '%'
+		min_width = Math.floor(initWidth.value / t_len)
+	} else if (layoutMode.value === 'row') {
+		width = '100%'
+		height = Math.floor(100 / t_len)
+		height = height + '%'
+	}
 
-	computed: {
-		currentSessionInfo() {
-			const currentSessionInfo = {
-				url: ''
-			}
-			if (this.currentSessionId === -1) {
-				return currentSessionInfo
-			}
-			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.currentSessionId)
-			if (!sessionConfig) {
-				return currentSessionInfo
-			}
+	return {
+		width,
+		height,
+		'min-width': `${min_width}px`
+	}
+})
 
-			currentSessionInfo.url = this.genrateUrlBySessionCfg(sessionConfig.config)
-			return currentSessionInfo
-		},
-		tunnelTitle() {
-			return this.tunnelMapTitle[this.currentSessionId]
-		},
-		backgroundColor() {
-			return {
-				backgroundColor: this.themes[this.currentSessionId]?.background || 'black'
-			}
-		},
-		toolbarShow() {
-			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.currentSessionId)
-			return sessionConfig && sessionConfig.config.protocal === 'ssh';
-		},
-		xtermWrapper() {
-			let width = '100%'
-			let height = '100%'
-			let min_width = 200
-			let t_len = this.sessions.length
-			let f_len = Math.floor((t_len + 1) / 2)
-
-			if (this.split_type === 'grid') {
-				if (t_len < 3) {
-					height = '100%'
-					width = Math.floor(100 / t_len)
-					width = width + '%'
-				} else {
-					height = '50%'
-					width = Math.floor(100 / f_len)
-					width = width + '%'
-					min_width = Math.floor(this.width / f_len)
-				}
-			} else if (this.split_type === 'col') {
-				height = '100%'
-				width = Math.floor(100 / t_len)
-				width = width + '%'
-				min_width = Math.floor(this.width / t_len)
-			} else if (this.split_type === 'row') {
-				width = '100%'
-				height = Math.floor(100 / t_len)
-				height = height + '%'
-			}
-
-			return {
-				width,
-				height,
-				'min-width': `${ min_width }px`
-			}
-		}
-	},
-
-
-	mounted() {
-		this.$nextTick(() => {
-			this.getxtermwitdh()
-		})
-		EventBus.subscript('change-layout', (type) => {
-			this.split_type = type
-		})
-	},
-
-	beforeRouteUpdate(to, from, next) {
-		if (to.path !== from.path) {
-			let sessionId = parseInt(to.params.sessionId)
-			this.currentSessionId = sessionId
-			this.addSession(sessionId)
-			if (!this.tunnelMapTitle[sessionId]) {
-				this.updateTunnelTitle(sessionId, this.$t('home.session-instance.tunnel'))
-			}
-		}
-		next()
-	},
-
-	activated() {
-		this.currentSessionId = parseInt(this.$route.params.sessionId)
-		this.addSession(this.currentSessionId)
-		if (!this.tunnelMapTitle[this.currentSessionId]) {
-			this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel'))
-		}
-	},
-
-	deactivated() {
-	},
-
-	methods: {
-		getxtermwitdh() {
-			let width = this.$refs.xterm_container.clientWidth
-			if (this.width != width) {
-				this.width = width
-			}
-		},
-		genrateUrlBySessionCfg(config) {
-			let url = ''
-			if (config.protocal == 'ssh') {
-				const { hostAddress, hostPort, username, password, authType } = config
-				// URL对于SSH这种自定义protocol的解析都是当做类似file的解析方式
-				// 为了更方便的处理，这里先用http代替protocol ssh
-				let sessionURL = {}
-				try {
-					sessionURL = new URL(`http://${ hostAddress || 'localhost' }`)
-				} catch (e) {
-					sessionURL.href = `ssh://${ username }:****@${ hostAddress }:${ hostPort }`
-				}
-
-				sessionURL.port = hostPort || 22
-				if (username) {
-					sessionURL.username = username
-				}
-				if (authType === 'password' && password) {
-					sessionURL.password = '*'.padStart(4, '*')
-				}
-				// 把输出的http协议转换为ssh
-				url = sessionURL.href.replace('http', 'ssh')
-			} else if (config.protocal == 'telnet') {
-				const { hostAddress, hostTelnetPort, username, password } = config
-				url = `telnet://${ hostAddress }:${ hostTelnetPort }`
-			} else if (config.protocal == 'localshell') {
-				url = 'LocalShell Tool'
-			} else {
-				// serial protocol
-				const { port } = config
-				url = `serial@${ port }`
-			}
-			return url
-		},
-		updateTunnelTitle(id, title) {
-			this.$set(this.tunnelMapTitle, id, title)
-		},
-		addSession(sessId) {
-			if (this.sessions.findIndex((v) => v == sessId) > -1) {
-				return
-			}
-			this.sessions.push(sessId)
-		},
-		xtermShow(sessId) {
-			if (this.split_type == 'normal') {
-				return this.currentSessionId == sessId
-			}
-			return true
-		},
-		removeSession(idx) {
-			this.sessions.splice(idx, 1)
-		},
-		copySession() {
-			let sessionInstance = this.$sessionManager.getSessionInstanceById(this.currentSessionId)
-			if (!sessionInstance) {
-				return
-			}
-			this.$sessionManager.duplicateSshInstance(sessionInstance)
-		},
-		async reconSession() {
-			let sessionInstance = this.$sessionManager.getSessionInstanceById(this.currentSessionId)
-			if (!sessionInstance) {
-				return
-			}
-			await sessionInstance.refresh()
-		},
-
-		async openTunnel() {
-			const sessionInstance = this.$sessionManager.getSessionInstanceById(this.currentSessionId)
-			const port = await sessionInstance.openTunnel()
-			if (port) {
-				this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel-success', [port]))
-			} else {
-				this.updateTunnelTitle(this.currentSessionId, this.$t('home.session-instance.tunnel'))
-			}
-		},
-
-		async openSFTP() {
-			// get reconnid
-			let connId = -1
-			try {
-				const sessionInstance = this.$sessionManager.getSessionInstanceById(this.currentSessionId)
-				connId = await sessionInstance.getTermConnId()
-			} catch (e) {
-				console.log('openSFTP ssh instance error ', e)
-				return
-			}
-
-			const sessionConfig = this.$sessionManager.getSessionConfigByInstanceId(this.currentSessionId)
-			const sftpDirt = this.sessionIdMapSftpDir[this.currentSessionId] || '/'
-			let sftCfg = { ...sessionConfig }
-			sftCfg.config = { ...sftCfg.config, sftpDirt: sftpDirt, connId: connId }
-			this.$sessionManager.createSFTPSessionInstance(sftCfg)
-		},
-		onTitleChange({ sessionId, title }) {
-			//TODO remove it mapper
-			this.sessionIdMapSftpDir[sessionId] = title
-		},
-		handleChangeTheme(theme, sessionId) {
-			this.$set(this.themes, sessionId, theme)
-		},
-		handleSplit(type) {
-			if (type == 'row') {
-				this.split_type = 'row'
-			} else if (type == 'col') {
-				this.split_type = 'col'
-			} else if (type == 'grid') {
-				this.split_type = 'grid'
-			} else {
-				// close
-				this.split_type = 'normal'
-			}
+const handleTitleChange = ({ sessionId, title }) => (sessionIdMapSftpDir[sessionId] = title)
+const handleRemoveSession = (idx) => sessions.value.splice(idx, 1)
+const addSession = (sessionId) => {
+	if (sessions.value.findIndex((v) => v === sessionId) > -1) {
+		return
+	}
+	sessions.value.push(sessionId)
+}
+onBeforeRouteUpdate((to, from, next) => {
+	if (to.path !== from.path) {
+		currentSessionId.value = parseInt(to.params.sessionId)
+		addSession(currentSessionId.value)
+		if (!tunnelMapTitle.value[currentSessionId.value]) {
+			tunnelMapTitle.value[currentSessionId.value] = t('home.session-instance.tunnel')
 		}
 	}
-}
+	next()
+})
+
+const route = useRoute()
+onActivated(() => {
+	currentSessionId.value = parseInt(route.params.sessionId)
+	addSession(currentSessionId.value)
+	if (!tunnelMapTitle.value[currentSessionId.value]) {
+		tunnelMapTitle.value[currentSessionId.value] = t('home.session-instance.tunnel')
+	}
+})
+
+onMounted(() => {
+	nextTick(() => (initWidth.valu = xtermContainerRef.value.clientWidth))
+})
 </script>
 
 <style lang="scss" scoped>

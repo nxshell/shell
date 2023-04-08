@@ -1,88 +1,278 @@
 <template>
 	<el-dialog
-		title="Telnet 会话配置"
-		width="40%"
-		:visible.sync="visible"
-		:destroy-on-close="true"
+		title="Telnet 会话"
+		:visible="visible"
+		append-to-body
+		width="70%"
+		:show-close="false"
+		:destroy-on-close="false"
 		:close-on-click-modal="false"
 		@close="handlerClose"
 	>
-		<el-form ref="telnetFormRef" :form="sessionForm" :rules="telnetFormRules" label-position="right"
-		         label-width="120px">
-			<el-form-item :label="$t('home.profile.base.host-name.title')" prop="hostName">
-				<el-input v-model="sessionForm.hostName" />
-			</el-form-item>
-			<!-- 操作系统 -->
-			<el-form-item :label="$t(OsType.title)" prop="osType">
-				<el-select v-model="sessionForm[OsType.name]" style="width: 100%">
-					<el-option v-for="(o,i) in OsType.options" :label="$t(o.label)" :value="o.value" :key="i" />
-				</el-select>
-			</el-form-item>
-			<!-- 主机 -->
-			<el-form-item :label="$t('home.profile.base.host.title')" prop="host">
-				<el-input v-model="sessionForm.host" />
-			</el-form-item>
-			<!-- 端口 -->
-			<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
-				<el-input v-model="sessionForm.hostTelnetPort" />
-			</el-form-item>
+		<el-form
+			ref="telnetFormRef"
+			:model="sessionForm"
+			:rules="telnetFormRules"
+			class="n-session-ssh-container"
+			label-position="top"
+			label-width="80px"
+		>
+			<div class="n-session-ssh-container__left">
+				<el-form-item :label="t('home.profile.base.host-name.title')" prop="hostName">
+					<el-input
+						v-model="sessionForm.hostName"
+						:placeholder="t('home.profile.base.host-name.placeholder')"
+					/>
+				</el-form-item>
+				<el-form-item :label="t('home.profile.base.host-name.title')" prop="system">
+					<n-space>
+						<el-autocomplete
+							v-model="sessionForm.system"
+							value-key="icon"
+							:fetch-suggestions="querySearch"
+							clearable
+							placeholder="请输入内容"
+						/>
+						<n-icon :name="sessionForm.system" size="24" />
+					</n-space>
+				</el-form-item>
+				<el-form-item :label="t('home.profile.base.host-group.title')" prop="group">
+					<el-select
+						v-model="sessionForm.group"
+						:placeholder="t('home.profile.base.host-group.placeholder')"
+						style="width: 100%"
+					>
+						<el-option
+							v-for="(item, index) in group"
+							:label="item.label"
+							:value="item.value"
+							:key="index"
+						/>
+					</el-select>
+				</el-form-item>
+			</div>
+			<div class="n-session-ssh-container__right">
+				<el-tabs v-model="activeTab" type="border-card">
+					<!-- 通用 -->
+					<el-tab-pane :label="t('components.session.base.label')" name="base">
+						<el-row :gutter="10">
+							<el-col :span="12">
+								<!-- 主机 -->
+								<el-form-item :label="$t('home.profile.base.host.title')" prop="hostAddress">
+									<el-input v-model="sessionForm.hostAddress" />
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<!-- 端口 -->
+								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
+									<el-input-number v-model="sessionForm.hostTelnetPort" :min="1" :max="65535" />
+								</el-form-item>
+							</el-col>
+						</el-row>
+					</el-tab-pane>
+					<!-- 主题 -->
+					<el-tab-pane :label="t('components.session.theme.label')" name="theme">
+						<div class="n-theme-form">
+							<template v-for="item in configItems">
+								<el-row :title="t(item.description)" class="item">
+									<el-col :span="6">
+										<label>{{ t(item.title) }}</label>
+									</el-col>
+									<el-col :offset="3" :span="14">
+										<el-input
+											v-model="sessionForm[item.name]"
+											v-if="['text', 'password'].includes(item.type)"
+											:type="item.type"
+										/>
+										<el-input-number
+											v-model="sessionForm[item.name]"
+											v-if="item.type === 'number'"
+											:step="item.step"
+											:min="1"
+											style="width: 100%"
+										/>
+										<el-switch v-model="sessionForm[item.name]" v-if="item.type === 'switch'" />
+										<el-radio-group
+											v-if="item.type === 'radio-group'"
+											v-model="sessionForm[item.name]"
+										>
+											<el-radio-button
+												v-for="(r, index) in item.options"
+												:label="r.value"
+												:key="index"
+											>
+												{{ r.label }}
+											</el-radio-button>
+										</el-radio-group>
+										<el-select
+											v-model="sessionForm[item.name]"
+											v-if="item.type === 'select'"
+											style="width: 100%"
+										>
+											<el-option
+												v-for="(opt, idx) in item.options"
+												:key="idx"
+												:label="t(opt.label)"
+												:value="opt.value"
+											/>
+										</el-select>
+									</el-col>
+								</el-row>
+							</template>
+							<div class="item theme">
+								<xtermThemeList :value.sync="sessionForm.xtermTheme" :theme-options="sessionForm" />
+							</div>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
+			</div>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="visible = false">取 消</el-button>
-			<el-button type="primary" @click="handlerSave">确 定</el-button>
+			<el-button @click="visible = false">{{ t('components.Cancel') }}</el-button>
+			<el-button type="primary" @click="handleOk">{{ t('components.OK') }}</el-button>
+			<el-button type="primary" @click="handleSaveAndConnect">
+				{{ t('home.profile.operator.save-conn') }}
+			</el-button>
 		</div>
 	</el-dialog>
 </template>
-<script>
-import OsType from '../../constants/osType'
+<script setup>
+import { querySearch } from '@/icons/system-icon'
+import { publish } from '@/services/eventbus'
+import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
+import { useSessionStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { getCurrentInstance, ref } from 'vue'
+import { useI18n } from 'vue-i18n-bridge'
+import { configItems, formItem, xtermThemeList } from '../ssh/xtermTheme'
+import { defaultForm } from './constants'
 
-export default {
-	name: 'NxTelnetDialog',
-	data() {
-		return {
-			visible: false,
-			sessionForm: {
-				hostName: '',
-				osType: 'auto',
-				host: '',
-				hostTelnetPort: 23
-			},
-			telnetFormRules: {
-				hostName: [
-					{ required: true, message: '请输入会话名称', trigger: 'blur' }
-				],
-				host: [
-					{ required: true, message: '请输入主机地址', trigger: 'blur' }
-				],
-				hostTelnetPort: [
-					{ required: true, message: '请输入主机端口', trigger: 'blur' }
-				]
-			},
-			OsType
+const { t } = useI18n()
+const emits = defineEmits(['ok', 'cancel'])
+const visible = ref(false)
+const telnetFormRef = ref()
+const sessionForm = ref({ ...defaultForm })
+const telnetFormRules = {
+	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }],
+	host: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
+	hostTelnetPort: [{ required: true, message: '请输入主机端口', trigger: 'blur' }]
+}
+const sessionStore = useSessionStore()
+const { group } = storeToRefs(sessionStore)
+const activeTab = ref('base')
+const isEdit = ref(false)
+const proxy = getCurrentInstance().proxy
+const sessionManager = proxy.$sessionManager
+const sessionConfig = ref()
+
+const showModal = (sessionId) => {
+	if (sessionId) {
+		isEdit.value = true
+		sessionConfig.value = sessionManager.getSessionConfigById(sessionId)
+		sessionForm.value = { ...sessionForm.value, ...sessionConfig.value.config }
+	}
+	visible.value = true
+}
+
+const saveOrUpdateSession = () => {
+	const name =
+		sessionConfig.value.name === '' || sessionForm.value.hostName !== sessionConfig.value.name
+			? sessionForm.value.hostName
+			: sessionConfig.value.name
+	if (isEdit.value) {
+		// 更新配置信息
+		sessionConfig.value.update(name, Object.assign(sessionConfig.value.config, sessionForm.value), '')
+	} else {
+		// 创建会话配置
+		sessionConfig.value = new SessionConfig(name, SESSION_CONFIG_TYPE.NODE, sessionForm.value, 'telnet session')
+		// 添加会话配置
+		sessionStore.appendSessionConfig(sessionConfig.value)
+	}
+	// 刷新菜单
+	publish('refresh-session-tree')
+}
+
+const handleOk = () => {
+	telnetFormRef.value.validate((valid) => {
+		if (!valid) {
+			return false
 		}
-	},
-	methods: {
-		show(sessionId) {
-			this.$nextTick(() => {
-				const currentSession = this.$sessionManager.getSessionInstanceById(sessionId)
-				console.log('会话信息', sessionId, currentSession)
-			})
-			this.visible = true
-		},
-		handlerSave() {
-			this.$refs.telnetFormRef.validate((valid) => {
-				if (valid) {
-					alert('submit!');
-				} else {
-					console.log('error submit!!');
-					return false;
-				}
-			});
-		},
-		handlerClose() {
-			this.$refs.telnetFormRef.resetFields();
+		saveOrUpdateSession()
+		emits('ok', sessionForm.value)
+		visible.value = false
+	})
+}
+
+const handleSaveAndConnect = () => {
+	telnetFormRef.value.validate((valid) => {
+		if (!valid) {
+			return false
 		}
+		saveOrUpdateSession()
+		sessionManager.createSessionInstance(sessionConfig.value)
+		emits('ok', sessionForm.value)
+		visible.value = false
+	})
+}
+
+const handlerClose = () => {
+	isEdit.value = false
+	activeTab.value = 'base'
+	sessionConfig.value = undefined
+	sessionForm.value = { ...defaultForm }
+	telnetFormRef.value?.clearValidate()
+}
+
+defineExpose({ showModal })
+</script>
+
+<style lang="scss" scoped>
+::v-deep .el-dialog__body {
+	height: 400px;
+}
+
+.n-session-ssh-container {
+	display: flex;
+	justify-content: space-between;
+	column-gap: 10px;
+
+	&__left {
+		width: 30%;
+		padding-top: 12px;
 	}
 
+	&__right {
+		flex: 1;
+
+		.n-port-forward {
+			display: flex;
+			column-gap: 5px;
+			justify-content: space-between;
+			width: 100%;
+
+			&__source,
+			&__target {
+				flex: 1;
+				display: inline-flex;
+				column-gap: 5px;
+			}
+		}
+
+		.n-theme-form {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-gap: 10px;
+			padding-right: 10px;
+			max-height: 340px;
+			grid-template-areas: 'normal theme';
+
+			.theme {
+				grid-area: theme;
+				grid-column: 2 / span 1;
+				grid-row: 1 / span 5;
+				max-height: 255px;
+			}
+		}
+	}
 }
-</script>
+</style>
