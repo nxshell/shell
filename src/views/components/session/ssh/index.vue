@@ -352,15 +352,17 @@ const handleCancel = () => {
 
 const saveOrUpdate = () => {
 	// 更新配置信息
-	const name =
-		sessionConfig.value.name === '' || sshSubForm.value.hostName !== sessionConfig.value.name
-			? sshSubForm.value.hostName
-			: sessionConfig.value.name
+	const sessionName = sshSubForm.value.hostName
 	if (isEdit.value) {
-		sessionConfig.value.update(name, Object.assign(sessionConfig.value.config, sshSubForm.value), '')
+		sessionConfig.value.update(sessionName, Object.assign(sessionConfig.value.config, sshSubForm.value), '')
 	} else {
 		// 创建会话配置
-		sessionConfig.value = new SessionConfig(name, SESSION_CONFIG_TYPE.NODE, sshSubForm.value, 'telnet session')
+		sessionConfig.value = new SessionConfig(
+			sessionName,
+			SESSION_CONFIG_TYPE.NODE,
+			sshSubForm.value,
+			'telnet session'
+		)
 		// 添加会话配置
 		sessionStore.appendSessionConfig(sessionConfig.value)
 	}

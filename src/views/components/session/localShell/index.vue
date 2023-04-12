@@ -1,6 +1,6 @@
 <template>
 	<el-dialog
-		title="Telnet 会话"
+		title="LocalShell 会话"
 		:visible="visible"
 		append-to-body
 		width="70%"
@@ -53,23 +53,6 @@
 			</div>
 			<div class="n-session-ssh-container__right">
 				<el-tabs v-model="activeTab" type="border-card">
-					<!-- 通用 -->
-					<el-tab-pane :label="t('components.session.base.label')" name="base">
-						<el-row :gutter="10">
-							<el-col :span="12">
-								<!-- 主机 -->
-								<el-form-item :label="$t('home.profile.base.host.title')" prop="hostAddress">
-									<el-input v-model="sessionForm.hostAddress" />
-								</el-form-item>
-							</el-col>
-							<el-col :span="12">
-								<!-- 端口 -->
-								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
-									<el-input-number v-model="sessionForm.hostTelnetPort" :min="1" :max="65535" />
-								</el-form-item>
-							</el-col>
-						</el-row>
-					</el-tab-pane>
 					<!-- 主题 -->
 					<el-tab-pane :label="t('components.session.theme.label')" name="theme">
 						<div class="n-theme-form">
@@ -144,9 +127,9 @@ import { useSessionStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { getCurrentInstance, ref } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
-import { configItems } from '../ssh/xtermTheme'
-import { defaultForm } from './constants'
 import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
+import { defaultForm } from './constants'
+import { configItems } from '@/views/components/session/ssh/xtermTheme'
 
 const { t } = useI18n()
 const emits = defineEmits(['ok', 'cancel'])
@@ -154,13 +137,11 @@ const visible = ref(false)
 const telnetFormRef = ref()
 const sessionForm = ref({ ...defaultForm })
 const telnetFormRules = {
-	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }],
-	host: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
-	hostTelnetPort: [{ required: true, message: '请输入主机端口', trigger: 'blur' }]
+	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }]
 }
 const sessionStore = useSessionStore()
 const { group } = storeToRefs(sessionStore)
-const activeTab = ref('base')
+const activeTab = ref('theme')
 const isEdit = ref(false)
 const proxy = getCurrentInstance().proxy
 const sessionManager = proxy.$sessionManager
@@ -220,7 +201,6 @@ const handleSaveAndConnect = () => {
 
 const handlerClose = () => {
 	isEdit.value = false
-	activeTab.value = 'base'
 	sessionConfig.value = undefined
 	sessionForm.value = { ...defaultForm }
 	telnetFormRef.value?.clearValidate()

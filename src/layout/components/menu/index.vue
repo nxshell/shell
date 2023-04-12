@@ -47,9 +47,8 @@
         </el-scrollbar>
         <!--编辑文件夹-->
         <nx-folder-dialog ref="folderDialogRef" />
-        <!-- SSH会话弹窗 -->
-        <ssh-modal ref="sshModalRef" />
-        <telnet-modal ref="telnetModalRef" />
+        <!-- 编辑及新建会话弹窗 -->
+        <component ref="sessionModalRef" :is="sessionModal" />
     </div>
 </template>
 
@@ -61,10 +60,9 @@ import NSpace from '@/components/space'
 import { showContextMenu } from '@/components/menu/contextmenu'
 import { storeToRefs } from 'pinia'
 import { useNxTabsStore, useSessionStore } from '@/store'
-import { SshModal } from '@/views/components'
-import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref, watchEffect } from 'vue'
+import { shallowRef, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
-import TelnetModal from '@/views/components/session/telnet/index.vue'
+import { shellModalInstance } from '@/views/components/session'
 
 const sessionTreeRef = ref()
 const folderDialogRef = ref()
@@ -81,6 +79,8 @@ const {} = storeToRefs(nxTabStore)
 const { menuTree, search, currentNode } = storeToRefs(sessionStore)
 const proxy = getCurrentInstance().proxy
 const sessionManager = proxy.$sessionManager
+const sessionModal = shallowRef()
+const sessionModalRef = ref()
 
 const createFolder = (name) => {
     folderDialogRef.value?.show(name)
@@ -126,15 +126,7 @@ const handleSessionTreeContextMenu_Paste = () => {
         clipboard.operate = ''
     }
 }
-/**
- * 编辑会话弹窗
- *
- * @return {Promise<void>}
- */
-const handleSessionTreeContextMenu_Prop = () => {
-    telnetModalRef.value?.showModal(currentNode.value.sessionId)
-    // sshModalRef.value?.showModal(currentNode.value.sessionId)
-}
+
 /**
  * 删除会话或者会话目录
  */
@@ -144,13 +136,15 @@ const handleSessionTreeContextMenu_Delete = () => {
         sessionConfig.type === SESSION_CONFIG_TYPE.NODE
             ? t('home.host-manager.dialog-delete-confirm.delete-node', [sessionConfig.name])
             : t('home.host-manager.dialog-delete-confirm.delete-folder', [sessionConfig.name])
-    proxy.$confirm(message, t('home.host-manager.dialog-delete-confirm.title'), {
-        type: 'warning'
-    }).then(() => {
-        sessionManager.removeSessionConfig(sessionConfig)
-        handleSessionTreeContainerClick()
-        sessionStore.updateProcess()
-    })
+    proxy
+        .$confirm(message, t('home.host-manager.dialog-delete-confirm.title'), {
+            type: 'warning'
+        })
+        .then(() => {
+            sessionManager.removeSessionConfig(sessionConfig)
+            handleSessionTreeContainerClick()
+            sessionStore.updateProcess()
+        })
 }
 
 /**
@@ -218,6 +212,11 @@ async function importSessionConfig() {
     }
 }
 
+const createShellModal = (type) => {
+    sessionModal.value = shellModalInstance(type)
+    nextTick(() => sessionModalRef.value?.showModal())
+}
+
 const contextMenus = {
     folder: [
         {
@@ -232,23 +231,27 @@ const contextMenus = {
                 {
                     label: 'SSH',
                     type: 'normal',
-                    handler: () => sshModalRef.value?.showModal()
+                    handler: () => createShellModal('ssh')
                 },
                 {
                     label: 'SFTP',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => createShellModal('ftp')
                 },
                 {
                     label: 'Serial',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => createShellModal('serial')
                 },
                 {
                     label: 'Telnet',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => createShellModal('telnet')
                 },
                 {
                     label: 'VNC',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => createShellModal('vnc')
                 }
             ]
         },
@@ -302,7 +305,11 @@ const contextMenus = {
         {
             label: 'home.sessions-context-menu.prop',
             type: 'normal',
-            handler: handleSessionTreeContextMenu_Prop
+            handler: () => {
+                const { sessionId, protocol } = currentNode.value
+                sessionModal.value = shellModalInstance(protocol)
+                nextTick(() => sessionModalRef.value?.showModal(sessionId))
+            }
         }
     ],
     empty: [
@@ -318,23 +325,51 @@ const contextMenus = {
                 {
                     label: 'SSH',
                     type: 'normal',
-                    handler: () => sshModalRef.value?.showModal()
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('ssh')
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
                 },
                 {
                     label: 'SFTP',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('ftp')
+                        console.log('会话', sessionModal.value)
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
                 },
                 {
                     label: 'Serial',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('serial')
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
                 },
                 {
                     label: 'Telnet',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('telnet')
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
+                },
+                {
+                    label: 'localShell',
+                    type: 'normal',
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('localShell')
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
                 },
                 {
                     label: 'VNC',
-                    type: 'normal'
+                    type: 'normal',
+                    handler: () => {
+                        sessionModal.value = shellModalInstance('vnc')
+                        nextTick(() => sessionModalRef.value?.showModal())
+                    }
                 }
             ]
         },
@@ -379,7 +414,10 @@ const handleNodeExpand = (data, node) => {
 }
 
 const handleNodeCollapse = (data, node, vnode, element) => {
-    menuProps.expandedKeys.splice(menuProps.expandedKeys.findIndex((item) => item === node.key), 1)
+    menuProps.expandedKeys.splice(
+        menuProps.expandedKeys.findIndex((item) => item === node.key),
+        1
+    )
 }
 
 const handleNodeSelected = (data, node, _vnode, _element) => {
@@ -428,8 +466,8 @@ const nodeContextmenu = (event, data, node, vnode) => {
 }
 
 const menuSearch = (value, data) => {
-    if (!value) return true;
-    return data.text.indexOf(value) !== -1;
+    if (!value) return true
+    return data.text.indexOf(value) !== -1
 }
 onMounted(() => {
     // 订阅主机搜索事件
@@ -441,7 +479,8 @@ onMounted(() => {
     // 订阅菜单刷新事件
     subscript('refresh-session-tree', () => sessionStore.updateProcess())
     // 订阅会话创建事件
-    subscript('create-session-toolbar', () => telnetModalRef.value?.showModal())
+    // subscript('create-session-toolbar', () => telnetModalRef.value?.showModal())
+    subscript('create-session-toolbar', (type) => createShellModal(type))
     nextTick(() => sessionStore.updateCurrentNode(sessionTreeRef.value))
 })
 onBeforeUnmount(() => {

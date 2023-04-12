@@ -1,6 +1,6 @@
 <template>
 	<el-dialog
-		title="Telnet 会话"
+		title="Serial 会话"
 		:visible="visible"
 		append-to-body
 		width="70%"
@@ -57,15 +57,80 @@
 					<el-tab-pane :label="t('components.session.base.label')" name="base">
 						<el-row :gutter="10">
 							<el-col :span="12">
-								<!-- 主机 -->
-								<el-form-item :label="$t('home.profile.base.host.title')" prop="hostAddress">
-									<el-input v-model="sessionForm.hostAddress" />
+								<!-- 端口 -->
+								<el-form-item :label="$t('home.profile.serial.port.title')" prop="port">
+									<el-select v-model="sessionForm.port">
+										<el-option value="COM1">COM1</el-option>
+									</el-select>
 								</el-form-item>
 							</el-col>
 							<el-col :span="12">
-								<!-- 端口 -->
-								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
-									<el-input-number v-model="sessionForm.hostTelnetPort" :min="1" :max="65535" />
+								<!-- 主机 -->
+								<el-form-item :label="$t('home.profile.serial.baudRate.title')" prop="baudRate">
+									<el-select v-model="sessionForm.baudRate" allow-create filterable>
+										<el-option
+											v-for="item in baudRateOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+										/>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter="10">
+							<el-col :span="12">
+								<!-- 数据位 -->
+								<el-form-item :label="$t('home.profile.serial.dataBits.title')" prop="dataBits">
+									<el-select v-model="sessionForm.dataBits">
+										<el-option
+											v-for="item in dataBitsOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+										/>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<!-- 停止位 -->
+								<el-form-item :label="$t('home.profile.serial.stopBits.title')" prop="stopBits">
+									<el-select v-model="sessionForm.stopBits">
+										<el-option
+											v-for="item in stopBitsOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+										/>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter="10">
+							<el-col :span="12">
+								<!-- 主机 -->
+								<el-form-item :label="$t('home.profile.serial.parity.title')" prop="parity">
+									<el-select v-model="sessionForm.parity">
+										<el-option
+											v-for="item in parityOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+										/>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<!-- 流控方式 -->
+								<el-form-item :label="$t('home.profile.serial.flowControl.title')" prop="flowControl">
+									<el-select v-model="sessionForm.flowControl">
+										<el-option
+											v-for="item in flowControlOptions"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+										/>
+									</el-select>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -144,8 +209,15 @@ import { useSessionStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { getCurrentInstance, ref } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
-import { configItems } from '../ssh/xtermTheme'
-import { defaultForm } from './constants'
+import {
+	defaultForm,
+	baudRateOptions,
+	parityOptions,
+	flowControlOptions,
+	dataBitsOptions,
+	stopBitsOptions
+} from './constants'
+import { configItems } from '@/views/components/session/ssh/xtermTheme'
 import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 
 const { t } = useI18n()

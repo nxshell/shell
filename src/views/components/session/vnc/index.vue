@@ -1,6 +1,6 @@
 <template>
 	<el-dialog
-		title="Telnet 会话"
+		title="VNC 会话"
 		:visible="visible"
 		append-to-body
 		width="70%"
@@ -64,65 +64,25 @@
 							</el-col>
 							<el-col :span="12">
 								<!-- 端口 -->
-								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostTelnetPort">
-									<el-input-number v-model="sessionForm.hostTelnetPort" :min="1" :max="65535" />
+								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostVncPort">
+									<el-input-number v-model="sessionForm.hostVncPort" :min="1" :max="65535" />
 								</el-form-item>
 							</el-col>
 						</el-row>
-					</el-tab-pane>
-					<!-- 主题 -->
-					<el-tab-pane :label="t('components.session.theme.label')" name="theme">
-						<div class="n-theme-form">
-							<template v-for="item in configItems">
-								<el-row :title="t(item.description)" class="item">
-									<el-col :span="6">
-										<label>{{ t(item.title) }}</label>
-									</el-col>
-									<el-col :offset="3" :span="14">
-										<el-input
-											v-model="sessionForm[item.name]"
-											v-if="['text', 'password'].includes(item.type)"
-											:type="item.type"
-										/>
-										<el-input-number
-											v-model="sessionForm[item.name]"
-											v-if="item.type === 'number'"
-											:step="item.step"
-											:min="1"
-											style="width: 100%"
-										/>
-										<el-switch v-model="sessionForm[item.name]" v-if="item.type === 'switch'" />
-										<el-radio-group
-											v-if="item.type === 'radio-group'"
-											v-model="sessionForm[item.name]"
-										>
-											<el-radio-button
-												v-for="(r, index) in item.options"
-												:label="r.value"
-												:key="index"
-											>
-												{{ r.label }}
-											</el-radio-button>
-										</el-radio-group>
-										<el-select
-											v-model="sessionForm[item.name]"
-											v-if="item.type === 'select'"
-											style="width: 100%"
-										>
-											<el-option
-												v-for="(opt, idx) in item.options"
-												:key="idx"
-												:label="t(opt.label)"
-												:value="opt.value"
-											/>
-										</el-select>
-									</el-col>
-								</el-row>
-							</template>
-							<div class="item theme">
-								<xtermThemeList :value.sync="sessionForm.xtermTheme" :theme-options="sessionForm" />
-							</div>
-						</div>
+						<el-row :gutter="10">
+							<el-col :span="12">
+								<!-- 用户名 -->
+								<el-form-item :label="$t('home.profile.auth.username.title')" prop="username">
+									<el-input v-model="sessionForm.username" />
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<!-- 密码 -->
+								<el-form-item :label="$t('home.profile.auth.password.title')" prop="password">
+									<el-input v-model="sessionForm.password" />
+								</el-form-item>
+							</el-col>
+						</el-row>
 					</el-tab-pane>
 				</el-tabs>
 			</div>
@@ -144,9 +104,7 @@ import { useSessionStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { getCurrentInstance, ref } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
-import { configItems } from '../ssh/xtermTheme'
 import { defaultForm } from './constants'
-import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 
 const { t } = useI18n()
 const emits = defineEmits(['ok', 'cancel'])
@@ -155,8 +113,8 @@ const telnetFormRef = ref()
 const sessionForm = ref({ ...defaultForm })
 const telnetFormRules = {
 	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }],
-	host: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
-	hostTelnetPort: [{ required: true, message: '请输入主机端口', trigger: 'blur' }]
+	hostAddress: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
+	hostVncPort: [{ required: true, message: '请输入主机端口', trigger: 'blur' }]
 }
 const sessionStore = useSessionStore()
 const { group } = storeToRefs(sessionStore)

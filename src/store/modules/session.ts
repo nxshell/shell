@@ -20,6 +20,7 @@ interface IGroupProps {
 
 export interface ITreeNode {
     sessionId: number | undefined
+    protocol: string
     label: string
     isFolder: boolean
     node: TreeNode<string, IMenuNode> | undefined
@@ -33,6 +34,7 @@ const useSessionStore = defineStore('session', () => {
     const search = ref<boolean>(false)
     const currentNode = reactive<ITreeNode>({
         sessionId: undefined,
+        protocol: '',
         label: '',
         isFolder: false,
         node: undefined,
@@ -121,6 +123,7 @@ const useSessionStore = defineStore('session', () => {
      */
     function updateCurrentNode(nodeElement: any, node?: TreeNode<string, IMenuNode>, nodeData?: IMenuNode) {
         currentNode.sessionId = nodeData?.id
+        currentNode.protocol = nodeData?.protocol ?? ''
         currentNode.label = nodeData?.text ?? ''
         currentNode.nodeElement = nodeElement
         currentNode.node = node
