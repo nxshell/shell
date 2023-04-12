@@ -6,5 +6,6 @@ export const defaultForm = {
 	hostName: '',
 	system: 'linux',
 	group: '',
+	xtermTheme: 'Night_3024',
 	...formItem
 }

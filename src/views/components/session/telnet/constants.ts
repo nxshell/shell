@@ -8,5 +8,6 @@ export const defaultForm = {
 	group: '',
 	hostAddress: '',
 	hostTelnetPort: 23,
+	xtermTheme: 'Night_3024',
 	...formItem
 }

@@ -12,6 +12,7 @@ export const defaultForm = {
 	parity: 'none',
 	flowControl: 'none',
 	port: 'COM1',
+	xtermTheme: 'Night_3024',
 	...formItem
 }
 
