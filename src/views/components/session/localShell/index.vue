@@ -129,13 +129,14 @@ import { getCurrentInstance, ref } from 'vue'
 import { useI18n } from 'vue-i18n-bridge'
 import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 import { defaultForm } from './constants'
-import { configItems } from '@/views/components/session/ssh/xtermTheme'
+import { initDefaultThemeOptions } from '../constants'
 
+const { configItems, formItem } = initDefaultThemeOptions()
 const { t } = useI18n()
 const emits = defineEmits(['ok', 'cancel'])
 const visible = ref(false)
 const telnetFormRef = ref()
-const sessionForm = ref({ ...defaultForm })
+const sessionForm = ref({ ...defaultForm, ...formItem })
 const telnetFormRules = {
 	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }]
 }

@@ -276,16 +276,17 @@ export default {
 </script>
 
 <script setup>
-import { getCurrentInstance, ref, watchEffect } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSessionStore } from '@/store'
-import { useI18n } from 'vue-i18n-bridge'
-import { publish } from '@/services/eventbus'
 import { querySearch } from '@/icons/system-icon'
-import { configItems, formItem } from './xtermTheme'
-import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
+import { publish } from '@/services/eventbus'
 import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
+import { useSessionStore } from '@/store'
+import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
+import { storeToRefs } from 'pinia'
+import { getCurrentInstance, ref } from 'vue'
+import { useI18n } from 'vue-i18n-bridge'
+import { initDefaultThemeOptions } from '../constants'
 
+const { configItems, formItem } = initDefaultThemeOptions()
 const { t } = useI18n()
 const visible = ref(false)
 const sshSubFormRef = ref()
