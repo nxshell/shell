@@ -6,6 +6,7 @@
 			</span>
 			<p class="n-logo-text">NxShell</p>
 		</div>
+		<h1>{{ t('app.welcome') }}</h1>
 		<div class="n-home-footer">
 			<div class="n-home-footer__feedback">
 				<n-space :size="20">
@@ -15,36 +16,28 @@
 					</el-link>
 					<el-link :underline="false" @click="toIssues">
 						<n-icon name="bug" />
-						{{ $t('home.welcome.reportProblem') }}
+						{{ t('home.welcome.reportProblem') }}
 					</el-link>
 				</n-space>
 			</div>
-			<div class="n-home-footer__version">{{ $t('home.welcome.software-version') }} {{ version }}</div>
+			<div class="n-home-footer__version">{{ t('home.welcome.software-version') }} {{ version }}</div>
 		</div>
 	</div>
 </template>
 
-<script>
-export default {
-	name: 'NxWelcome',
-	data() {
-		return {}
-	},
-	computed: {
-		version() {
-			return `V${powertools.getVersion()}`
-		}
-	},
-	methods: {
-		toStar() {
-			const github = 'https://github.com/nxshell/nxshell'
-			powertools.openExterUrl(github)
-		},
-		toIssues() {
-			const issues = 'https://github.com/nxshell/nxshell/issues'
-			powertools.openExterUrl(issues)
-		}
-	}
+<script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n-bridge'
+
+const { t } = useI18n()
+const version = computed(() => `V${ window.powertools.getVersion() }`)
+const toStar = () => {
+	const github = 'https://github.com/nxshell/nxshell'
+	window.powertools.openExterUrl(github)
+}
+const toIssues = () => {
+	const issues = 'https://github.com/nxshell/nxshell/issues'
+	window.powertools.openExterUrl(issues)
 }
 </script>
 
@@ -62,12 +55,14 @@ export default {
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
 		.n-logo {
 			display: inline-block;
 			width: 80px;
 			height: 80px;
 			box-sizing: border-box;
 			z-index: 0;
+
 			&::before {
 				position: absolute;
 				content: '';
@@ -81,12 +76,14 @@ export default {
 				-webkit-mask-image: linear-gradient(transparent, #000);
 			}
 		}
+
 		.n-logo-text {
 			margin-left: 60px;
 			font-size: 80px;
 			font-weight: 700;
 			color: #132847;
 			z-index: 0;
+
 			&::before {
 				position: absolute;
 				content: 'NxShell';

@@ -8,15 +8,35 @@
 			suffix-icon="el-icon-search"
 		/>
 		<n-space :size="5">
-			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-folder')" placement="top-start">
+			<el-tooltip
+				class="item"
+				effect="dark"
+				:content="$t('home.sessions-context-menu.create-folder')"
+				placement="top-start"
+			>
 				<span class="host-tree-btn" @click.prevent="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
-			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-session')" placement="top-start">
-				<span class="host-tree-btn" @click.prevent="gotoCreateShellSession">
-					<i class="el-icon-circle-plus-outline" />
-				</span>
+			<el-tooltip
+				class="item"
+				effect="dark"
+				:content="$t('home.sessions-context-menu.create-session')"
+				placement="top-start"
+			>
+				<el-popover placement="top-start" trigger="click">
+					<span slot="reference" class="host-tree-btn">
+						<i class="el-icon-circle-plus-outline" />
+					</span>
+					<ul class="n-session-mode" @click.prevent="gotoCreateShellSession">
+						<li class="n-session-mode__item" data-type="ssh">ssh</li>
+						<li class="n-session-mode__item" data-type="ftp">ftp</li>
+						<li class="n-session-mode__item" data-type="telnet">telnet</li>
+						<li class="n-session-mode__item" data-type="serial">serial</li>
+						<li class="n-session-mode__item" data-type="vnc">vnc</li>
+						<li class="n-session-mode__item" data-type="localShell">localShell</li>
+					</ul>
+				</el-popover>
 			</el-tooltip>
 		</n-space>
 	</div>
@@ -29,7 +49,7 @@ export default {
 	name: 'NxToolbar',
 	data() {
 		return {
-			searchKeywords: '',
+			searchKeywords: ''
 		}
 	},
 	watch: {
@@ -40,12 +60,13 @@ export default {
 		}
 	},
 	methods: {
-		async gotoCreateShellSession() {
-			EventBus.publish('create-session-toolbar', {})
+		async gotoCreateShellSession(e) {
+			const type = e.target.dataset.type || 'ssh' // default to ssh if none specified.
+			EventBus.publish('create-session-toolbar', type)
 		},
 		handleCreateFolder() {
-			EventBus.publish('create-session-folder', {})
-		},
+			EventBus.publish('create-session-folder')
+		}
 	}
 }
 </script>
@@ -85,6 +106,22 @@ export default {
 		&:hover {
 			cursor: pointer;
 			background-color: var(--n-button-primary-hover);
+		}
+	}
+}
+
+.n-session-mode {
+	padding: 10px 5px;
+	background-color: var(--n-select-bg-color);
+
+	&__item {
+		padding: 5px 10px;
+		color: var(--n-text-color-light);
+
+		&:hover {
+			cursor: pointer;
+			border-radius: 4px;
+			background-color: var(--n-select-hover-bg-color);
 		}
 	}
 }

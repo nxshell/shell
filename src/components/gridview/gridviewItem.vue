@@ -2,7 +2,7 @@
 	<div class="pt-grid-view-item" :style="itemStyle" :class="mode" @mousedown.stop @contextmenu="handleContextMenu">
 		<div class="pt-grid-view-item-container" :class="{selected: selected}" @click="selectItem" @dblclick="openItem">
 			<template v-if="!showExtFields">
-				<n-icon v-if="value.icon" :name="value.icon" :type="value.iconType || 'svg'" :size="iconSize" />
+				<n-icon v-if="value.icon" :name="`${value.icon.replace('.svg','')}`" :type="'svg'" :size="iconSize" />
 				<span class="name">{{ value.name }}</span>
 			</template>
 			<template v-if="showExtFields">
@@ -14,7 +14,7 @@
 							minWidth: columns[0].minWidth + 'px'
 						}"
 					>
-						<n-icon :name="value.icon" :size="iconSize" :type="value.iconType || 'svg'" />
+						<n-icon :name="`${value.icon.replace('.svg','')}`" :size="iconSize" :type="'svg'" />
 						<span class="name" :class="{normal: !selected, selected}" :title="value.name">
 							{{ value.name }}
 						</span>
@@ -33,7 +33,7 @@
 					</span>
 				</template>
 				<template v-if="mode === 'tile'">
-					<n-icon :name="value.icon" :size="iconSize" :type="value.iconType || 'svg'" />
+					<n-icon :name="`${value.icon.replace('.svg','')}`" :size="iconSize" :type="'svg'" /> {{ value.icon }}
 					<div class="tile-fields">
 						<span>{{ value.name }}</span>
 						<span v-for="(field, idx) in extFields" :key="value.name + idx" class="ext-fields">

@@ -3,7 +3,7 @@ import Storage from "./storage";
 type GlobalCategoryType = "xterm" | "storage";
 
 interface IProfile {
-    [propName: string]: number | string | object | any[]
+    [propName: string]: number | string | object | boolean | any[]
 }
 
 let globalCategory: {

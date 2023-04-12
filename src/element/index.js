@@ -13,6 +13,7 @@ import {
 	Col,
 	TabPane,
 	Switch,
+	Autocomplete,
 	Form,
 	FormItem,
 	Input,
@@ -57,6 +58,7 @@ const element = {
 		Vue.use(Form).use(FormItem)
 		Vue.use(Input)
 		Vue.use(InputNumber)
+		Vue.use(Autocomplete)
 		Vue.use(Dialog)
 		Vue.use(Alert)
 		Vue.use(Scrollbar)

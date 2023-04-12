@@ -4,7 +4,6 @@
 			<nx-menus ref="menuRef" />
 		</div>
 		<div class="nx-layout-right" :style="{width: `calc(100% - ${configPanel ? 295 : 0}px)`}">
-			<!-- toggle-bar	-->
 			<div
 				class="nx-layout-toggle-bar"
 				:class="{'nx-layout-toggle-bar--collapsed': configPanel}"
@@ -15,46 +14,38 @@
 			</div>
 			<nx-tab-menu v-if="showTabs" />
 			<div class="nx-content" :style="{height: `calc(100% - ${showTabs ? '40px':'0px' })`}">
-				<keep-alive>
-					<router-view :key="$route.name" />
+				<keep-alive :exclude="['GlobalSetting', 'lock']">
+					<router-view />
 				</keep-alive>
 			</div>
 		</div>
 	</div>
 </template>
-<script>
+<script setup>
 import * as EventBus from '@/services/eventbus'
 import { NxMenus, NxTabMenu } from './components'
-import { mapMutations, mapState } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { getCurrentInstance, onBeforeMount } from "vue";
+import { useNxTabsStore } from '@/store'
 
-export default {
-	name: 'Home',
-	components: { NxMenus, NxTabMenu },
-	data() {
-		return {}
-	},
-	computed: {
-		...mapState(['configPanel', 'showTabs'])
-	},
-	created() {
-		this.init()
-	},
-	methods: {
-		...mapMutations(['setConfigPanel']),
-		handlerCollapsed() {
-			const action = this.configPanel ? 'close' : 'open'
-			EventBus.publish('session-config-panel', action)
-			this.setConfigPanel(!this.configPanel)
-		},
+const { configPanel, showTabs } = storeToRefs(useNxTabsStore())
+const proxy = getCurrentInstance()?.proxy
 
-		async init() {
-			// 避免重复创建欢迎会话实例
-			if (!this.$sessionManager.getSessionIntances().find(x => x.name === 'Welcome')) {
-				await this.$sessionManager.createWelcomeSessionInstance()
-			}
-		}
-	}
+const handlerCollapsed = () => {
+	const action = configPanel.value ? 'close' : 'open'
+	configPanel.value = !configPanel.value
+	EventBus.publish('session-config-panel', action)
 }
+
+onBeforeMount(async () => {
+	// @ts-ignore
+	const sessionManager = proxy.$sessionManager
+	// 避免重复创建欢迎会话实例
+	if (!sessionManager.getSessionIntances().find((x) => x.name === 'Welcome')) {
+		await sessionManager.createWelcomeSessionInstance()
+	}
+})
+
 </script>
 
 <style lang="scss" scoped>

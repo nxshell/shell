@@ -245,7 +245,6 @@ export default {
 			const { startRow, endRow } = this.viewVisual
 
 			const cols = this.view.cols
-
 			return this.items.slice(startRow * cols, (endRow + 1) * cols)
 		},
 

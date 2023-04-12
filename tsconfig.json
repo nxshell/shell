@@ -2,10 +2,14 @@
     "compilerOptions": {
         "target": "ES2015",
         "module": "commonjs",
-        "strict": true, // 启用所有严格类型检查选项
+        // 鍚敤鎵�鏈変弗鏍肩被鍨嬫鏌ラ�夐」
+        "strict": true,
+        // 绂佹this 鍊间负 any
+        "noImplicitThis": true,
         "allowJs": true,
         "strictNullChecks": true,
         "esModuleInterop": true,
+        "moduleResolution": "node16",
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
@@ -15,11 +19,12 @@
         }
     },
     "include": [
+        "src/**/*.js",
         "src/**/*.ts",
-        "src/**/*.d.ts",
         "src/**/*.tsx",
         "src/**/*.vue",
-        "src/types/**/*.ts"
+        "src/types/**/*.d.ts",
+        "/common/**/*.js"
     ],
     "vueCompilerOptions": {
         "target": 2.7,

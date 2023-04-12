@@ -56,6 +56,7 @@ class Dirent extends FStats {
     }
 
     getMTime() {
+        console.log('时间',new Date(this.stats.date))
         return new Date(this.stats.date);
     }
 

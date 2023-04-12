@@ -21,25 +21,57 @@
             "keyboard-input-on": "打开",
             "keyboard-input-note": "键盘输入将发送到所有打开接受的会话中"
         },
+        "ssh": {
+            "modal-title-add": "新增SSH会话",
+            "modal-title-edit": "编辑SSH会话"
+        },
         "auth": {
             "title": "用户认证",
             "authType": {
                 "title": "认证方式"
             },
             "username": {
-                "title": "用户名"
+                "title": "用户名",
+                "placeholder": "请输入用户名"
             },
             "password": {
-                "title": "密码"
+                "title": "密码",
+                "placeholder": "请输入密码"
             },
             "publickey": {
-                "title": "秘钥"
+                "title": "秘钥",
+                "placeholder": "请选择秘钥"
             },
             "keyboard": {
                 "title": "键盘交互"
             },
             "passphrase": {
-                "title": "秘钥密码"
+                "title": "秘钥密码",
+                "placeholder": "请输入秘钥密码"
+            }
+        },
+        "session": {
+            "base": {
+                "label": "通用",
+                "link-type": {
+                    "label": "链接类型",
+                    "placeholder": "请选择链接类型",
+                    "options": {
+                        "directly": "直连",
+                        "socks": "Socks 代理"
+                    }
+                }
+            },
+            "port": {
+                "label": "端口"
+            },
+            "advanced": {
+                "label": "高级"
+            },
+            "theme": {
+                "label": "主题"
+            },
+            "ssh": {
             }
         }
     },
@@ -124,7 +156,12 @@
                 "title": "基础配置",
                 "host-name": {
                     "title": "主机名称",
+                    "placeholder": "请输入主机名称",
                     "description": "主机名称可以使用字符或者数字，此处为必填项。"
+                },
+                "host-group": {
+                    "title": "主机分组",
+                    "placeholder": "请选择分组"
                 },
                 "os": {
                     "title": "操作系统",
@@ -139,10 +176,12 @@
                 },
                 "host": {
                     "title": "主机",
-                    "description": "主机地址，可以为IP地址（IPv4/IPv6），主机名称或者域名。"
+                    "description": "请输入主机地址 \"IP地址（IPv4/IPv6），主机名称或者域名。\"",
+                    "placeholder": "请输入主机地址"
                 },
                 "port": {
                     "title": "端口",
+                    "placeholder": "请输入主机端口",
                     "description": "主机端口，默认为：22(SSH默认端口);",
                     "ftpdescription": "主机端口，默认为：21(FTP默认端口);",
                     "telnetdescription": "主机端口，默认：23(Telnet默认端口);",
@@ -274,7 +313,7 @@
                     "description": "字符间距"
                 },
                 "cursorBlink": {
-                    "title": "光标是否闪烁",
+                    "title": "闪烁",
                     "description": "光标是否闪烁"
                 },
                 "cursorStyle": {
@@ -349,19 +388,23 @@
                 },
                 "username": {
                     "title": "登录用户名",
-                    "description": "登录主机的用户名。"
+                    "description": "登录主机的用户名。",
+                    "placeholder": "请输入登录用户名"
                 },
                 "password": {
                     "title": "密码",
-                    "description": "登录主机的所使用的密码。"
+                    "description": "登录主机的所使用的密码。",
+                    "placeholder": "请输入密码"
                 },
                 "publickey": {
                     "title": "私钥",
-                    "description": "请选择与主机配对的私钥，可以选择私钥或者拖放私钥文件到下方区域中。"
+                    "description": "请选择与主机配对的私钥，可以选择私钥或者拖放私钥文件到下方区域中。",
+                    "placeholder": "请选择与主机配对的私钥"
                 },
                 "passphrase": {
                     "title": "私有钥密码",
-                    "description": "如有密钥密码,请输入配对密钥的密码在下方区域中。"
+                    "description": "如有密钥密码,请输入配对密钥的密码在下方区域中。",
+                    "placeholder": "如有密钥密码，请输入"
                 },
                 "secure": {
                     "title": "SSL链接方式",

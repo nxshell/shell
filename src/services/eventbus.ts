@@ -13,7 +13,7 @@ export function getGlobalEventBus(): EventBus {
 export declare type EventType = "instance-created" | "instance-updated" | "instance-destroyed" | "instance-close" |
     "session-created" | "session-update" | "session-destroyed" | "session-added" |
     "session-removed" | "create-session" | 'create-session-toolbar' | "create-session-folder" | "session-config-panel"
-    | "enter-fullscreen" | "nx-menu-search" | "refresh-session-tree" | 'change-layout';
+    | "enter-fullscreen" | "nx-menu-search" | "refresh-session-tree" | 'change-layout' | 'xterm-send-to-all';
 
 export function subscript(evtType: EventType, handler: Function): void {
     globalEventBus.subscript(evtType, handler);
