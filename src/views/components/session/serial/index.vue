@@ -60,7 +60,9 @@
 								<!-- 端口 -->
 								<el-form-item :label="$t('home.profile.serial.port.title')" prop="port">
 									<el-select v-model="sessionForm.port">
-										<el-option value="COM1">COM1</el-option>
+										<el-option v-for="(item, index) in serialPorts" :value="item" :key="index">
+											{{ item }}
+										</el-option>
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -202,6 +204,7 @@
 	</el-dialog>
 </template>
 <script setup>
+import { onMounted } from 'vue'
 import { querySearch } from '@/icons/system-icon'
 import { publish } from '@/services/eventbus'
 import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
@@ -217,14 +220,15 @@ import {
 	dataBitsOptions,
 	stopBitsOptions
 } from './constants'
-import { configItems } from '@/views/components/session/ssh/xtermTheme'
+import { initDefaultThemeOptions } from '../constants'
 import xtermThemeList from '@/views/session/components/xtermTheme/index.vue'
 
+const { configItems, formItem } = initDefaultThemeOptions()
 const { t } = useI18n()
 const emits = defineEmits(['ok', 'cancel'])
 const visible = ref(false)
 const telnetFormRef = ref()
-const sessionForm = ref({ ...defaultForm })
+const sessionForm = ref({ ...defaultForm, ...formItem })
 const telnetFormRules = {
 	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }],
 	host: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
@@ -233,6 +237,7 @@ const telnetFormRules = {
 const sessionStore = useSessionStore()
 const { group } = storeToRefs(sessionStore)
 const activeTab = ref('base')
+const serialPorts = ref(['COM1'])
 const isEdit = ref(false)
 const proxy = getCurrentInstance().proxy
 const sessionManager = proxy.$sessionManager
@@ -298,6 +303,9 @@ const handlerClose = () => {
 	telnetFormRef.value?.clearValidate()
 }
 
+onMounted(async () => {
+	serialPorts.value = await sessionInstance.getSerialPorts()
+})
 defineExpose({ showModal })
 </script>
 

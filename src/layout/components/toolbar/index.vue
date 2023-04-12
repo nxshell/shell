@@ -24,7 +24,7 @@
 				:content="$t('home.sessions-context-menu.create-session')"
 				placement="top-start"
 			>
-				<el-popover placement="top-start" trigger="click">
+				<el-popover v-model="visible" placement="top-start">
 					<span slot="reference" class="host-tree-btn">
 						<i class="el-icon-circle-plus-outline" />
 					</span>
@@ -49,7 +49,8 @@ export default {
 	name: 'NxToolbar',
 	data() {
 		return {
-			searchKeywords: ''
+			searchKeywords: '',
+			visible: false
 		}
 	},
 	watch: {
@@ -62,6 +63,7 @@ export default {
 	methods: {
 		async gotoCreateShellSession(e) {
 			const type = e.target.dataset.type || 'ssh' // default to ssh if none specified.
+			this.visible = false
 			EventBus.publish('create-session-toolbar', type)
 		},
 		handleCreateFolder() {

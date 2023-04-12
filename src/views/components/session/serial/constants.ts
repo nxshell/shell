@@ -1,5 +1,3 @@
-import { formItem } from '../ssh/xtermTheme'
-
 export const defaultForm = {
 	sessType: 'serialport',
 	protocal: 'serialport',
@@ -13,7 +11,6 @@ export const defaultForm = {
 	flowControl: 'none',
 	port: 'COM1',
 	xtermTheme: 'Night_3024',
-	...formItem
 }
 
 interface IOptionProps {
