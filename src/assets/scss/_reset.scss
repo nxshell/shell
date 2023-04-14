@@ -199,13 +199,12 @@ a {
 }
 
 .el-input {
-  &-number {
-    //&--small {
-    //  width: 218px !important;
-    //}
-
-    &__increase,
-    &__decrease {
+  &-number.is-controls-right {
+      .el-input__inner {
+        padding-right: 32px !important;
+      }
+    .el-input-number__increase,
+    .el-input-number__decrease {
       color: var(--n-text-color-base) !important;
       border-width: 0 !important;
       background-color: transparent !important;

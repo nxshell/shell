@@ -33,6 +33,7 @@ export default {
 		return createElement(
 			'div',
 			{
+				attrs: this.$attrs,
 				class: {
 					'n-space': true
 				},
@@ -44,7 +45,8 @@ export default {
 					width: this.fill ? '100%' : 'auto',
 					'row-gap': `${this.size}px`,
 					'column-gap': `${this.size}px`,
-					'flex-wrap': this.wrap ? 'wrap' : 'nowrap'
+					'flex-wrap': this.wrap ? 'wrap' : 'nowrap',
+					'box-sizing': 'border-box'
 				}
 			},
 			this.$slots.default

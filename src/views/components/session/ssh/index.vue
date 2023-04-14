@@ -3,7 +3,7 @@
 		:title="t(`${isEdit ? 'components.ssh.modal-title-edit' : 'components.ssh.modal-title-add'}`)"
 		:visible="visible"
 		append-to-body
-		width="70%"
+		width="80%"
 		:show-close="false"
 		:destroy-on-close="false"
 		:close-on-click-modal="false"
@@ -166,21 +166,55 @@
 					<!-- 端口转发 -->
 					<el-tab-pane :label="t('components.session.port.label')" name="second">
 						<el-form-item :label="t('home.profile.auth.forwardin.title')">
-							<div class="n-port-forward">
-								<div class="n-port-forward__source">
-									<el-input v-model="sshSubForm.forwardInRemoteHost" placeholder="127.0.0.1" />
-									<el-input-number v-model="sshSubForm.forwardInRemotePort" :min="1" :max="65535" />
-								</div>
-								<div class="n-port-forward__link">
-									<div style="width: 100%; display: inline-flex; justify-content: center">
+							<el-scrollbar style="height: 300px">
+								<n-space
+									v-for="(item, index) in sshSubForm.forwardIn"
+									:key="index"
+									fill
+									style="padding-right: 8px"
+								>
+									<n-space>
+										<div style="flex: 1">
+											<el-input v-model="item.remoteHost" placeholder="127.0.0.1" />
+										</div>
+										<div style="flex: 1">
+											<el-input-number
+												v-model="item.remotePort"
+												:min="1"
+												:max="65535"
+												controls-position="right"
+											/>
+										</div>
+									</n-space>
+									<div style="display: inline-flex; justify-content: center; align-items: center">
 										<i class="el-icon-right"></i>
 									</div>
-								</div>
-								<div class="n-port-forward__target">
-									<el-input v-model="sshSubForm.forwardInLocalHost" placeholder="127.0.0.1" />
-									<el-input-number v-model="sshSubForm.forwardInLocalPort" :min="1" :max="65535" />
-								</div>
-							</div>
+									<n-space>
+										<div style="flex: 1">
+											<el-input v-model="item.localHost" placeholder="127.0.0.1" />
+										</div>
+										<div style="flex: 1">
+											<el-input-number
+												v-model="item.localPort"
+												:min="1"
+												:max="65535"
+												controls-position="right"
+											/>
+										</div>
+									</n-space>
+									<n-space>
+										<el-button type="text" icon="el-icon-plus" @click="addForward"></el-button>
+										<el-button
+											type="text"
+											icon="el-icon-delete"
+											:style="{
+												visibility: sshSubForm.forwardIn.length > 1 ? 'visible' : 'hidden'
+											}"
+											@click="removeForward(index)"
+										></el-button>
+									</n-space>
+								</n-space>
+							</el-scrollbar>
 						</el-form-item>
 					</el-tab-pane>
 					<!-- 主题 -->
@@ -299,6 +333,12 @@ const { configItems, formItem } = initDefaultThemeOptions()
 const { t } = useI18n()
 const visible = ref(false)
 const sshSubFormRef = ref()
+const forwardDefault = {
+	localHost: '127.0.0.1',
+	localPort: 10024,
+	remoteHost: '127.0.0.1',
+	remotePort: 10024
+}
 const defaultForm = {
 	sessType: 'ssh',
 	protocal: 'ssh',
@@ -313,10 +353,6 @@ const defaultForm = {
 	password: '',
 	cert: '',
 	passphrase: '',
-	forwardInRemoteHost: 'localhost',
-	forwardInRemotePort: 10024,
-	forwardInLocalHost: 'localhost',
-	forwardInLocalPort: 10024,
 	proxyHost: '',
 	proxyPort: 1080,
 	forward: 'none',
@@ -325,16 +361,16 @@ const defaultForm = {
 	keepAliveCountMax: 3,
 	readyTimeout: 20000,
 	xtermTheme: 'Night_3024',
+	forwardIn: [{ ...forwardDefault }],
 	...formItem
 }
-const sshSubForm = ref({ ...defaultForm })
+const sshSubForm = ref({ ...JSON.parse(JSON.stringify(defaultForm)) })
 
 const rules = ref({
 	hostName: [{ required: true, message: t('home.profile.base.host-name.description') }],
 	hostAddress: [{ required: true, message: t('home.profile.base.host.description') }]
 })
 const activeTab = ref('base')
-const authMethod = ref(1)
 const emits = defineEmits(['cancel', 'ok'])
 const sessionStore = useSessionStore()
 const isEdit = ref(false)
@@ -351,8 +387,19 @@ const showModal = (sessionId) => {
 	visible.value = true
 }
 
+/**
+ * 新增一个端口转发
+ */
+const addForward = () => sshSubForm.value.forwardIn.push({ ...forwardDefault })
+
+/**
+ * 删除端口转发
+ * @param index 需要删除的序号
+ */
+const removeForward = (index) => sshSubForm.value.forwardIn.splice(index, 1)
+
 const handleCancel = () => {
-	sshSubForm.value = { ...defaultForm }
+	sshSubForm.value = JSON.parse(JSON.stringify(defaultForm))
 	sshSubFormRef.value?.clearValidate()
 	sessionConfig.value = undefined
 	isEdit.value = false
