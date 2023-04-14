@@ -129,7 +129,10 @@
 										:placeholder="t('home.profile.auth.username.placeholder')"
 									/>
 								</el-form-item>
-								<el-form-item v-if="authMethod === 2" :label="t('home.profile.auth.passphrase.title')">
+								<el-form-item
+									v-if="sshSubForm.authType === 'cert'"
+									:label="t('home.profile.auth.passphrase.title')"
+								>
 									<el-input
 										v-model="sshSubForm.passphrase"
 										:placeholder="t('home.profile.auth.passphrase.placeholder')"
@@ -138,14 +141,20 @@
 								</el-form-item>
 							</el-col>
 							<el-col :span="12">
-								<el-form-item v-if="authMethod === 1" :label="t('home.profile.auth.password.title')">
+								<el-form-item
+									v-if="sshSubForm.authType === 'password'"
+									:label="t('home.profile.auth.password.title')"
+								>
 									<el-input
 										v-model="sshSubForm.password"
 										:placeholder="t('home.profile.auth.password.placeholder')"
 										show-password
 									/>
 								</el-form-item>
-								<el-form-item v-if="authMethod === 2" :label="t('home.profile.auth.publickey.title')">
+								<el-form-item
+									v-if="sshSubForm.authType === 'cert'"
+									:label="t('home.profile.auth.publickey.title')"
+								>
 									<pt-file
 										v-model="sshSubForm.cert"
 										:placeholder="t('home.profile.auth.publickey.placeholder')"
