@@ -409,15 +409,16 @@ const showModal = (sessionId) => {
 	if (!!sessionId) {
 		isEdit.value = true
 		sessionConfig.value = sessionManager.getSessionConfigById(sessionId)
+		const { config } = sessionConfig.value
 		// 旧会话端口转发兼容
-		if (sessionConfig.value.hasOwnProperty('forwardInRemoteHost') && sessionConfig.value.forwardInRemoteHost !== '127.0.0.1') {
+		if (config.hasOwnProperty('forwardInRemoteHost') && !['127.0.0.1','localhost'].includes(config.forwardInRemoteHost)) {
 			const {
 				forwardInRemoteHost,
 				forwardInRemotePort,
 				forwardInLocalHost,
 				forwardInLocalPort
-			} = sessionConfig.value
-			sessionConfig.value['forwardIn'] = [{
+			} = config
+			sessionConfig.value['config']['forwardIn'] = [{
 				localHost: forwardInLocalHost,
 				localPort: forwardInLocalPort,
 				remoteHost: forwardInRemoteHost,
@@ -426,7 +427,7 @@ const showModal = (sessionId) => {
 		}
 		// 移除旧会话中无用属性
 		const newFormKeys = Object.keys(sshSubForm.value)
-		const oldFormKeys = Object.keys(sessionConfig.value)
+		const oldFormKeys = Object.keys(sessionConfig.value.config)
 		// 删除oldFormKeys 中不在newFormKeys中的属性
 		for (let i = 0, len = oldFormKeys.length; i < len; i++) {
 			const key = oldFormKeys[i]

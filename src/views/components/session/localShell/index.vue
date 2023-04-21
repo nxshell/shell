@@ -154,7 +154,7 @@ const showModal = (sessionId) => {
 		sessionConfig.value = sessionManager.getSessionConfigById(sessionId)
 		// 移除旧会话中无用属性
 		const newFormKeys = Object.keys(sessionForm.value)
-		const oldFormKeys = Object.keys(sessionConfig.value)
+		const oldFormKeys = Object.keys(sessionConfig.value.config)
 		// 删除oldFormKeys 中不在newFormKeys中的属性
 		for (let i = 0, len = oldFormKeys.length; i < len; i++) {
 			const key = oldFormKeys[i]
