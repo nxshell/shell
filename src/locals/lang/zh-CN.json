@@ -349,7 +349,7 @@
                     }
                 },
                 "forwardin-type": {
-                    "title": "ForwardIn转发设置",
+                    "title": "端口转发",
                     "description": "SSH ForwardIn转发设置.",
                     "options": {
                         "none": "无",
@@ -357,7 +357,7 @@
                     }
                 },
                 "forwardin": {
-                    "title": "ForwardIn 转发设置",
+                    "title": "端口转发",
                     "remotehost": {
                         "title": "远端IP",
                         "description": "配置远端服务器IP地址信息"
