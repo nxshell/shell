@@ -1,50 +1,50 @@
 <template>
-	<div class="pt-xterm" :style="{'background-color': backgroundColor}" @dragover.prevent @drop="handleFileDrop" >
-		<div class="xterm-search" v-if="searchShow">
-			<div class="search-input">
+	<div class='pt-xterm' :style="{'background-color': backgroundColor}" @dragover.prevent @drop='handleFileDrop'>
+		<div class='xterm-search' v-if='searchShow'>
+			<div class='search-input'>
 				<el-input
-					ref="searchInputRef"
-					v-model="searchWord"
+					ref='searchInputRef'
+					v-model='searchWord'
 					:placeholder="$t('components.pt-xterm.search-placeholder')"
-					slot="center"
-					@keydown.enter.native="searchDown"
+					slot='center'
+					@keydown.enter.native='searchDown'
 				/>
 			</div>
-			<div class="search-icons">
-				<n-space size="5">
+			<div class='search-icons'>
+				<n-space size='5'>
 					<el-tooltip
-						class="item"
-						effect="dark"
+						class='item'
+						effect='dark'
 						:content="$t('components.pt-xterm.search-up')"
-						placement="top-start">
-						<n-icon name="direction-up" @click="searchUp" />
+						placement='top-start'>
+						<n-icon name='direction-up' @click='searchUp' />
 					</el-tooltip>
 					<el-tooltip
-						class="item"
-						effect="dark"
+						class='item'
+						effect='dark'
 						:content="$t('components.pt-xterm.search-down')"
-						placement="top-start">
-						<n-icon name="direction-down" @click="searchDown" />
+						placement='top-start'>
+						<n-icon name='direction-down' @click='searchDown' />
 					</el-tooltip>
 					<el-tooltip
-						class="item"
-						effect="dark"
+						class='item'
+						effect='dark'
 						:content="$t('components.pt-xterm.search-close')"
-						placement="top-start">
-						<n-icon name="close" @click="searchClose" />
+						placement='top-start'>
+						<n-icon name='close' @click='searchClose' />
 					</el-tooltip>
 
 				</n-space>
 			</div>
 		</div>
-		<div class="keyboard-input" v-show="sendToAllTerm">
+		<div class='keyboard-input' v-show='sendToAllTerm'>
 			<div>{{ $t('components.pt-xterm.keyboard-input-note') }}</div>
-			<el-switch v-model="showOn" @change="keyboardInputAllow" />
+			<el-switch v-model='showOn' @change='keyboardInputAllow' />
 		</div>
-		<div ref="xtermContainer" class="xterm-container" @click="onXtermFocus"></div>
+		<div ref='xtermContainer' class='xterm-container' @click='onXtermFocus'></div>
 		<div
-			v-if="urlTip"
-			class="xterm-link-tip"
+			v-if='urlTip'
+			class='xterm-link-tip'
 			:style="{left: urlTipPosition.left + 'px', top: urlTipPosition.top + 'px'}"
 		>
 			{{ $t('components.pt-xterm.open-url') }}
@@ -61,6 +61,7 @@ import { WebLinksAddon } from 'xterm-addon-web-links'
 import { FitAddon } from 'xterm-addon-fit'
 import { WebglAddon } from 'xterm-addon-webgl'
 import { SearchAddon } from 'xterm-addon-search'
+import { getProfile } from '@/services/globalSetting'
 
 export default {
 	name: 'PtXterm',
@@ -94,7 +95,6 @@ export default {
 			backgroundColor: '#000'
 		}
 	},
-
 	created() {
 		this.$on('data', (data) => {
 			this.onDataHandler(data)
@@ -193,6 +193,22 @@ export default {
 					this.$emit('line-data', this.getLineString())
 				}
 			})
+			// 绑定选中复制
+			const { selectedCopy = false } = getProfile('xterm')
+			if (selectedCopy) {
+				this.terminal.onSelectionChange(e => {
+					async function copyTextToClipboard(text) {
+						try {
+							await navigator.clipboard.writeText(text)
+						} catch (err) {
+							console.log('鼠标选中复制失败:', err)
+						}
+					}
+
+					const select = this.terminal.getSelection()
+					copyTextToClipboard(select)
+				})
+			}
 			this.terminal.attachCustomKeyEventHandler((ev) => {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
@@ -202,9 +218,9 @@ export default {
 					}
 					if (['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
 						// trigger to global process
-						mousetrap.trigger(`alt+${ key }`)
+						mousetrap.trigger(`alt+${key}`)
 					} else {
-						this.$emit('shortcut', `alt+${ key }`)
+						this.$emit('shortcut', `alt+${key}`)
 					}
 					return false
 				} else {
@@ -220,7 +236,7 @@ export default {
 
 	methods: {
 		onXtermFocus() {
-			this.$emit("xterm-focus")
+			this.$emit('xterm-focus')
 		},
 		write(text) {
 			if (!this.terminal) {
@@ -273,7 +289,7 @@ export default {
 				return
 			}
 			this.fitAddon.fit()
-			this.terminal?.refresh(0,0);
+			this.terminal?.refresh(0, 0)
 		},
 
 		onFocus() {
@@ -422,90 +438,90 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .pt-xterm {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	padding: 5px 5px 5px 10px;
-	box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 5px 5px 5px 10px;
+  box-sizing: border-box;
 
-	.xterm-container {
-		width: 100%;
-		height: 100%;
+  .xterm-container {
+    width: 100%;
+    height: 100%;
 
-		::-webkit-scrollbar-thumb {
-			width: 4px;
-			border-radius: 4px;
-			background: rgba(144, 147, 153, 0.3);
-			transition: 0.3s background-color;
-		}
+    ::-webkit-scrollbar-thumb {
+      width: 4px;
+      border-radius: 4px;
+      background: rgba(144, 147, 153, 0.3);
+      transition: 0.3s background-color;
+    }
 
-		.xterm {
-			height: 100%;
-		}
-	}
+    .xterm {
+      height: 100%;
+    }
+  }
 
-	.xterm-link-tip {
-		position: absolute;
-		height: 30px;
-		line-height: 30px;
-		z-index: 999;
+  .xterm-link-tip {
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    z-index: 999;
 
-		border-radius: 3px;
-		font-size: 14px;
-		padding: 0 10px;
-		background-color: lightgray;
-	}
+    border-radius: 3px;
+    font-size: 14px;
+    padding: 0 10px;
+    background-color: lightgray;
+  }
 
-	.xterm-search {
-		position: absolute;
-		top: 0;
-		left: 0;
-		backdrop-filter: blur(5px);
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-		height: 40px;
-		z-index: 999;
-		padding: 0 5px;
-		box-sizing: border-box;
+  .xterm-search {
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    z-index: 999;
+    padding: 0 5px;
+    box-sizing: border-box;
 
-		.search-input {
-			flex-grow: 1;
-		}
+    .search-input {
+      flex-grow: 1;
+    }
 
-		.search-icons {
-			display: flex;
-			flex-shrink: 0;
-			justify-content: flex-end;
-			align-items: center;
-			color: #FFFFFF;
-			padding-left: 10px;
-		}
-	}
+    .search-icons {
+      display: flex;
+      flex-shrink: 0;
+      justify-content: flex-end;
+      align-items: center;
+      color: #FFFFFF;
+      padding-left: 10px;
+    }
+  }
 
-	.keyboard-input {
-		position: absolute;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		z-index: 998;
-		box-sizing: border-box;
-		padding-left: 5px;
-		padding-right: 5px;
-		background-color: goldenrod;
-		width: calc(100% - 10px);
-		height: 30px;
+  .keyboard-input {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 998;
+    box-sizing: border-box;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: goldenrod;
+    width: calc(100% - 10px);
+    height: 30px;
 
-		.switch-btn {
-			border: 1px solid var(--n-text-color-base);
-			color: var(--n-text-color-base);
-			background-color: var(--n-bg-color-base);
-		}
-	}
+    .switch-btn {
+      border: 1px solid var(--n-text-color-base);
+      color: var(--n-text-color-base);
+      background-color: var(--n-bg-color-base);
+    }
+  }
 }
 </style>
