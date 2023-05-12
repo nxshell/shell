@@ -72,6 +72,7 @@
 											v-if="item.type === 'number'"
 											:step="item.step"
 											:min="1"
+											controls-position="right"
 											style="width: 100%"
 										/>
 										<el-switch v-model="sessionForm[item.name]" v-if="item.type === 'switch'" />
