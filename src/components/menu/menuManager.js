@@ -41,7 +41,7 @@ const contextMenuDirective = {
             } else {
                 menu = binding.value;
             }
-            
+
             if (menu && typeof menu.then === "function") {
                 menu = await menu;
             }
@@ -70,7 +70,7 @@ function initDefaultMenuHandler() {
             closeAllMenu();
         }
         // setTimeout(() => {
-            
+
         // }, 100);
     }, true);
 

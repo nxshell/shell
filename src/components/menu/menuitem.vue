@@ -3,7 +3,7 @@
 		class="pt-menu-item"
 		:class="{ 'pt-menu-separator': item.type === 'separator' }"
 		@mouseenter="handleMouseEnter"
-		@mousedown="handleClick"
+		@mousedown.left="handleClick"
 	>
 		<el-popover
 			v-if="item.type === 'submenu'"

@@ -88,6 +88,7 @@
 									<el-input-number
 										size='small'
 										v-model='sshSubForm.hostPort'
+										controls-position="right"
 										:placeholder="t('home.profile.base.port.placeholder')"
 									/>
 								</el-form-item>
@@ -105,6 +106,7 @@
 									<el-input-number
 										size='small'
 										v-model='sshSubForm.proxyPort'
+										controls-position="right"
 										placeholder='请输入代理主机端口'
 									/>
 								</el-form-item>
@@ -260,6 +262,7 @@
 										<el-input-number
 											v-model='sshSubForm[item.name]'
 											v-if="item.type === 'number'"
+											controls-position="right"
 											:step='item.step'
 											:min='1'
 											style='width: 100%'
@@ -308,15 +311,15 @@
 							<n-space fill align='space-between'>
 								<!--活动状态保持间隔-->
 								<span>{{ t('home.profile.connect.keepalive.title') }}</span>
-								<el-input-number v-model='sshSubForm.keepAliveInterval' />
+								<el-input-number v-model='sshSubForm.keepAliveInterval' controls-position="right"/>
 							</n-space>
 							<n-space fill align='space-between'>
 								<span>{{ t('home.profile.connect.keepalive-count-max.title') }}</span>
-								<el-input-number v-model='sshSubForm.keepAliveCountMax' />
+								<el-input-number v-model='sshSubForm.keepAliveCountMax' controls-position="right"/>
 							</n-space>
 							<n-space fill align='space-between'>
 								<span>{{ t('home.profile.connect.ready-timeout.title') }}</span>
-								<el-input-number v-model='sshSubForm.readyTimeout' />
+								<el-input-number v-model='sshSubForm.readyTimeout' controls-position="right"/>
 							</n-space>
 							<n-space fill align='space-between'>
 								<!--X11 转发-->

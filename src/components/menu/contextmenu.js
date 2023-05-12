@@ -35,7 +35,7 @@ const PtContextMenu = Vue.extend({
 			let top = this.sourceEvent.y
 			if (top + this.selfRect.height > window.innerHeight) {
 				// 当真实高度 - 当前鼠标Y坐标 小于等于真实高度 1/3时，使用当前鼠标位置-菜单栏自身高度计算菜单栏top 否则使用subHeight
-                // 如果计算后的高度小于subHeight 则使用苏北Height
+				// 如果计算后的高度小于subHeight 则使用苏北Height
 				const calcTop = top - this.selfRect.height
 				top = realHeight - top <= realHeight / 3 ? (calcTop < subHeight ? subHeight : calcTop) : subHeight
 			}
@@ -99,6 +99,7 @@ const PtContextMenu = Vue.extend({
 })
 
 export function showContextMenu(menu, evt) {
+	console.log('打开内容')
 	// 没有内容禁止打开
 	if (!menu || menu.length === 0) {
 		return
