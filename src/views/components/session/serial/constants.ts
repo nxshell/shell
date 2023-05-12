@@ -2,7 +2,7 @@ export const defaultForm = {
 	sessType: 'serialport',
 	protocal: 'serialport',
 	hostName: '',
-	system: 'linux',
+	system: 'serial',
 	group: '',
 	baudRate: 115200,
 	dataBits: 8,

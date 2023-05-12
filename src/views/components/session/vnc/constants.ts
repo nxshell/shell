@@ -2,7 +2,7 @@ export const defaultForm = {
 	sessType: 'vnc',
 	protocal: 'vnc',
 	hostName: '',
-	system: 'linux',
+	system: 'vnc',
 	group: '',
 	hostAddress: '',
 	hostVncPort: 5800

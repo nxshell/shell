@@ -30,7 +30,6 @@ class ShellSession extends SessionInterface {
 
     async init() {
         this.emit("data", "Connect to server ...\r\n\n");
-        
         this.clientReady = new WaitObject();
         this.resize_window = async (cols, rows) => {
             this.current_cols_rows = {cols, rows};

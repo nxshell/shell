@@ -2,7 +2,7 @@ export const defaultForm = {
 	sessType: 'localshell',
 	protocal: 'localshell',
 	hostName: '',
-	system: 'linux',
+	system: 'powershell',
 	group: '',
 	xtermTheme: 'Night_3024'
 }

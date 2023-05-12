@@ -1,40 +1,42 @@
 <template>
 	<div v-bind="$attrs" class="nx-toolbar">
-		<el-input
-			v-model="searchKeywords"
-			:placeholder="$t('home.host-manager.search.placeholder')"
-			class="nx-search-input"
-			clearable
-			suffix-icon="el-icon-search"
-		/>
+		<el-input v-model="searchKeywords" :placeholder="$t('home.host-manager.search.placeholder')" class="nx-search-input" clearable suffix-icon="el-icon-search" />
 		<n-space :size="5">
-			<el-tooltip
-				class="item"
-				effect="dark"
-				:content="$t('home.sessions-context-menu.create-folder')"
-				placement="top-start"
-			>
+			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-folder')" placement="top-start">
 				<span class="host-tree-btn" @click.prevent="handleCreateFolder">
 					<i class="el-icon-folder-add" />
 				</span>
 			</el-tooltip>
-			<el-tooltip
-				class="item"
-				effect="dark"
-				:content="$t('home.sessions-context-menu.create-session')"
-				placement="top-start"
-			>
+			<el-tooltip class="item" effect="dark" :content="$t('home.sessions-context-menu.create-session')" placement="top-start">
 				<el-popover v-model="visible" placement="top-start">
 					<span slot="reference" class="host-tree-btn">
 						<i class="el-icon-circle-plus-outline" />
 					</span>
 					<ul class="n-session-mode" @click.prevent="gotoCreateShellSession">
-						<li class="n-session-mode__item" data-type="ssh">ssh</li>
-						<li class="n-session-mode__item" data-type="ftp">ftp</li>
-						<li class="n-session-mode__item" data-type="telnet">telnet</li>
-						<li class="n-session-mode__item" data-type="serial">serial</li>
-						<li class="n-session-mode__item" data-type="vnc">vnc</li>
-						<li class="n-session-mode__item" data-type="localShell">localShell</li>
+						<li class="n-session-mode__item" data-type="ssh">
+							<n-icon name="ssh" />
+							SSH
+						</li>
+						<li class="n-session-mode__item" data-type="ftp">
+							<n-icon name="s-ftp" />
+							FTP
+						</li>
+						<li class="n-session-mode__item" data-type="telnet">
+							<n-icon name="telnet" />
+							Telnet
+						</li>
+						<li class="n-session-mode__item" data-type="serial">
+							<n-icon name="serial" />
+							Serial
+						</li>
+						<li class="n-session-mode__item" data-type="vnc">
+							<n-icon name="vnc" />
+							Vnc
+						</li>
+						<li class="n-session-mode__item" data-type="localShell">
+							<n-icon name="powershell" />
+							LocalShell
+						</li>
 					</ul>
 				</el-popover>
 			</el-tooltip>
@@ -43,31 +45,31 @@
 </template>
 
 <script>
-import * as EventBus from '@/services/eventbus'
+import { publish } from "@/services/eventbus"
 
 export default {
-	name: 'NxToolbar',
+	name: "NxToolbar",
 	data() {
 		return {
-			searchKeywords: '',
+			searchKeywords: "",
 			visible: false
 		}
 	},
 	watch: {
 		searchKeywords() {
 			setTimeout(() => {
-				EventBus.publish('nx-menu-search', this.searchKeywords)
+				publish("nx-menu-search", this.searchKeywords)
 			}, 200)
 		}
 	},
 	methods: {
 		async gotoCreateShellSession(e) {
-			const type = e.target.dataset.type || 'ssh' // default to ssh if none specified.
+			const type = e.target.dataset.type || "ssh" // default to ssh if none specified.
 			this.visible = false
-			EventBus.publish('create-session-toolbar', type)
+			publish("create-session-toolbar", type)
 		},
 		handleCreateFolder() {
-			EventBus.publish('create-session-folder')
+			publish("create-session-folder")
 		}
 	}
 }
@@ -117,6 +119,10 @@ export default {
 	background-color: var(--n-select-bg-color);
 
 	&__item {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		column-gap: 10px;
 		padding: 5px 10px;
 		color: var(--n-text-color-light);
 

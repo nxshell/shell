@@ -369,7 +369,7 @@ const defaultForm = {
 	sessType: 'ssh',
 	protocal: 'ssh',
 	proxy: 'none',
-	system: 'linux',
+	system: 'ssh',
 	hostName: '',
 	group: '',
 	hostAddress: '',

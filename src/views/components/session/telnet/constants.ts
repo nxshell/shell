@@ -2,7 +2,7 @@ export const defaultForm = {
 	sessType: 'telnet',
 	protocal: 'telnet',
 	hostName: '',
-	system: 'linux',
+	system: 'telnet',
 	group: '',
 	hostAddress: '',
 	hostTelnetPort: 23,
