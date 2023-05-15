@@ -65,7 +65,7 @@
 							<el-col :span="12">
 								<!-- 端口 -->
 								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostVncPort">
-									<el-input-number v-model="sessionForm.hostVncPort" :min="1" :max="65535" />
+									<el-input-number v-model="sessionForm.hostVncPort" :min="1" :max="65535" controls-position="right"/>
 								</el-form-item>
 							</el-col>
 						</el-row>

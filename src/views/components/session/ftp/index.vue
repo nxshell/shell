@@ -80,7 +80,7 @@
 							<el-col :span="6">
 								<!-- 端口 -->
 								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostFtpPort">
-									<el-input-number v-model="sessionForm.hostFtpPort" :min="1" :max="65535" />
+									<el-input-number v-model="sessionForm.hostFtpPort" :min="1" :max="65535" controls-position="right"/>
 								</el-form-item>
 							</el-col>
 						</el-row>
