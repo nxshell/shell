@@ -24,28 +24,34 @@ function removeContextMenuHandler(ctxMenuId) {
 
 const contextMenuDirective = {
     bind (el, binding, vnode) {
+        const isTerminal = el.classList.contains('pt-xterm')
         const ctxMenuId = getLastMenuId();
 
         const handler = addContextMenuHandler(ctxMenuId, async function(evt) {
-            evt.preventDefault();
-            evt.stopPropagation();
-            // 不管三七二十一，只要触发右键菜单，之前所有的菜单全部关闭掉
-            // 对！！就这么豪横~
-            closeAllMenu();
-            /**
-             * 允许绑定
-             */
-            let menu;
-            if (typeof binding.value === "function") {
-                menu = binding.value();
-            } else {
-                menu = binding.value;
-            }
+            // 因新增鼠标选中复制，右键粘贴功能在此处理
+            const text = await navigator.clipboard.readText()
+            if (!text || !isTerminal) {
+                evt.preventDefault()
+                evt.stopPropagation()
+                // 不管三七二十一，只要触发右键菜单，之前所有的菜单全部关闭掉
+                // 对！！就这么豪横~
+                closeAllMenu()
 
-            if (menu && typeof menu.then === "function") {
-                menu = await menu;
+                /**
+                 * 允许绑定
+                 */
+                let menu
+                if (typeof binding.value === 'function') {
+                    menu = binding.value()
+                } else {
+                    menu = binding.value
+                }
+
+                if (menu && typeof menu.then === 'function') {
+                    menu = await menu
+                }
+                showContextMenu(menu, evt)
             }
-            showContextMenu(menu, evt);
         });
         el.addEventListener("contextmenu", handler);
         el.dataset.contextMenuId = ctxMenuId;
@@ -70,7 +76,7 @@ function initDefaultMenuHandler() {
             closeAllMenu();
         }
         // setTimeout(() => {
-
+            
         // }, 100);
     }, true);
 

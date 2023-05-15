@@ -209,6 +209,9 @@ export default {
 					copyTextToClipboard(select)
 				})
 			}
+			// 绑定右键粘贴功能
+			document.addEventListener('contextmenu', this.contextmenuPast)
+
 			this.terminal.attachCustomKeyEventHandler((ev) => {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
@@ -246,7 +249,11 @@ export default {
 			this.terminal.write(text)
 			text = null
 		},
-
+		async contextmenuPast() {
+			const text = await navigator.clipboard.readText()
+			this.pasteText(text)
+			await navigator.clipboard.writeText('')
+		},
 		getLineString() {
 			const terminal = this.terminal
 			let lineIndex = 0
@@ -306,8 +313,10 @@ export default {
 		},
 
 		zoom_in() {
-			this.zoom -= 1
-			this._zoom()
+			if (this.zoom >= 1) {
+				this.zoom -= 1
+				this._zoom()
+			}
 		},
 
 		zoom_out() {
@@ -434,6 +443,7 @@ export default {
 		//     window.removeEventListener("pt-view-resize", this.ptViewResizeHandler);
 		//     this.ptViewResizeHandler = null;
 		// }
+		document.removeEventListener('contextmenu', this.contextmenuPast)
 	}
 }
 </script>
