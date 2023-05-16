@@ -27,7 +27,12 @@ const useNxTabsStore = defineStore('nxTabs', () => {
 	// @ts-ignore
 	const sessionManager = proxy?.$sessionManager
 
-	const tabIcon: Record<string, string> = { login: 'user', welcome: 'logo', sftp: 'folder-sftp-open' }
+	const tabIcon: Record<string, string> = {
+		login: 'user',
+		welcome: 'logo',
+		sftp: 'folder-sftp-open',
+		globalsetting: 'n-setting'
+	}
 
 	/**
 	 * 监听并更新Tab数据
@@ -42,7 +47,7 @@ const useNxTabsStore = defineStore('nxTabs', () => {
 				title: name === '' ? cfg.hostAddress : name,
 				session: x,
 				iconType: 'svg',
-				icon: tabIcon[type] || 'auto'
+				icon: tabIcon[type] || type
 			}
 			if (type === 'shell' || type === 'sftp' || type === 'editor') {
 				tabInstance.title = name === '' ? cfg.hostAddress : name
