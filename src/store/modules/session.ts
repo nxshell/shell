@@ -166,9 +166,6 @@ const useSessionStore = defineStore('session', () => {
 			appendSessionConfig,
 			updateCurrentNode
 		}
-	},
-	{
-		persist: true
 	}
 )
 export default useSessionStore

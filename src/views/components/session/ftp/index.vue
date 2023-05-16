@@ -7,6 +7,7 @@
 		:show-close="false"
 		:destroy-on-close="false"
 		:close-on-click-modal="false"
+		:close-on-press-escape='false'
 		@close="handlerClose"
 	>
 		<el-form
