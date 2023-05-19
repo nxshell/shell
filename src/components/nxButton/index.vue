@@ -1,10 +1,17 @@
 <template>
 	<div class="n-icon-button" v-bind="$attrs" v-on="$listeners">
 		<n-icon v-if="icon" :name="icon" :size="size" />
+		<i v-if="elIcon" :class="elIcon" :style="{ fontSize: `calc(${size} * 1px)` }" />
 		<slot v-if="$slots.default"></slot>
-		<div v-else class="n-icon-button__label">{{ t(label) }}</div>
+		<div v-if="!$slots.default && label" class="n-icon-button__label">{{ t(label) }}</div>
 	</div>
 </template>
+
+<script>
+export default {
+	name: "NxButton"
+}
+</script>
 
 <script setup>
 import { useI18n } from "vue-i18n-bridge"
@@ -12,6 +19,10 @@ import { useI18n } from "vue-i18n-bridge"
 const props = defineProps({
 	// Icon name
 	icon: {
+		type: String,
+		default: ""
+	},
+	elIcon: {
 		type: String,
 		default: ""
 	},
@@ -42,9 +53,12 @@ const { t } = useI18n()
 	align-items: v-bind(labelAlign);
 	column-gap: calc(v-bind(gap) * 1px);
 	font-size: calc(v-bind(size) / 3 * 2px);
+	padding: 5px;
 
 	&:hover {
 		cursor: pointer;
+		border-radius: 4px;
+		background-color: var(--n-hover-bg-color);
 	}
 }
 </style>

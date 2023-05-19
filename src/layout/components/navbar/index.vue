@@ -29,6 +29,10 @@
 						</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
+				<!-- 语言切换 -->
+				<el-button type="text" @click="changeLanguage">
+					<n-icon :name="`language-${locale === 'zh-CN' ? 'zh' : 'es'}`" size="20" />
+				</el-button>
 				<!-- 设置按钮 -->
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting" />
 				<!-- 版本信息 -->
@@ -52,8 +56,9 @@ import { storeToRefs } from "pinia"
 import semver from "semver"
 import { getCurrentInstance, onMounted, ref } from "vue"
 import { useI18n } from "vue-i18n-bridge"
+import { getProfile, updateProfile } from "@/services/globalSetting"
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const IS_MACOS = /macintosh/i.test(navigator.userAgent)
 const version = ref("V1.0.0")
 const needUpdate = ref(false)
@@ -69,7 +74,7 @@ const themeIconConstants = {
 	pink: "el-icon-grape",
 	hazy: "el-icon-sunny"
 }
-
+console.log("设置", locale.value, getProfile("xterm").language)
 const doCapture = async (e) => {
 	capture.value = !capture.value
 	captureIcon.value = capture.value ? "VideoPlay" : "VideoPause"
@@ -137,6 +142,13 @@ const handlerVersionUpdate = async () => {
 	// 外链打开github地址
 	const update = "https://github.com/nxshell/nxshell/releases"
 	await window.powertools.openExterUrl(update)
+}
+
+const changeLanguage = () => {
+	const language = locale.value === "zh-CN" ? "en-US" : "zh-CN"
+	updateProfile("xterm", { "language": language })
+	// settingStore.changeLanguage()
+	locale.value = language
 }
 
 onMounted(() => {

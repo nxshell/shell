@@ -443,7 +443,8 @@
                 "save": "保存",
                 "save-conn": "保存并连接",
                 "configure-mode": "极简模式"
-            }
+            },
+            "mouse-copy": "开启鼠标选中复制"
         },
         "session-instance": {
             "duplicate-session": "复制会话",

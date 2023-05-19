@@ -134,21 +134,16 @@ const useSessionStore = defineStore('session', () => {
 			currentNode.isFolder = nodeData?.isFolder ?? false
 		}
 
-		/**
-		 * 添加新的菜单选项
-		 *
-		 * @param sessionConfig 会话内容
-		 */
-		function appendSessionConfig(sessionConfig: Record<string, any>) {
-			const { isFolder, node, sessionData } = currentNode
-			if (!sessionData && !node) {
-				sessionManager.addSessionConfig(null, sessionConfig)
-			}
-			if (isFolder) {
-				sessionManager.addSessionConfig(sessionData?.data, sessionConfig)
-			}
-			updateProcess()
-		}
+	/**
+	 * 添加新的菜单选项
+	 *
+	 * @param sessionConfig 会话内容
+	 */
+	async function appendSessionConfig(sessionConfig: Record<string, any>) {
+		const { isFolder, node, sessionData } = currentNode
+		await sessionManager.addSessionConfig(isFolder ? sessionData?.data : null, sessionConfig)
+		updateProcess()
+	}
 
 		function updateSendToAllXterm(status: boolean) {
 			keyboardToAll.value = status

@@ -99,7 +99,6 @@ const PtContextMenu = Vue.extend({
 })
 
 export function showContextMenu(menu, evt) {
-	console.log('打开内容')
 	// 没有内容禁止打开
 	if (!menu || menu.length === 0) {
 		return

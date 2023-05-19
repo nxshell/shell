@@ -9,5 +9,6 @@ export const settingFormReset = {
 	cursorStyle: 'underline',
 	xterm: 'xterm',
 	xtermTheme: 'default',
-	selectedCopy: false
+	selectedCopy: false,
+	language: 'zh-CN'
 }

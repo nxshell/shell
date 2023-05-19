@@ -441,7 +441,8 @@
                 "save": "Save",
                 "save-conn": "Save and connect",
                 "configure-mode": "Simple Mode"
-            }
+            },
+            "mouse-copy": "Mouse selection"
         },
         "session-instance": {
             "duplicate-session": "Duplicate session",

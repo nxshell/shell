@@ -7,48 +7,22 @@
 		:show-close="false"
 		:destroy-on-close="false"
 		:close-on-click-modal="false"
-		:close-on-press-escape='false'
 		@close="handlerClose"
 	>
-		<el-form
-			ref="telnetFormRef"
-			:model="sessionForm"
-			:rules="telnetFormRules"
-			class="n-session-ssh-container"
-			label-position="top"
-			label-width="80px"
-		>
+		<el-form ref="telnetFormRef" :model="sessionForm" :rules="telnetFormRules" class="n-session-ssh-container" label-position="top" label-width="80px">
 			<div class="n-session-ssh-container__left">
 				<el-form-item :label="t('home.profile.base.host-name.title')" prop="hostName">
-					<el-input
-						v-model="sessionForm.hostName"
-						:placeholder="t('home.profile.base.host-name.placeholder')"
-					/>
+					<el-input v-model="sessionForm.hostName" :placeholder="t('home.profile.base.host-name.placeholder')" />
 				</el-form-item>
 				<el-form-item :label="t('home.profile.base.host-name.title')" prop="system">
 					<n-space>
-						<el-autocomplete
-							v-model="sessionForm.system"
-							value-key="icon"
-							:fetch-suggestions="querySearch"
-							clearable
-							placeholder="请输入内容"
-						/>
+						<el-autocomplete v-model="sessionForm.system" value-key="icon" :fetch-suggestions="querySearch" clearable placeholder="请输入内容" />
 						<n-icon :name="sessionForm.system" size="24" />
 					</n-space>
 				</el-form-item>
 				<el-form-item :label="t('home.profile.base.host-group.title')" prop="group">
-					<el-select
-						v-model="sessionForm.group"
-						:placeholder="t('home.profile.base.host-group.placeholder')"
-						style="width: 100%"
-					>
-						<el-option
-							v-for="(item, index) in group"
-							:label="item.label"
-							:value="item.value"
-							:key="index"
-						/>
+					<el-select v-model="sessionForm.group" :placeholder="t('home.profile.base.host-group.placeholder')" style="width: 100%">
+						<el-option v-for="(item, index) in group" :label="item.label" :value="item.value" :key="index" />
 					</el-select>
 				</el-form-item>
 			</div>
@@ -59,16 +33,10 @@
 						<el-row :gutter="10">
 							<el-col :span="6">
 								<el-form-item :label="t('home.profile.auth.secure.title')">
-									<el-select
-										v-model="sessionForm.secure"
-										:placeholder="t('home.profile.auth.secure.description')"
-									>
+									<el-select v-model="sessionForm.secure" :placeholder="t('home.profile.auth.secure.description')">
 										<el-option value="true" :label="t('home.profile.auth.secure.options.true')" />
 										<el-option value="false" :label="t('home.profile.auth.secure.options.false')" />
-										<el-option
-											value="control"
-											:label="t('home.profile.auth.secure.options.control')"
-										/>
+										<el-option value="control" :label="t('home.profile.auth.secure.options.control')" />
 									</el-select>
 								</el-form-item>
 							</el-col>
@@ -81,7 +49,7 @@
 							<el-col :span="6">
 								<!-- 端口 -->
 								<el-form-item :label="$t('home.profile.base.port.title')" prop="hostFtpPort">
-									<el-input-number v-model="sessionForm.hostFtpPort" :min="1" :max="65535" controls-position="right"/>
+									<el-input-number v-model="sessionForm.hostFtpPort" :min="1" :max="65535" controls-position="right" />
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -104,37 +72,37 @@
 			</div>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="visible = false">{{ t('components.Cancel') }}</el-button>
-			<el-button type="primary" @click="handleOk">{{ t('components.OK') }}</el-button>
+			<el-button @click="handlerClose">{{ t("components.Cancel") }}</el-button>
+			<el-button type="primary" @click="handleOk">{{ t("components.OK") }}</el-button>
 			<el-button type="primary" @click="handleSaveAndConnect">
-				{{ t('home.profile.operator.save-conn') }}
+				{{ t("home.profile.operator.save-conn") }}
 			</el-button>
 		</div>
 	</el-dialog>
 </template>
 <script setup>
-import { querySearch } from '@/icons/system-icon'
-import { publish } from '@/services/eventbus'
-import { SESSION_CONFIG_TYPE, SessionConfig } from '@/services/sessionMgr'
-import { useSessionStore } from '@/store'
-import { storeToRefs } from 'pinia'
-import { getCurrentInstance, ref } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
-import { defaultForm } from './constants'
+import { querySearch } from "@/icons/system-icon"
+import { publish } from "@/services/eventbus"
+import { SESSION_CONFIG_TYPE, SessionConfig } from "@/services/sessionMgr"
+import { useSessionStore } from "@/store"
+import { storeToRefs } from "pinia"
+import { getCurrentInstance, ref } from "vue"
+import { useI18n } from "vue-i18n-bridge"
+import { defaultForm } from "./constants"
 
 const { t } = useI18n()
-const emits = defineEmits(['ok', 'cancel'])
+const emits = defineEmits(["ok", "cancel"])
 const visible = ref(false)
 const telnetFormRef = ref()
 const sessionForm = ref({ ...defaultForm })
 const telnetFormRules = {
-	hostName: [{ required: true, message: '请输入会话名称', trigger: 'blur' }],
-	hostAddress: [{ required: true, message: '请输入主机地址', trigger: 'blur' }],
-	hostFtpPort: [{ required: true, message: '请输入主机端口', trigger: 'blur' }]
+	hostName: [{ required: true, message: "请输入会话名称", trigger: "blur" }],
+	hostAddress: [{ required: true, message: "请输入主机地址", trigger: "blur" }],
+	hostFtpPort: [{ required: true, message: "请输入主机端口", trigger: "blur" }]
 }
 const sessionStore = useSessionStore()
 const { group } = storeToRefs(sessionStore)
-const activeTab = ref('base')
+const activeTab = ref("base")
 const isEdit = ref(false)
 const proxy = getCurrentInstance().proxy
 const sessionManager = proxy.$sessionManager
@@ -163,20 +131,15 @@ const saveOrUpdateSession = () => {
 	const sessionName = sessionForm.value.hostName
 	if (isEdit.value) {
 		// 更新配置信息
-		sessionConfig.value.update(sessionName, Object.assign(sessionConfig.value.config, sessionForm.value), '')
+		sessionConfig.value.update(sessionName, Object.assign(sessionConfig.value.config, sessionForm.value), "")
 	} else {
 		// 创建会话配置
-		sessionConfig.value = new SessionConfig(
-			sessionName,
-			SESSION_CONFIG_TYPE.NODE,
-			sessionForm.value,
-			'telnet session'
-		)
+		sessionConfig.value = new SessionConfig(sessionName, SESSION_CONFIG_TYPE.NODE, sessionForm.value, "telnet session")
 		// 添加会话配置
 		sessionStore.appendSessionConfig(sessionConfig.value)
 	}
 	// 刷新菜单
-	publish('refresh-session-tree')
+	publish("refresh-session-tree")
 }
 
 const handleOk = () => {
@@ -185,7 +148,7 @@ const handleOk = () => {
 			return false
 		}
 		saveOrUpdateSession()
-		emits('ok', sessionForm.value)
+		emits("ok", sessionForm.value)
 		visible.value = false
 	})
 }
@@ -197,17 +160,18 @@ const handleSaveAndConnect = () => {
 		}
 		saveOrUpdateSession()
 		sessionManager.createSessionInstance(sessionConfig.value)
-		emits('ok', sessionForm.value)
+		emits("ok", sessionForm.value)
 		visible.value = false
 	})
 }
 
 const handlerClose = () => {
 	isEdit.value = false
-	activeTab.value = 'base'
+	activeTab.value = "base"
 	sessionConfig.value = undefined
 	sessionForm.value = { ...defaultForm }
 	telnetFormRef.value?.clearValidate()
+	visible.value = false
 }
 
 defineExpose({ showModal })
@@ -251,7 +215,7 @@ defineExpose({ showModal })
 			grid-gap: 10px;
 			padding-right: 10px;
 			max-height: 340px;
-			grid-template-areas: 'normal theme';
+			grid-template-areas: "normal theme";
 
 			.theme {
 				grid-area: theme;

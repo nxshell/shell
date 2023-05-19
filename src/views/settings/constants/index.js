@@ -1,5 +1,4 @@
 import xtermTheme from 'xterm-theme'
-import xtermPreviewComponent from '../components/xterminalPreview.vue'
 
 export const fontFamily = {
     name: 'fontFamily',
@@ -306,8 +305,7 @@ export const termTheme = {
                 value: themeName
             }
         })
-    ],
-    component: xtermPreviewComponent
+    ]
 }
 export const language = {
     name: 'language',

@@ -24,11 +24,12 @@
 							<n-icon v-show="type === 'folder'" :name="`${node.expanded ? 'folder-client-open' : 'folder-client'}`" />
 							<span :title="node.label || '-'">{{ node.label }}</span>
 						</n-space>
-						<el-tooltip v-if="type === 'node' && protocol === 'ssh'" effect="dark" :content="$t('home.sessions-context-menu.sftp')" placement="top-start">
-							<span class="session-extend" @click.stop="handleOpenSFTP(data)">
-								<n-icon name="folder-sftp-open" size="18" />
-							</span>
-						</el-tooltip>
+						<span class="session-extend" style='--n-hover-bg-color: #00000018'>
+							<el-tooltip v-if="type === 'node' && protocol === 'ssh'" effect="dark" :content="$t('home.sessions-context-menu.sftp')" placement="top-start">
+								<nx-button icon="folder-sftp-open" @click.stop="handleOpenSFTP(data)" />
+							</el-tooltip>
+							<nx-button el-icon="el-icon-delete" @click.stop="handleDelete(data._id)" />
+						</span>
 					</span>
 				</template>
 			</el-tree>
@@ -52,6 +53,7 @@ import { useNxTabsStore, useSessionStore } from "@/store"
 import { getCurrentInstance, nextTick, onBeforeUnmount, onMounted, reactive, ref, shallowRef } from "vue"
 import { useI18n } from "vue-i18n-bridge"
 import { shellModalInstance } from "@/views/components/session"
+import { NxButton } from "@/components"
 
 const sessionTreeRef = ref()
 const folderDialogRef = ref()
@@ -69,7 +71,6 @@ const proxy = getCurrentInstance().proxy
 const sessionManager = proxy.$sessionManager
 const sessionModal = shallowRef()
 const sessionModalRef = ref()
-console.log("树", menuTree.value)
 const createFolder = (name) => {
 	folderDialogRef.value?.show(name)
 }
@@ -118,14 +119,14 @@ const handleSessionTreeContextMenu_Paste = () => {
 /**
  * 删除会话或者会话目录
  */
-const handleSessionTreeContextMenu_Delete = () => {
-	const sessionConfig = sessionManager.getSessionConfigById(currentNode.value.sessionId)
+const handleDelete = (sessionId) => {
+	const sessionConfig = sessionManager.getSessionConfigById(sessionId)
 	const message =
 		sessionConfig.type === SESSION_CONFIG_TYPE.NODE
 			? t("home.host-manager.dialog-delete-confirm.delete-node", [sessionConfig.name])
 			: t("home.host-manager.dialog-delete-confirm.delete-folder", [sessionConfig.name])
 	proxy
-		.$confirm(message, t("home.host-manager.dialog-delete-confirm.title"), {
+		?.$confirm(message, t("home.host-manager.dialog-delete-confirm.title"), {
 			type: "warning"
 		})
 		.then(() => {
@@ -134,7 +135,6 @@ const handleSessionTreeContextMenu_Delete = () => {
 			sessionStore.updateProcess()
 		})
 }
-
 /**
  * 编辑文件夹
  */
@@ -261,7 +261,7 @@ const contextMenus = {
 		{
 			label: "home.sessions-context-menu.delete",
 			type: "normal",
-			handler: handleSessionTreeContextMenu_Delete
+			handler: () => handleDelete(currentNode.value.sessionId)
 		},
 		{
 			label: "home.sessions-context-menu.rename",
@@ -288,7 +288,7 @@ const contextMenus = {
 		{
 			label: "home.sessions-context-menu.delete",
 			type: "normal",
-			handler: handleSessionTreeContextMenu_Delete
+			handler: () => handleDelete(currentNode.value.sessionId)
 		},
 		{
 			label: "home.sessions-context-menu.prop",
@@ -323,7 +323,6 @@ const contextMenus = {
 					type: "normal",
 					handler: () => {
 						sessionModal.value = shellModalInstance("ftp")
-						console.log("会话", sessionModal.value)
 						nextTick(() => sessionModalRef.value?.showModal())
 					}
 				},
@@ -504,22 +503,13 @@ onBeforeUnmount(() => {
 				border-radius: 4px;
 				color: var(--n-text-color-base);
 
-				//&:hover {
-				//	color: #fff;
-				//}
-
 				.session-extend {
 					display: inline-flex;
 					align-items: center;
 					justify-content: center;
-					width: 24px;
-					height: 24px;
+					column-gap: 5px;
 					box-sizing: border-box;
 					border-radius: 4px;
-
-					&:hover {
-						background-color: var(--n-hover-bg-color);
-					}
 				}
 			}
 		}
@@ -558,7 +548,6 @@ onBeforeUnmount(() => {
 				.custom-tree-node {
 					.session-extend {
 						display: inline-flex;
-						font-size: 18px;
 					}
 				}
 			}
@@ -570,20 +559,14 @@ onBeforeUnmount(() => {
 			align-items: center;
 			width: 100%;
 			height: 32px;
-			padding-right: 5px;
 
 			.session-extend {
 				display: none;
 				align-items: center;
 				justify-content: center;
-				width: 24px;
-				height: 24px;
+				column-gap: 5px;
 				box-sizing: border-box;
 				border-radius: 4px;
-
-				&:hover {
-					background-color: var(--n-hover-bg-color);
-				}
 			}
 		}
 
