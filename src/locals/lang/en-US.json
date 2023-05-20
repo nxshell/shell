@@ -83,7 +83,8 @@
             "pink": "Pink"
         },
         "need-update": "There is a new version, click to upgrade",
-        "current-version": "Current Version"
+        "current-version": "Current Version",
+        "website": "Website"
     },
     "home": {
         "editor": {
@@ -441,7 +442,8 @@
                 "save": "Save",
                 "save-conn": "Save and connect",
                 "configure-mode": "Simple Mode"
-            }
+            },
+            "mouse-copy": "Mouse selection"
         },
         "session-instance": {
             "duplicate-session": "Duplicate session",

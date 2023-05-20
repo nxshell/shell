@@ -1,6 +1,6 @@
 <template>
 	<div class="nx-layout-wrapper">
-		<div v-if="configPanel" class="nx-layout-left">
+		<div v-show="configPanel" class="nx-layout-left">
 			<nx-menus ref="menuRef" />
 		</div>
 		<div class="nx-layout-right" :style="{width: `calc(100% - ${configPanel ? 295 : 0}px)`}">

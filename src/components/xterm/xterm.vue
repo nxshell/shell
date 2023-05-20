@@ -1,70 +1,53 @@
 <template>
-	<div class='pt-xterm' :style="{'background-color': backgroundColor}" @dragover.prevent @drop='handleFileDrop'>
-		<div class='xterm-search' v-if='searchShow'>
-			<div class='search-input'>
+	<div class="pt-xterm" :style="{ 'background-color': backgroundColor }" @dragover.prevent @drop="handleFileDrop">
+		<div class="xterm-search" v-if="searchShow">
+			<div class="search-input">
 				<el-input
-					ref='searchInputRef'
-					v-model='searchWord'
+					ref="searchInputRef"
+					v-model="searchWord"
 					:placeholder="$t('components.pt-xterm.search-placeholder')"
-					slot='center'
-					@keydown.enter.native='searchDown'
+					slot="center"
+					@keydown.enter.native="searchDown"
 				/>
 			</div>
-			<div class='search-icons'>
-				<n-space size='5'>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('components.pt-xterm.search-up')"
-						placement='top-start'>
-						<n-icon name='direction-up' @click='searchUp' />
+			<div class="search-icons">
+				<n-space size="5">
+					<el-tooltip class="item" effect="dark" :content="$t('components.pt-xterm.search-up')" placement="top-start">
+						<n-icon name="direction-up" @click="searchUp" />
 					</el-tooltip>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('components.pt-xterm.search-down')"
-						placement='top-start'>
-						<n-icon name='direction-down' @click='searchDown' />
+					<el-tooltip class="item" effect="dark" :content="$t('components.pt-xterm.search-down')" placement="top-start">
+						<n-icon name="direction-down" @click="searchDown" />
 					</el-tooltip>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('components.pt-xterm.search-close')"
-						placement='top-start'>
-						<n-icon name='close' @click='searchClose' />
+					<el-tooltip class="item" effect="dark" :content="$t('components.pt-xterm.search-close')" placement="top-start">
+						<n-icon name="close" @click="searchClose" />
 					</el-tooltip>
-
 				</n-space>
 			</div>
 		</div>
-		<div class='keyboard-input' v-show='sendToAllTerm'>
-			<div>{{ $t('components.pt-xterm.keyboard-input-note') }}</div>
-			<el-switch v-model='showOn' @change='keyboardInputAllow' />
+		<div class="keyboard-input" v-show="sendToAllTerm">
+			<div>{{ $t("components.pt-xterm.keyboard-input-note") }}</div>
+			<el-switch v-model="showOn" @change="keyboardInputAllow" />
 		</div>
-		<div ref='xtermContainer' class='xterm-container' @click='onXtermFocus'></div>
-		<div
-			v-if='urlTip'
-			class='xterm-link-tip'
-			:style="{left: urlTipPosition.left + 'px', top: urlTipPosition.top + 'px'}"
-		>
-			{{ $t('components.pt-xterm.open-url') }}
+		<div ref="xtermContainer" class="xterm-container" @click="onXtermFocus"></div>
+		<div v-if="urlTip" class="xterm-link-tip" :style="{ left: urlTipPosition.left + 'px', top: urlTipPosition.top + 'px' }">
+			{{ $t("components.pt-xterm.open-url") }}
 		</div>
 	</div>
 </template>
 
 <script>
-import mousetrap from 'mousetrap'
-import debounce from 'lodash/debounce'
-import '../../../node_modules/xterm/css/xterm.css'
-import { Terminal } from 'xterm'
-import { WebLinksAddon } from 'xterm-addon-web-links'
-import { FitAddon } from 'xterm-addon-fit'
-import { WebglAddon } from 'xterm-addon-webgl'
-import { SearchAddon } from 'xterm-addon-search'
-import { getProfile } from '@/services/globalSetting'
+import mousetrap from "mousetrap"
+import debounce from "lodash/debounce"
+import "../../../node_modules/xterm/css/xterm.css"
+import { Terminal } from "xterm"
+import { WebLinksAddon } from "xterm-addon-web-links"
+import { FitAddon } from "xterm-addon-fit"
+import { WebglAddon } from "xterm-addon-webgl"
+import { SearchAddon } from "xterm-addon-search"
+import { getProfile } from "@/services/globalSetting"
 
 export default {
-	name: 'PtXterm',
+	name: "PtXterm",
 	props: {
 		options: {
 			type: Object,
@@ -82,24 +65,24 @@ export default {
 			fitAddon: null,
 			nativeResizeHandler: null,
 			ptViewResizeHandler: null,
-			urlTip: '',
+			urlTip: "",
 			urlTipPosition: {
 				left: 0,
 				top: 0
 			},
 
 			logging: false,
-			searchWord: '',
+			searchWord: "",
 			searchShow: false,
 			zoom: 0,
-			backgroundColor: '#000'
+			backgroundColor: "#000"
 		}
 	},
 	created() {
-		this.$on('data', (data) => {
+		this.$on("data", (data) => {
 			this.onDataHandler(data)
 		})
-		this.$on('focus', () => {
+		this.$on("focus", () => {
 			this.onFocus()
 		})
 	},
@@ -115,10 +98,10 @@ export default {
 		this.$nextTick(() => {
 			this.$ptElementResizeDetector.listenTo(this.$el, this.nativeResizeHandler)
 			//this.resizeObserve.observe(this.$el);
-			const options = { wordSeparator: ' /:?,;.', ...this.options }
+			const options = { wordSeparator: " /:?,;.", ...this.options }
 			// 优化xterm终端边距
-			if (options.hasOwnProperty('theme') && options.theme) {
-				const { background = '#000' } = options.theme
+			if (options.hasOwnProperty("theme") && options.theme) {
+				const { background = "#000" } = options.theme
 				this.backgroundColor = background
 			}
 
@@ -129,7 +112,7 @@ export default {
 						if (!event.ctrlKey) {
 							return
 						}
-						this.$emit('link', uri)
+						this.$emit("link", uri)
 					},
 					{
 						tooltipCallback: (evt, uri, location) => {
@@ -146,7 +129,7 @@ export default {
 						},
 						leaveCallback: () => {
 							// hide tip
-							this.urlTip = ''
+							this.urlTip = ""
 						},
 						willLinkActivate(evt, uri) {
 							return evt.ctrlKey
@@ -166,64 +149,64 @@ export default {
 				webgl.onContextLoss((e) => webgl.dispose())
 				this.terminal.loadAddon(webgl)
 			} catch (e) {
-				console.log('WebGL init fail, it will fallback to canvas', e)
+				console.log("WebGL init fail, it will fallback to canvas", e)
 			}
 
 			this.searchAddon = new SearchAddon()
 			this.terminal.loadAddon(this.searchAddon)
 
 			this.terminal.onKey((e) => {
-				this.$emit('key', e)
+				this.$emit("key", e)
 			})
 
 			this.terminal.onData((data) => {
-				this.$emit('termdata', data)
+				this.$emit("termdata", data)
 			})
 
 			this.terminal.onResize(({ cols, rows }) => {
-				this.$emit('resize', cols, rows)
+				this.$emit("resize", cols, rows)
 			})
 
 			this.terminal.onTitleChange((title) => {
-				this.$emit('titleChange', title)
+				this.$emit("titleChange", title)
 			})
 
 			this.terminal.onLineFeed((e) => {
 				if (this.logging) {
-					this.$emit('line-data', this.getLineString())
+					this.$emit("line-data", this.getLineString())
 				}
 			})
 			// 绑定选中复制
-			const { selectedCopy = false } = getProfile('xterm')
+			const { selectedCopy = false } = getProfile("xterm")
 			if (selectedCopy) {
-				this.terminal.onSelectionChange(e => {
-					async function copyTextToClipboard(text) {
+				this.terminal.onSelectionChange((e) => {
+					function copyTextToClipboard(text) {
 						try {
-							await navigator.clipboard.writeText(text)
+							powertools.clipboardWriteText(text)
 						} catch (err) {
-							console.log('鼠标选中复制失败:', err)
+							console.log("鼠标选中复制失败:", err)
 						}
 					}
 
 					const select = this.terminal.getSelection()
-					copyTextToClipboard(select)
+					select && copyTextToClipboard(select)
 				})
 			}
-			// 绑定右键粘贴功能
-			document.addEventListener('contextmenu', this.contextmenuPast)
-
+			// 绑定右键粘贴功能1
+			// document.addEventListener("contextmenu", this.contextmenuPast)
+			this.$refs.xtermContainer.addEventListener("contextmenu", this.contextmenuPast)
 			this.terminal.attachCustomKeyEventHandler((ev) => {
 				if (ev.altKey) {
 					// emit shortcut to process in home page
 					const { key, type } = ev
-					if (type !== 'keydown') {
+					if (type !== "keydown") {
 						return false
 					}
-					if (['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
+					if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(key)) {
 						// trigger to global process
 						mousetrap.trigger(`alt+${key}`)
 					} else {
-						this.$emit('shortcut', `alt+${key}`)
+						this.$emit("shortcut", `alt+${key}`)
 					}
 					return false
 				} else {
@@ -232,14 +215,14 @@ export default {
 			})
 
 			// first notify current terminal size
-			this.$emit('resize', this.terminal.cols, this.terminal.rows)
+			this.$emit("resize", this.terminal.cols, this.terminal.rows)
 			this.onFocus()
 		})
 	},
 
 	methods: {
 		onXtermFocus() {
-			this.$emit('xterm-focus')
+			this.$emit("xterm-focus")
 		},
 		write(text) {
 			if (!this.terminal) {
@@ -249,10 +232,15 @@ export default {
 			this.terminal.write(text)
 			text = null
 		},
-		async contextmenuPast() {
-			const text = await navigator.clipboard.readText()
-			this.pasteText(text)
-			await navigator.clipboard.writeText('')
+		async contextmenuPast(event) {
+			const text = powertools.clipboardReadText()
+			console.log(text)
+			if (text !== "") {
+				event.preventDefault()
+				event.stopPropagation()
+				this.pasteText(text)
+				powertools.clipboardWriteText("")
+			}
 		},
 		getLineString() {
 			const terminal = this.terminal
@@ -264,7 +252,7 @@ export default {
 				lineIndex = terminal.buffer.active.length - 2
 			}
 
-			let lineString = ''
+			let lineString = ""
 			let lineWrapsToNext
 			do {
 				const nextLine = terminal.buffer.active.getLine(lineIndex + 1)
@@ -337,18 +325,19 @@ export default {
 		},
 
 		pasteText(s) {
-			this.terminal.paste(s)
+			console.log("粘贴")
+			this.terminal?.paste(s)
 			this.onFocus()
 		},
 
 		currentSize() {
-			this.$emit('resize', this.terminal.cols, this.terminal.rows)
+			this.$emit("resize", this.terminal.cols, this.terminal.rows)
 		},
 
 		setTheme(theme = {}) {
 			// 优化xterm终端边距
 			this.backgroundColor = theme.background
-			this.terminal?.setOption('theme', theme)
+			this.terminal?.setOption("theme", theme)
 		},
 
 		setOption(name, value) {
@@ -394,7 +383,7 @@ export default {
 				}
 			}
 
-			this.$emit('file-drop', files)
+			this.$emit("file-drop", files)
 		},
 
 		searchUp() {
@@ -422,7 +411,7 @@ export default {
 			}, 100)
 		},
 		keyboardInputAllow() {
-			this.$emit('sendToAll', this.showOn)
+			this.$emit("sendToAll", this.showOn)
 		},
 		selectAll() {
 			this.terminal.selectAll()
@@ -443,95 +432,96 @@ export default {
 		//     window.removeEventListener("pt-view-resize", this.ptViewResizeHandler);
 		//     this.ptViewResizeHandler = null;
 		// }
-		document.removeEventListener('contextmenu', this.contextmenuPast)
+		this.$refs.xtermContainer?.removeEventListener("contextmenu", this.contextmenuPast)
+		// document.removeEventListener("contextmenu", this.contextmenuPast)
 	}
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .pt-xterm {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 5px 5px 5px 10px;
-  box-sizing: border-box;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 5px 5px 5px 10px;
+	box-sizing: border-box;
 
-  .xterm-container {
-    width: 100%;
-    height: 100%;
+	.xterm-container {
+		width: 100%;
+		height: 100%;
 
-    ::-webkit-scrollbar-thumb {
-      width: 4px;
-      border-radius: 4px;
-      background: rgba(144, 147, 153, 0.3);
-      transition: 0.3s background-color;
-    }
+		::-webkit-scrollbar-thumb {
+			width: 4px;
+			border-radius: 4px;
+			background: rgba(144, 147, 153, 0.3);
+			transition: 0.3s background-color;
+		}
 
-    .xterm {
-      height: 100%;
-    }
-  }
+		.xterm {
+			height: 100%;
+		}
+	}
 
-  .xterm-link-tip {
-    position: absolute;
-    height: 30px;
-    line-height: 30px;
-    z-index: 999;
+	.xterm-link-tip {
+		position: absolute;
+		height: 30px;
+		line-height: 30px;
+		z-index: 999;
 
-    border-radius: 3px;
-    font-size: 14px;
-    padding: 0 10px;
-    background-color: lightgray;
-  }
+		border-radius: 3px;
+		font-size: 14px;
+		padding: 0 10px;
+		background-color: lightgray;
+	}
 
-  .xterm-search {
-    position: absolute;
-    top: 0;
-    left: 0;
-    backdrop-filter: blur(5px);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    z-index: 999;
-    padding: 0 5px;
-    box-sizing: border-box;
+	.xterm-search {
+		position: absolute;
+		top: 0;
+		left: 0;
+		backdrop-filter: blur(5px);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		height: 40px;
+		z-index: 999;
+		padding: 0 5px;
+		box-sizing: border-box;
 
-    .search-input {
-      flex-grow: 1;
-    }
+		.search-input {
+			flex-grow: 1;
+		}
 
-    .search-icons {
-      display: flex;
-      flex-shrink: 0;
-      justify-content: flex-end;
-      align-items: center;
-      color: #FFFFFF;
-      padding-left: 10px;
-    }
-  }
+		.search-icons {
+			display: flex;
+			flex-shrink: 0;
+			justify-content: flex-end;
+			align-items: center;
+			color: #ffffff;
+			padding-left: 10px;
+		}
+	}
 
-  .keyboard-input {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 998;
-    box-sizing: border-box;
-    padding-left: 5px;
-    padding-right: 5px;
-    background-color: goldenrod;
-    width: calc(100% - 10px);
-    height: 30px;
+	.keyboard-input {
+		position: absolute;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		z-index: 998;
+		box-sizing: border-box;
+		padding-left: 5px;
+		padding-right: 5px;
+		background-color: goldenrod;
+		width: calc(100% - 10px);
+		height: 30px;
 
-    .switch-btn {
-      border: 1px solid var(--n-text-color-base);
-      color: var(--n-text-color-base);
-      background-color: var(--n-bg-color-base);
-    }
-  }
+		.switch-btn {
+			border: 1px solid var(--n-text-color-base);
+			color: var(--n-text-color-base);
+			background-color: var(--n-bg-color-base);
+		}
+	}
 }
 </style>

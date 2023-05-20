@@ -112,7 +112,7 @@
 			</div>
 		</el-form>
 		<div slot="footer" class="dialog-footer">
-			<el-button @click="visible = false">{{ t('components.Cancel') }}</el-button>
+			<el-button @click="handlerClose">{{ t('components.Cancel') }}</el-button>
 			<el-button type="primary" @click="handleOk">{{ t('components.OK') }}</el-button>
 			<el-button type="primary" @click="handleSaveAndConnect">
 				{{ t('home.profile.operator.save-conn') }}
@@ -216,6 +216,7 @@ const handlerClose = () => {
 	sessionConfig.value = undefined
 	sessionForm.value = { ...defaultForm }
 	telnetFormRef.value?.clearValidate()
+	visible.value = false
 }
 
 defineExpose({ showModal })

@@ -19,26 +19,25 @@
 					<el-button type="text" :icon="themeIconConstants[theme]" />
 					<el-dropdown-menu class="theme-btn" slot="dropdown">
 						<el-dropdown-item :disabled="theme === 'light'" command="light" icon="el-icon-sunny">
-							{{ t('app.theme.light') }}
+							{{ t("app.theme.light") }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'dark'" command="dark" icon="el-icon-moon">
-							{{ t('app.theme.dark') }}
+							{{ t("app.theme.dark") }}
 						</el-dropdown-item>
 						<el-dropdown-item :disabled="theme === 'pink'" command="pink" icon="el-icon-grape">
-							{{ t('app.theme.pink') }}
+							{{ t("app.theme.pink") }}
 						</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
+				<!-- 语言切换 -->
+				<el-button type="text" @click="changeLanguage">
+					<n-icon :name="`language-${locale === 'zh-CN' ? 'zh' : 'es'}`" size="20" />
+				</el-button>
 				<!-- 设置按钮 -->
 				<el-button type="text" icon="el-icon-setting" @click="gotoGlobalSetting" />
 				<!-- 版本信息 -->
 				<el-tooltip v-if="needUpdate" effect="dark" :content="t('app.need-update')" placement="bottom">
-					<el-button
-						type="text"
-						:class="{ 'version-btn': needUpdate }"
-						icon="el-icon-sold-out"
-						@click="handlerVersionUpdate"
-					/>
+					<el-button type="text" :class="{ 'version-btn': needUpdate }" icon="el-icon-sold-out" @click="handlerVersionUpdate" />
 				</el-tooltip>
 				<el-tooltip v-else effect="dark" :content="`${t('app.current-version')} ${version}`">
 					<el-button type="text" icon="el-icon-warning-outline" />
@@ -49,38 +48,39 @@
 </template>
 
 <script setup>
-import { createLocalFs } from '@/services/nxsys/localfs'
-import { SESSION_TYPES } from '@/services/session'
-import { useSettingStore } from '@/store'
-import axios from 'axios'
-import { storeToRefs } from 'pinia'
-import semver from 'semver'
-import { getCurrentInstance, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n-bridge'
+import { createLocalFs } from "@/services/nxsys/localfs"
+import { SESSION_TYPES } from "@/services/session"
+import { useSettingStore } from "@/store"
+import axios from "axios"
+import { storeToRefs } from "pinia"
+import semver from "semver"
+import { getCurrentInstance, onMounted, ref } from "vue"
+import { useI18n } from "vue-i18n-bridge"
+import { getProfile, updateProfile } from "@/services/globalSetting"
 
-const {t} = useI18n()
+const { t, locale } = useI18n()
 const IS_MACOS = /macintosh/i.test(navigator.userAgent)
-const version = ref('V1.0.0')
+const version = ref("V1.0.0")
 const needUpdate = ref(false)
 const capture = ref(false)
-const captureIcon = ref('')
+const captureIcon = ref("")
 const fsClient = ref()
 const instance = getCurrentInstance()
 const settingStore = useSettingStore()
 const { theme, userLock } = storeToRefs(settingStore)
 const themeIconConstants = {
-	light: 'el-icon-sunny',
-	dark: 'el-icon-moon',
-	pink: 'el-icon-grape',
-	hazy: 'el-icon-sunny'
+	light: "el-icon-sunny",
+	dark: "el-icon-moon",
+	pink: "el-icon-grape",
+	hazy: "el-icon-sunny"
 }
-
+console.log("设置", locale.value, getProfile("xterm").language)
 const doCapture = async (e) => {
 	capture.value = !capture.value
-	captureIcon.value = capture.value ? 'VideoPlay' : 'VideoPause'
+	captureIcon.value = capture.value ? "VideoPlay" : "VideoPause"
 	if (capture.value) {
 		const save_buffer = await window.powertools.captureStop()
-		const coreService = window.powertools.getService('powertools-core')
+		const coreService = window.powertools.getService("powertools-core")
 		const { canceled, filePath } = await coreService.showSaveDialog({
 			defaultPath: `nxshell-capture-${Date.now()}.webm`
 		})
@@ -90,25 +90,25 @@ const doCapture = async (e) => {
 		if (!fsClient.value) {
 			fsClient.value = await createLocalFs()
 		}
-		const w_handle = await fsClient.value.open(filePath, 'w')
+		const w_handle = await fsClient.value.open(filePath, "w")
 		await fsClient.value.write(w_handle, save_buffer, 0, save_buffer.length, 0)
 		fsClient.value.close(w_handle)
 		return
 	}
-	window.powertools.captureStart()
+	await window.powertools.captureStart()
 }
 
 const checkAppUpdate = async () => {
-	const versionUrl = 'http://106.15.238.81:56789/oauth/version'
+	const versionUrl = "http://106.15.238.81:56789/oauth/version"
 	try {
 		const {
-			data: { remoteVersion = '' }
+			data: { version: remoteVersion = "" }
 		} = await axios.get(versionUrl, { timeout: 60 * 1000 })
-		if (remoteVersion) {
+		if (remoteVersion !== "" && remoteVersion !== version.value) {
 			needUpdate.value = semver.gt(remoteVersion, version.value)
 		}
 	} catch (e) {
-		console.error('App版本检测异常', e)
+		console.error("App版本检测异常", e)
 	}
 }
 
@@ -140,8 +140,15 @@ const gotoGlobalSetting = () => {
 }
 const handlerVersionUpdate = async () => {
 	// 外链打开github地址
-	const update = 'https://github.com/nxshell/nxshell/releases'
+	const update = "https://github.com/nxshell/nxshell/releases"
 	await window.powertools.openExterUrl(update)
+}
+
+const changeLanguage = () => {
+	const language = locale.value === "zh-CN" ? "en-US" : "zh-CN"
+	updateProfile("xterm", { "language": language })
+	// settingStore.changeLanguage()
+	locale.value = language
 }
 
 onMounted(() => {
@@ -207,6 +214,7 @@ onMounted(() => {
 
 	.icon-setting-container {
 		padding-bottom: 10px;
+
 		::v-deep .el-button {
 			width: 40px;
 

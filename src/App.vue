@@ -21,7 +21,6 @@ const router = useRouter()
 const instance = getCurrentInstance()
 onMounted(() => {
 	settingStore.changeTheme(theme.value)
-	const proxy = instance?.proxy
 	if (process.env.NODE_ENV !== 'development') {
 		router.push({ name: 'Home' })
 	}

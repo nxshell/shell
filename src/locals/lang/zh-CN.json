@@ -85,7 +85,8 @@
             "pink": "粉色"
         },
         "need-update": "有新版本，点击进行升级",
-        "current-version": "当前版本"
+        "current-version": "当前版本",
+        "website": "官网"
     },
     "home": {
         "editor": {
@@ -443,7 +444,8 @@
                 "save": "保存",
                 "save-conn": "保存并连接",
                 "configure-mode": "极简模式"
-            }
+            },
+            "mouse-copy": "开启鼠标选中复制"
         },
         "session-instance": {
             "duplicate-session": "复制会话",
