@@ -23,7 +23,7 @@
 				</span>
 			</el-tooltip>
 		</div>
-		<pt-xterm
+		<PtXterm
 			class="xterm-pt"
 			ref="xterm"
 			:sendToAllTerm="keyboardToAll"
@@ -48,9 +48,9 @@
 import path from "path"
 import xtermTheme from "xterm-theme"
 import PtAuthDialog from "../components/auth/auth"
-import { getProfile } from '@/services/globalSetting'
+import { getProfile } from "@/services/globalSetting"
 import * as EventBus from "../../services/eventbus"
-
+import { PtXterm } from "@/components"
 import { xzmodem } from "./xzmodem.js"
 import { create_iconv } from "./iconv.js"
 import { createLogger } from "@/services/nxsys/logger"
@@ -61,6 +61,7 @@ import { useSessionStore } from "@/store"
 export default {
 	name: "XtermInstance",
 	components: {
+		PtXterm,
 		PtAuthDialog
 	},
 	props: {
@@ -250,7 +251,7 @@ export default {
 
 	methods: {
 		xtermFocus() {
-			EventBus.publish("updateTabBySessionId", this.sessionInstanceId)
+			// EventBus.publish("updateTabBySessionId", this.sessionInstanceId)
 		},
 		genrateUrlBySessionCfg(config) {
 			let url = ""
@@ -491,8 +492,7 @@ export default {
 			const write = async (data) => {
 				this.iconv_to_uft8.write(data)
 			}
-			let xzm = new xzmodem({ sendTo, write })
-			return xzm
+			return new xzmodem({ sendTo, write })
 		},
 		onXtermKey(e) {
 			const event = e.domEvent

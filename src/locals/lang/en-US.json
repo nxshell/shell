@@ -83,7 +83,8 @@
             "pink": "Pink"
         },
         "need-update": "There is a new version, click to upgrade",
-        "current-version": "Current Version"
+        "current-version": "Current Version",
+        "website": "Website"
     },
     "home": {
         "editor": {

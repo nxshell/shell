@@ -85,7 +85,8 @@
             "pink": "粉色"
         },
         "need-update": "有新版本，点击进行升级",
-        "current-version": "当前版本"
+        "current-version": "当前版本",
+        "website": "官网"
     },
     "home": {
         "editor": {

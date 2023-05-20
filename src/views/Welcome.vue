@@ -9,7 +9,7 @@
 		<h1>{{ t('app.welcome') }}</h1>
 		<div class='n-home-footer'>
 			<div class='n-home-footer__feedback'>
-				<nx-button icon='official-website' label='官网' label-align='flex-end' @click='toWebsite' />
+				<nx-button icon='official-website' label='app.website' label-align='flex-end' @click='toWebsite' />
 				<nx-button icon='github' label='Github' label-align='flex-end' @click='toStar' />
 				<nx-button icon='bug' label='home.welcome.reportProblem' label-align='flex-end' @click='toIssues' />
 			</div>
