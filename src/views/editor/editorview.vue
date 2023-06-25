@@ -18,6 +18,7 @@
 					class="nx-search-input"
 					suffix-icon="el-icon-search"
 					@keydown.enter.native="searchDown"
+					@clear="clearSearch"
 				/>
 			</div>
 		</div>
@@ -26,38 +27,38 @@
 </template>
 
 <script setup>
-import { EditorView, keymap, lineNumbers } from '@codemirror/view'
-import { Compartment, EditorSelection, SelectionRange } from '@codemirror/state'
-import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import { highlightSelectionMatches, SearchCursor } from '@codemirror/search'
-import { javascript } from '@codemirror/lang-javascript'
-import { css } from '@codemirror/lang-css'
-import { cpp } from '@codemirror/lang-cpp'
-import { html } from '@codemirror/lang-html'
-import { java } from '@codemirror/lang-java'
-import { json } from '@codemirror/lang-json'
-import { markdown } from '@codemirror/lang-markdown'
-import { php } from '@codemirror/lang-php'
-import { python } from '@codemirror/lang-python'
-import { xml } from '@codemirror/lang-xml'
-import themes from './themes'
-import { storeToRefs } from 'pinia'
-import { useNxTabsStore, useSettingStore } from '@/store'
-import { getCurrentInstance, onMounted, ref, watchEffect } from 'vue'
+import { EditorView, keymap, lineNumbers } from "@codemirror/view"
+import { Compartment, EditorSelection, SelectionRange } from "@codemirror/state"
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands"
+import { highlightSelectionMatches, SearchCursor } from "@codemirror/search"
+import { javascript } from "@codemirror/lang-javascript"
+import { css } from "@codemirror/lang-css"
+import { cpp } from "@codemirror/lang-cpp"
+import { html } from "@codemirror/lang-html"
+import { java } from "@codemirror/lang-java"
+import { json } from "@codemirror/lang-json"
+import { markdown } from "@codemirror/lang-markdown"
+import { php } from "@codemirror/lang-php"
+import { python } from "@codemirror/lang-python"
+import { xml } from "@codemirror/lang-xml"
+import themes from "./themes"
+import { storeToRefs } from "pinia"
+import { useNxTabsStore, useSettingStore } from "@/store"
+import { getCurrentInstance, onMounted, ref, watchEffect } from "vue"
 
 const props = defineProps({
 	mode: {
 		type: String,
-		default: () => 'full'
+		default: () => "full"
 	},
 	sessionId: undefined
 })
 const fontSize = ref(16)
 const scale = ref(0)
-const editorValue = ref('')
-const oldValue = ref('')
-const currentPath = ref('')
-const searchKeyWords = ref('')
+const editorValue = ref("")
+const oldValue = ref("")
+const currentPath = ref("")
+const searchKeyWords = ref("")
 const editorTheme = ref(0)
 const nxTabsStore = useNxTabsStore()
 const { theme } = storeToRefs(useSettingStore())
@@ -71,25 +72,25 @@ const sessionInstance = proxy.$sessionManager.getSessionInstanceById(props.sessi
 
 function getSupportLangMode(type) {
 	switch (type) {
-		case '.js':
+		case ".js":
 			return javascript()
-		case '.css':
+		case ".css":
 			return css()
-		case '.cc':
+		case ".cc":
 			return cpp()
-		case '.html':
+		case ".html":
 			return html()
-		case '.java':
+		case ".java":
 			return java()
-		case '.json':
+		case ".json":
 			return json()
-		case '.md':
+		case ".md":
 			return markdown()
-		case '.php':
+		case ".php":
 			return php()
-		case '.py':
+		case ".py":
 			return python()
-		case '.xml':
+		case ".xml":
 			return xml()
 		default:
 			return javascript()
@@ -97,11 +98,18 @@ function getSupportLangMode(type) {
 }
 
 const zoom = () => (fontSize.value = Math.pow(1.1, scale.value) * 16)
+
+const clearSearch = () => {
+	searchKeyWords.value = ""
+	searchCursor.value = null
+}
+
 const searchDown = () => {
+	debugger
 	if (!searchCursor.value) {
 		return
 	}
-	let curr = searchCursor.value.next()
+	const curr = searchCursor.value.next()
 	if (curr.done) {
 		return
 	}
@@ -111,12 +119,13 @@ const searchDown = () => {
 	})
 }
 watchEffect(() => {
-	currentPath.value = sessionInstance?.remote_path ?? ''
+	currentPath.value = sessionInstance?.remote_path ?? ""
 	editorInstance.value?.dispatch({
 		effects: themeConfig.value.reconfigure([themes[editorTheme.value]])
 	})
 	// 监听数据是否有变化
 	nxTabsStore.updateEditChange(editorInstance.value?.state.doc.toString() !== oldValue.value)
+	searchCursor.value = new SearchCursor(editorInstance.value.state.doc, searchKeyWords.value)
 })
 
 const save = async () => {
@@ -126,20 +135,20 @@ const save = async () => {
 		await sessionInstance.saveToRemote()
 		oldValue.value = editorValue.value
 		proxy.$notify({
-			title: '编辑器保存',
-			message: '修改内容已保存',
-			type: 'success'
+			title: "编辑器保存",
+			message: "修改内容已保存",
+			type: "success"
 		})
 	}
 }
 
 onMounted(async () => {
-	sessionInstance.on('close', () => {
+	sessionInstance.on("close", () => {
 		try {
 			proxy.$destroy()
 			proxy.$el.remove()
 		} catch (e) {
-			console.log('sftp editor instance remove error', e)
+			console.log("sftp editor instance remove error", e)
 		}
 	})
 	await sessionInstance.init()
@@ -150,11 +159,11 @@ onMounted(async () => {
 	sessionInstance.registerCloseCallback(save)
 	const ctrl_s_key = [
 		{
-			key: 'Ctrl-s',
+			key: "Ctrl-s",
 			run: () => save()
 		},
 		{
-			key: 'Alt--',
+			key: "Alt--",
 			run: () => {
 				if (scale.value > 0) {
 					scale.value -= 1
@@ -163,14 +172,14 @@ onMounted(async () => {
 			}
 		},
 		{
-			key: 'Alt-=',
+			key: "Alt-=",
 			run: () => {
 				scale.value += 1
 				zoom()
 			}
 		},
 		{
-			key: 'Alt-0',
+			key: "Alt-0",
 			run: () => {
 				scale.value = 0
 				zoom()
@@ -196,7 +205,6 @@ onMounted(async () => {
 		tabSize: 4
 	})
 	oldValue.value = editorInstance.value.state.doc.toString()
-	searchCursor.value = new SearchCursor(editorInstance.value.state.doc, searchKeyWords.value)
 })
 </script>
 
