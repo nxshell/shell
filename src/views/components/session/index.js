@@ -16,6 +16,7 @@ export function shellModalInstance(shellType) {
 		case "telnet":
 			return TelnetModal
 		case "serialport":
+		case "serial":
 			return SerialModal
 		case "vnc":
 			return VncModal
