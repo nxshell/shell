@@ -3,92 +3,44 @@
 		<pt-toolbar :centerStyle="{ overflow: 'hidden', marginLeft: '10px', marginRight: '10px' }">
 			<template slot='left'>
 				<n-space :size='5'>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('home.fileview.mainview.go-back')"
-						placement='right-end'
-					>
+					<el-tooltip class='item' effect='dark' :content="$t('home.fileview.mainview.go-back')"
+						placement='right-end'>
 						<el-button type='text' icon='el-icon-back' :disabled='!canGoBack' @click='goBack' />
 					</el-tooltip>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('home.fileview.mainview.go-forward')"
-						placement='right-end'
-					>
+					<el-tooltip class='item' effect='dark' :content="$t('home.fileview.mainview.go-forward')"
+						placement='right-end'>
 						<el-button type='text' icon='el-icon-right' :disabled='!canForward' @click='forward' />
 					</el-tooltip>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('home.fileview.mainview.go-up')"
-						placement='right-end'
-					>
+					<el-tooltip class='item' effect='dark' :content="$t('home.fileview.mainview.go-up')"
+						placement='right-end'>
 						<el-button type='text' icon='el-icon-top' :disabled='!canGoUp' @click='goUp' />
 					</el-tooltip>
-					<el-tooltip
-						class='item'
-						effect='dark'
-						:content="$t('home.fileview.mainview.go-refresh')"
-						placement='right-end'
-					>
+					<el-tooltip class='item' effect='dark' :content="$t('home.fileview.mainview.go-refresh')"
+						placement='right-end'>
 						<el-button type='text' icon='el-icon-refresh' :disabled='!refresh' @click='refresh' />
 					</el-tooltip>
 				</n-space>
 			</template>
-			<pt-file-view-address
-				slot='center'
-				v-model='currentPath'
-				:hostInfo='hostInfo'
-				:getFolderList='getFolderList'
-				:checkPath='checkPath'
-				@change='goTo($event)'
-			></pt-file-view-address>
+			<pt-file-view-address slot='center' v-model='currentPath' :hostInfo='hostInfo'
+				:getFolderList='getFolderList' :checkPath='checkPath' @change='goTo($event)'></pt-file-view-address>
 			<template slot='right'>
-				<el-input
-					v-model='searchKeyWords'
-					:placeholder="$t('home.fileview.mainview.search-tab')"
-					clearable
-					class='nx-search-input'
-					suffix-icon='el-icon-search'
-				/>
+				<el-input v-model='searchKeyWords' :placeholder="$t('home.fileview.mainview.search-tab')" clearable
+					class='nx-search-input' suffix-icon='el-icon-search' />
 			</template>
 		</pt-toolbar>
-		<pt-grid-view
-			:mode='layout'
-			:columns='columns'
-			:data='fileList'
-			@open='handleOpen($event)'
-			@refresh='refresh'
-			@delete='handleDelete($event)'
-			@go-back='goBack()'
-			@change='handleFileSelectedChange'
-			@contextmenu='handleFileItemContextMenu($event)'
-			@file-drop='handleFileDrop'
-			@file-sort='handleFileSort'
-			v-context-menu='handleGetContextMenu'
-		/>
-		<file-status-bar
-			:file-total='fileList.length'
-			:selected-length='selectedItems.length'
-			:progress-desc='currentProgressStatus.description'
-			:show-progress='currentProgressStatus.show'
-			:progress='currentProgressStatus.progress'
-			:speed='currentProgressStatus.speed'
-		/>
+		<pt-grid-view :mode='layout' :columns='columns' :data='fileList' @open='handleOpen($event)' @refresh='refresh'
+			@delete='handleDelete($event)' @go-back='goBack()' @change='handleFileSelectedChange'
+			@contextmenu='handleFileItemContextMenu($event)' @file-drop='handleFileDrop' @file-sort='handleFileSort'
+			v-context-menu='handleGetContextMenu' />
+		<file-status-bar :file-total='fileList.length' :selected-length='selectedItems.length'
+			:progress-desc='currentProgressStatus.description' :show-progress='currentProgressStatus.show'
+			:progress='currentProgressStatus.progress' :speed='currentProgressStatus.speed' />
 		<!-- 查看文件属性弹窗 -->
 		<el-dialog :title="$t('home.fileview.prop-dialog.file-props')" width='40%' :visible.sync='filePropDialog.show'>
 			<div class='file-prop-dialog'>
 				<el-scrollbar style='height: 100%'>
-					<el-descriptions
-						:column='1'
-						size='large'
-						:colon='false'
-						style='padding: 10px 30px'
-						:labelStyle="{ width: '150px' }"
-						:contentStyle="{ height: '32px', 'line-height': '32px' }"
-					>
+					<el-descriptions :column='1' size='large' :colon='false' style='padding: 10px 30px'
+						:labelStyle="{ width: '150px' }" :contentStyle="{ height: '32px', 'line-height': '32px' }">
 						<el-descriptions-item :span='10'>
 							<template slot='label'>
 								<n-icon size='28' :name='filePropDialog.dirent.fileicon' />
@@ -125,24 +77,13 @@
 			</div>
 		</el-dialog>
 		<!-- 创建文件夹弹窗 -->
-		<el-dialog
-			:title="$t('home.fileview.createdir-dialog.title')"
-			:visible.sync='dirCreateDialog.show'
-			:close-on-click-modal='false'
-			width='450px'
-		>
+		<el-dialog :title="$t('home.fileview.createdir-dialog.title')" :visible.sync='dirCreateDialog.show'
+			:close-on-click-modal='false' width='450px'>
 			<n-space vertical :item-style="{ width: '100%' }">
-				<el-input
-					v-model='dirCreateDialog.dirname'
-					:placeholder="$t('home.fileview.createdir-dialog.placeholder')"
-				/>
-				<el-alert
-					v-if='!isValidNewDirName'
-					:title="$t('home.fileview.createdir-dialog.invalid-dir-name')"
-					:closable='false'
-					type='warning'
-					show-icon
-				/>
+				<el-input v-model='dirCreateDialog.dirname'
+					:placeholder="$t('home.fileview.createdir-dialog.placeholder')" />
+				<el-alert v-if='!isValidNewDirName' :title="$t('home.fileview.createdir-dialog.invalid-dir-name')"
+					:closable='false' type='warning' show-icon />
 			</n-space>
 			<div slot='footer' class='dialog-footer'>
 				<el-button @click='handleCreateDirCancel'>{{ $t('components.Cancel') }}</el-button>
@@ -150,24 +91,13 @@
 			</div>
 		</el-dialog>
 		<!-- 重命名弹窗 -->
-		<el-dialog
-			:title="$t('home.fileview.rename-dialog.title')"
-			:visible.sync='renameDialog.show'
-			:close-on-click-modal='false'
-			width='400px'
-		>
+		<el-dialog :title="$t('home.fileview.rename-dialog.title')" :visible.sync='renameDialog.show'
+			:close-on-click-modal='false' width='400px'>
 			<n-space vertical :item-style="{ width: '100%' }">
-				<el-input
-					v-model='renameDialog.dirname'
-					:placeholder="$t('home.fileview.rename-dialog.placeholder')"
-				></el-input>
-				<el-alert
-					v-if='!isValidRenameDirName'
-					:title="$t('home.fileview.rename-dialog.invalid-name')"
-					:closable='false'
-					type='warning'
-					show-icon
-				/>
+				<el-input v-model='renameDialog.dirname'
+					:placeholder="$t('home.fileview.rename-dialog.placeholder')"></el-input>
+				<el-alert v-if='!isValidRenameDirName' :title="$t('home.fileview.rename-dialog.invalid-name')"
+					:closable='false' type='warning' show-icon />
 			</n-space>
 
 			<div slot='footer' class='dialog-footer'>
@@ -176,24 +106,13 @@
 			</div>
 		</el-dialog>
 		<!-- 文件权限修改弹窗 -->
-		<el-dialog
-			:title="$t('home.fileview.chmod-dialog.title')"
-			:visible.sync='chmodDialog.show'
-			:close-on-click-modal='false'
-			width='400px'
-		>
+		<el-dialog :title="$t('home.fileview.chmod-dialog.title')" :visible.sync='chmodDialog.show'
+			:close-on-click-modal='false' width='400px'>
 			<n-space vertical :item-style="{ width: '100%' }">
-				<el-input
-					v-model='chmodDialog.permissions'
-					:placeholder="$t('home.fileview.chmod-dialog.placeholder')"
-				></el-input>
-				<el-alert
-					v-if='!isValidPermissions'
-					:title="$t('home.fileview.chmod-dialog.invalid-permissions')"
-					:closable='false'
-					type='warning'
-					show-icon
-				/>
+				<el-input v-model='chmodDialog.permissions'
+					:placeholder="$t('home.fileview.chmod-dialog.placeholder')"></el-input>
+				<el-alert v-if='!isValidPermissions' :title="$t('home.fileview.chmod-dialog.invalid-permissions')"
+					:closable='false' type='warning' show-icon />
 			</n-space>
 
 			<div slot='footer' class='dialog-footer'>
@@ -202,12 +121,8 @@
 			</div>
 		</el-dialog>
 		<!-- 文件移动弹窗 -->
-		<el-dialog
-			:title="$t('home.fileview.move-dialog.title')"
-			:visible.sync='moveDialog.show'
-			:close-on-click-modal='false'
-			width='400px'
-		>
+		<el-dialog :title="$t('home.fileview.move-dialog.title')" :visible.sync='moveDialog.show'
+			:close-on-click-modal='false' width='400px'>
 			<div style='width: 100%'>
 				<el-select v-model='moveDialog.dirname' placeholder='请选择'>
 					<el-option v-for='(opt, idx) in moveDialog.dirnameList' :key='idx' :label='opt' :value='opt' />
@@ -221,11 +136,8 @@
 		<el-dialog :title='askDialog.title' :visible.sync='askDialog.show' :close-on-click-modal='false'>
 			<!-- 合并目录 -->
 			<template v-if="askDialog.questionType === 'merge'">
-				<el-descriptions
-					:title="$t('home.fileview.ask-dialogs.merge.message', [askDialog.args.name])"
-					:colon='false'
-					:column='2'
-				>
+				<el-descriptions :title="$t('home.fileview.ask-dialogs.merge.message', [askDialog.args.name])"
+					:colon='false' :column='2'>
 					<el-descriptions-item>
 						<template slot='label'>
 							<n-icon size='32' :name='askDialog.icon' />
@@ -235,11 +147,11 @@
 								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', [askDialog.args.name]) }}</p>
 								<p>
 									{{
-										$t(
-											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
-											askDialog.args.src.lastModify
-										)
-									}}
+			$t(
+				'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
+				askDialog.args.src.lastModify
+			)
+		}}
 								</p>
 							</n-space>
 						</div>
@@ -253,11 +165,11 @@
 								<p>{{ $t('home.fileview.ask-dialogs.merge.dir-info-name', [askDialog.args.name]) }}</p>
 								<p>
 									{{
-										$t(
-											'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
-											askDialog.args.src.lastModify
-										)
-									}}
+			$t(
+				'home.fileview.ask-dialogs.merge.dir-info-lastmodify',
+				askDialog.args.src.lastModify
+			)
+		}}
 								</p>
 							</n-space>
 						</div>
@@ -271,11 +183,8 @@
 			</template>
 			<!-- 覆盖文件 -->
 			<template v-if="askDialog.questionType === 'overwrite'">
-				<el-descriptions
-					:title="$t('home.fileview.ask-dialogs.overwrite.message', [askDialog.args.name])"
-					:colon='false'
-					:column='2'
-				>
+				<el-descriptions :title="$t('home.fileview.ask-dialogs.overwrite.message', [askDialog.args.name])"
+					:colon='false' :column='2'>
 					<el-descriptions-item>
 						<template slot='label'>
 							<n-icon size='32' :name='askDialog.icon' />
@@ -284,23 +193,23 @@
 							<n-space vertical>
 								<p>
 									{{
-										$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
-									}}
+			$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
+		}}
 								</p>
 								<p>
 									{{
-										$t('home.fileview.ask-dialogs.overwrite.file-info-size', [
-											askDialog.args.src.size
-										])
-									}}
+				$t('home.fileview.ask-dialogs.overwrite.file-info-size', [
+					askDialog.args.src.size
+				])
+			}}
 								</p>
 								<p>
 									{{
-										$t(
-											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
-											askDialog.args.src.lastModify
-										)
-									}}
+				$t(
+					'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
+					askDialog.args.src.lastModify
+				)
+			}}
 								</p>
 							</n-space>
 						</div>
@@ -313,24 +222,24 @@
 							<n-space vertical>
 								<p>
 									{{
-										$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
-									}}
+			$t('home.fileview.ask-dialogs.overwrite.file-info-name', [askDialog.args.name])
+		}}
 								</p>
 								<p>
 									{{
-										$t(
-											'home.fileview.ask-dialogs.overwrite.file-info-size',
-											askDialog.args.dest.size
-										)
-									}}
+				$t(
+					'home.fileview.ask-dialogs.overwrite.file-info-size',
+					askDialog.args.dest.size
+				)
+			}}
 								</p>
 								<p>
 									{{
-										$t(
-											'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
-											askDialog.args.dest.lastModify
-										)
-									}}
+				$t(
+					'home.fileview.ask-dialogs.overwrite.file-info-lastmodify',
+					askDialog.args.dest.lastModify
+				)
+			}}
 								</p>
 							</n-space>
 						</div>
@@ -514,8 +423,11 @@ export default {
 				keep: false,
 				args: null,
 				icon: '',
-				transfer: null
+				transfer: null,
+				lastOpeType: '',
+				fileIndex: 0,
 			},
+			currUploadFileNum: 0,
 
 			progressStatus: {
 				timer: null,
@@ -1049,7 +961,7 @@ export default {
 		closeAskDialog() {
 			this.askDialog.title = ''
 			this.askDialog.message = ''
-			this.askDialog.keep = false
+			// this.askDialog.keep = false
 			this.askDialog.args = {
 				basename: '',
 				dest: {},
@@ -1065,11 +977,13 @@ export default {
 		},
 
 		async handleOverwrite() {
+			this.askDialog.lastOpeType = 'overwrite';
 			await this.askDialog.transfer.answer('overwrite', this.askDialog.keep)
 			this.closeAskDialog()
 		},
 
 		async handleSkip() {
+			this.askDialog.lastOpeType = 'skip';
 			await this.askDialog.transfer.answer('skip', this.askDialog.keep)
 			this.closeAskDialog()
 		},
@@ -1099,8 +1013,21 @@ export default {
 					this.updateProgress(progressId, 0, this.$t('home.fileview.mainview.progress.prepare-upload'))
 				})
 
-				transfer.on('ask', ({ question, args }) => {
-					this.showAskDialog(transfer, question, args)
+				transfer.on('ask', async ({ question, args }) => {
+					this.askDialog.fileIndex++;
+					if (this.askDialog.keep && this.askDialog.fileIndex != 1) {
+						this.askDialog.args = args;
+						this.askDialog.transfer = transfer;
+						await this.askDialog.transfer.answer(this.askDialog.lastOpeType, this.askDialog.keep)
+					}
+					else {
+						this.showAskDialog(transfer, question, args)
+					}
+					if (this.askDialog.fileIndex == this.currUploadFileNum) {
+						this.askDialog.fileIndex = 0;
+						this.askDialog.keep = false;
+						// this.askDialog.transfer = null;
+					}
 				})
 
 				transfer.on('transferring', (args) => {
@@ -1737,6 +1664,8 @@ export default {
 		},
 
 		async handleFileDrop(files) {
+			this.currUploadFileNum = files.length;
+			this.askDialog.fileIndex = 0;
 			for (let i = 0; i < files.length; i++) {
 				let progressId = this.createProgress(this.$t('home.fileview.mainview.progress.prepare-download'))
 				let file = files[i]
@@ -1799,90 +1728,92 @@ export default {
 
 <style lang='scss' scoped>
 .pt-file-view {
-  position: relative;
-  width: 100%;
-  height: 100%;
+	position: relative;
+	width: 100%;
+	height: 100%;
 
-  .pt-grid-view {
-    height: calc(100% - 72px);
-  }
+	.pt-grid-view {
+		height: calc(100% - 72px);
+	}
 
-  .status-description {
-    width: 260px;
-    text-align: right;
-  }
+	.status-description {
+		width: 260px;
+		text-align: right;
+	}
 
-  ::v-deep .el-input__inner {
-    border: 1px solid var(--n-bg-color-base) !important;
-  }
+	::v-deep .el-input__inner {
+		border: 1px solid var(--n-bg-color-base) !important;
+	}
 }
 
 .file-prop-dialog {
-  width: 100%;
-  height: 400px;
+	width: 100%;
+	height: 400px;
 
-  .info-block {
-    padding: 20px 20px;
+	.info-block {
+		padding: 20px 20px;
 
-    .pt-row {
-      margin-bottom: 10px;
-    }
-  }
+		.pt-row {
+			margin-bottom: 10px;
+		}
+	}
 
-  .file-base-info {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 10px;
+	.file-base-info {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 10px;
 
-    .pt-icon-wrapper {
-      margin-right: 10px;
-    }
-  }
+		.pt-icon-wrapper {
+			margin-right: 10px;
+		}
+	}
 }
 
 .create-dir-dialog {
-  width: 300px;
-  margin: {
-    top: 30px;
-    bottom: 40px;
-  }
+	width: 300px;
 
-  .invalid-dir-name {
-    margin-top: 15px;
-    color: var(--dangerColor);
-  }
+	margin: {
+		top: 30px;
+		bottom: 40px;
+	}
+
+	.invalid-dir-name {
+		margin-top: 15px;
+		color: var(--dangerColor);
+	}
 }
 
 .move-dir-dialog {
-  margin: {
-    top: 30px;
-    bottom: 40px;
-  }
-  display: flex;
-  justify-content: center;
+	margin: {
+		top: 30px;
+		bottom: 40px;
+	}
 
-  .move-dir-select {
-    width: 300px;
-  }
+	display: flex;
+	justify-content: center;
+
+	.move-dir-select {
+		width: 300px;
+	}
 }
 
 .ask-dialog {
-  margin: {
-    top: 30px;
-    bottom: 40px;
-  }
+	margin: {
+		top: 30px;
+		bottom: 40px;
+	}
 
-  .message {
-    margin-bottom: 20px;
-  }
+	.message {
+		margin-bottom: 20px;
+	}
 
-  .file-summary {
-    margin: {
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-    }
-  }
+	.file-summary {
+		margin: {
+			left: 20px;
+			right: 20px;
+			bottom: 20px;
+		}
+	}
 }
 </style>
